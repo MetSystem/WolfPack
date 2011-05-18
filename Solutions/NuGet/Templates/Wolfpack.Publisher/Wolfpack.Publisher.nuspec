@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>Wolfpack.Publisher</id>
+    <version>1.0.0.0</version>
+    <title>Wolfpack.Publisher</title>
+    <authors>jimbobdog</authors>
+    <owners>James Simmonds, Rob Gibbens</owners>
+    <licenseUrl>http://wolfpack.codeplex.com/license</licenseUrl>
+    <projectUrl>http://wolfpack.codeplex.com/</projectUrl>
+    <iconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=Wolfpack&amp;DownloadId=140622&amp;Build=17672</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Wolfpack is an extensible .Net windows service based framework for running jobs to monitor your software and system. The data collected can be sent directly to Growl clients, WCF, SQL, SQLite, NServiceBus and it exposes a native Geckoboard REST/JSON data feed so you create instant dashboards for your system. It comes preloaded with some tasks but it's simple to implement your own!</description>
+    <summary>Wolfpack.Publishers adds the necessary classes to create your own custom Publishers.</summary>
+    <language>en-US</language>
+    <tags>Wolfpack Monitoring</tags>
+  </metadata>
+</package>
