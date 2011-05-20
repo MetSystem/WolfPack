@@ -40,6 +40,9 @@
     <Reference Include="Growl.CoreLibrary">
       <HintPath>..\packages\Growl.0.6\lib\Growl.CoreLibrary.dll</HintPath>
     </Reference>
+    <Reference Include="Magnum, Version=1.1.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Magnum.1.1.1.0\lib\NET40\Magnum.dll</HintPath>
+    </Reference>
     <Reference Include="Moq">
       <HintPath>..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
     </Reference>
@@ -85,6 +88,7 @@
     <Compile Include="Checks\WindowServiceState.Domain.cs" />
     <Compile Include="Checks\WindowServiceState.Specs.cs" />
     <Compile Include="CmdLineArgTests.cs" />
+    <Compile Include="Drivers\AutomationProfile.cs" />
     <Compile Include="Growl\NotificationFinaliserTests.cs" />
     <Compile Include="Mocks\MockMessenger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -115,6 +119,7 @@
       <Name>Wolfpack.Core</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
