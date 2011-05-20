@@ -1,12 +1,9 @@
-﻿using System;
-using Magnum;
-using Wolfpack.Core.AppStats;
-using Wolfpack.Core.Interfaces.Entities;
+﻿using Wolfpack.Core.AppStats;
 using NServiceBus;
 
 namespace Wolfpack.Core.Bus
 {
-    public class AppStatNServiceBusPublisher : IAppStatsPublisher
+    public class AppStatNServiceBusPublisher : AppStatsPublisherBase
     {
         private readonly string myDestinationQueue;
         private readonly IBus myBus;
@@ -22,33 +19,10 @@ namespace Wolfpack.Core.Bus
             myDestinationQueue = destinationQueue;
         }
 
-        public void Publish(AppStatsEvent stat)
+        public override void Publish(AppStatsEvent stat)
         {
-            Guard.AgainstNull(stat);
-            Guard.AgainstEmpty(stat.CheckId);
-
-            var result = new HealthCheckResultNotification
-            {
-                MinuteBucket = stat.MinuteBucket,
-                HourBucket = stat.HourBucket,
-                DayBucket = stat.DayBucket,
-                EventType = "AppStat",
-                Agent = new AgentInfo
-                {
-                    SiteId = stat.SiteId,
-                    AgentId = stat.AgentId
-                },
-                Check = new HealthCheckData
-                {
-                    Duration = stat.Duration ?? TimeSpan.Zero,
-                    Identity = new PluginDescriptor
-                    {
-                        Name = stat.CheckId
-                    },
-                    ResultCount = stat.ResultCount,
-                    Tags = stat.Tag
-                }
-            };
+            var result = new HealthCheckResultNotification();
+            DefaultMap(stat, result);
 
             if (string.IsNullOrEmpty(myDestinationQueue))
                 myBus.Send(result);
