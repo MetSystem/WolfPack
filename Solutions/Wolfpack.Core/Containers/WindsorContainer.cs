@@ -151,6 +151,9 @@ namespace Wolfpack.Core.Containers
             // custom stuff..auto register all config\*.castle.config files
             var configFilesLocation = SmartLocation.GetLocation("config");
 
+            if (!Directory.Exists(configFilesLocation))
+                return;
+
             foreach (var extraConfig in Directory.GetFiles(configFilesLocation, "*.castle.config"))
             {
                 try

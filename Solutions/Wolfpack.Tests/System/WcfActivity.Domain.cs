@@ -9,6 +9,7 @@ namespace Wolfpack.Tests.System
 {
     public class WcfActivityDomainConfig
     {
+        public string Uri { get; set; }
         public HealthCheckAgentStart SessionMessage { get; set; }
         public HealthCheckResult ResultMessage { get; set; }
     }
@@ -24,6 +25,7 @@ namespace Wolfpack.Tests.System
             myConfig = config;
             myAutomatedAgent = AutomationProfile.Configure();
             myMockSessionPublisher = new Mock<IHealthCheckSessionPublisher>();
+            myMockSessionPublisher.SetupProperty(target => target.Status, Status.For("Test").StateIsSuccess());
         }
 
         public override void Dispose()
@@ -35,7 +37,11 @@ namespace Wolfpack.Tests.System
             myAutomatedAgent.Run(new WcfServiceHost(new WcfServiceHostConfig
                                                         {
                                                             Enabled = true,
-                                                        }))
+                                                            Uri = myConfig.Uri
+                                                        })
+                                     {
+                                         Status = Status.For("WcfServiceHost").StateIsSuccess()
+                                     })
                 .Run(myMockSessionPublisher.Object);
         }
 
@@ -46,6 +52,13 @@ namespace Wolfpack.Tests.System
 
         public void TheSessionStartMessageIsSent()
         {
+            var publisher = new WcfSessionPublisher(new WcfPublisherConfiguration
+                                                        {
+                                                            Enabled = true,
+                                                            FriendlyId = "TestWcfPublisher",
+                                                            Uri = myConfig.Uri
+                                                        });
+            publisher.Publish(myConfig.SessionMessage);
         }
 
         public void TheAgentIsStarted()

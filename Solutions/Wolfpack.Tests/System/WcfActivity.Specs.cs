@@ -21,6 +21,7 @@ namespace Wolfpack.Tests.System
         {
             using (var domain = new WcfActivityDomain(new WcfActivityDomainConfig
                                                           {
+                                                              Uri = "http://localhost/Geckoboard",
                                                               SessionMessage = new HealthCheckAgentStart
                                                                                    {
                                                                                        
@@ -31,7 +32,8 @@ namespace Wolfpack.Tests.System
                     .Given(domain.TheActivityIsCorrectlyConfigured)
                     .And(domain.TheAgentIsStarted)
                     .When(domain.TheSessionStartMessageIsSent)
-                    .Then(domain.TheSessionMessageShouldBeReceived);
+                    .Then(domain.TheSessionMessageShouldBeReceived)
+                    .ExecuteWithReport();
             }
         }
     }

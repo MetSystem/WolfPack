@@ -1,3 +1,4 @@
+using Wolfpack.Core;
 using Wolfpack.Core.Interfaces;
 using Wolfpack.Core.Interfaces.Entities;
 using Wolfpack.Core.Interfaces.Magnum;
@@ -65,6 +66,8 @@ namespace Wolfpack.Tests.Drivers
 
         public AutomationProfile Start()
         {
+            Messenger.Initialise(new MagnumMessenger());
+
             myRole = new Agent.Roles.Agent(new AgentConfiguration
                                                {
                                                    SiteId = "Test"
@@ -73,7 +76,7 @@ namespace Wolfpack.Tests.Drivers
                                            myResultPublisherLoader,
                                            myCheckLoader,
                                            myActivityLoader);
-
+            myRole.Start();
             return this;
         }
     }

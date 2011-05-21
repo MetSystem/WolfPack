@@ -11,6 +11,11 @@ namespace Wolfpack.Core.Wcf
     {
         public string ServiceImplementation { get; set; }
         public string Uri { get; set; }
+
+        public WcfServiceHostConfig()
+        {
+            ServiceImplementation = "Wolfpack.Core.Geckoboard.GeckoboardDataService, Wolfpack.Core";
+        }
     }
 
     /// <summary>
