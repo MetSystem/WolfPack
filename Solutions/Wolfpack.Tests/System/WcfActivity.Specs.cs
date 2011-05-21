@@ -21,7 +21,7 @@ namespace Wolfpack.Tests.System
         {
             using (var domain = new WcfActivityDomain(new WcfActivityDomainConfig
                                                           {
-                                                              Uri = "http://localhost/Geckoboard",
+                                                              Uri = "http://localhost:802/Wolfpack",
                                                               SessionMessage = new HealthCheckAgentStart
                                                                                    {
                                                                                        

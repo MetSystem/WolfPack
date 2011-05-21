@@ -197,8 +197,8 @@
     <Compile Include="SerialisationHelper.cs" />
     <Compile Include="SmartLocation.cs" />
     <Compile Include="TypeDiscovery.cs" />
-    <Compile Include="Wcf\IMonitorWang.cs" />
-    <Compile Include="Wcf\MonitorWangService.cs" />
+    <Compile Include="Wcf\IWolfpack.cs" />
+    <Compile Include="Wcf\WolfpackService.cs" />
     <Compile Include="Wcf\WcfPublisherConfiguration.cs" />
     <Compile Include="Wcf\WcfPublishers.cs" />
     <Compile Include="Wcf\WcfServiceActivity.cs" />

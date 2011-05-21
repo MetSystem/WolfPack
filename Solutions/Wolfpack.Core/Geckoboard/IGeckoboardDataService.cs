@@ -3,7 +3,7 @@ using Wolfpack.Core.Geckoboard.Entities;
 
 namespace Wolfpack.Core.Geckoboard
 {
-    [ServiceContract(Namespace = "http://Wolfpack.iagileservices.com/dataservices/geckoboard")]
+    [ServiceContract(Namespace = "http://wolfpack.iagileservices.com/dataservices/geckoboard")]
     public interface IGeckoboardDataService
     {
         /// <summary>

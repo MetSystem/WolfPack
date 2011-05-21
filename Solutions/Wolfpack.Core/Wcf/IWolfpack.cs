@@ -3,7 +3,7 @@ using Wolfpack.Core.Interfaces.Entities;
 
 namespace Wolfpack.Core.Wcf
 {
-    [ServiceContract(Namespace = "http://Wolfpack.iagileservices.com")]
+    [ServiceContract(Namespace = "http://wolfpack.iagileservices.com")]
     public interface IWolfpack
     {
         [OperationContract(IsOneWay = true)]

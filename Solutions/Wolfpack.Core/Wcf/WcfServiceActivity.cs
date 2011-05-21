@@ -14,7 +14,7 @@ namespace Wolfpack.Core.Wcf
 
         public WcfServiceHostConfig()
         {
-            ServiceImplementation = "Wolfpack.Core.Geckoboard.GeckoboardDataService, Wolfpack.Core";
+            ServiceImplementation = "Wolfpack.Core.Wcf.WolfpackService, Wolfpack.Core";
         }
     }
 
