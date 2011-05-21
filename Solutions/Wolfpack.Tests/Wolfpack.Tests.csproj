@@ -88,10 +88,14 @@
     <Compile Include="Checks\WindowServiceState.Domain.cs" />
     <Compile Include="Checks\WindowServiceState.Specs.cs" />
     <Compile Include="CmdLineArgTests.cs" />
+    <Compile Include="Drivers\AutomationLoader.cs" />
     <Compile Include="Drivers\AutomationProfile.cs" />
+    <Compile Include="Drivers\AutomationScheduler.cs" />
     <Compile Include="Growl\NotificationFinaliserTests.cs" />
     <Compile Include="Mocks\MockMessenger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="System\WcfActivity.Domain.cs" />
+    <Compile Include="System\WcfActivity.Specs.cs" />
     <Compile Include="Timers\TwentyFourSevenTimerTests.cs" />
   </ItemGroup>
   <ItemGroup>
