@@ -21,7 +21,7 @@ namespace Wolfpack.Tests.System
         {
             using (var domain = new WcfActivityDomain(new WcfActivityDomainConfig
                                                           {
-                                                              Uri = "http://localhost:802/Wolfpack",
+                                                              Uri = "http://ipv4.fiddler:802/Wolfpack",
                                                               SessionMessage = new HealthCheckAgentStart
                                                                                    {
                                                                                        
@@ -32,7 +32,8 @@ namespace Wolfpack.Tests.System
                     .Given(domain.TheActivityIsCorrectlyConfigured)
                     .And(domain.TheAgentIsStarted)
                     .When(domain.TheSessionStartMessageIsSent)
-                    .Then(domain.TheSessionMessageShouldBeReceived)
+                    .Then(domain.ThereShouldBe_SessionMessagesReceived, 1)
+                        .And(domain.TheSessionMessageAtIndex_ShouldExactlyMatchTheOneSent, 0)
                     .ExecuteWithReport();
             }
         }

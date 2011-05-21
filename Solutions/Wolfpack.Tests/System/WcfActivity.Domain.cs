@@ -1,4 +1,5 @@
 using Moq;
+using NUnit.Framework;
 using Wolfpack.Core.Interfaces.Entities;
 using Wolfpack.Core.Interfaces.Magnum;
 using Wolfpack.Core.Wcf;
@@ -18,14 +19,15 @@ namespace Wolfpack.Tests.System
     {
         private readonly AutomationProfile myAutomatedAgent;
         private readonly WcfActivityDomainConfig myConfig;
-        private readonly Mock<IHealthCheckSessionPublisher> myMockSessionPublisher;
+        private readonly AutomationSessionPublisher mySessionPublisher;
+        private readonly AutomationResultPublisher myResultPublisher;
 
         public WcfActivityDomain(WcfActivityDomainConfig config)
         {
             myConfig = config;
             myAutomatedAgent = AutomationProfile.Configure();
-            myMockSessionPublisher = new Mock<IHealthCheckSessionPublisher>();
-            myMockSessionPublisher.SetupProperty(target => target.Status, Status.For("Test").StateIsSuccess());
+            mySessionPublisher = new AutomationSessionPublisher();
+            myResultPublisher = new AutomationResultPublisher();
         }
 
         public override void Dispose()
@@ -42,12 +44,20 @@ namespace Wolfpack.Tests.System
                                      {
                                          Status = Status.For("WcfServiceHost").StateIsSuccess()
                                      })
-                .Run(myMockSessionPublisher.Object);
+                .Run(mySessionPublisher)
+                .Run(myResultPublisher);
         }
 
-        public void TheSessionMessageShouldBeReceived()
+        public void ThereShouldBe_SessionMessagesReceived(int expected)
         {
-            myMockSessionPublisher.Verify(target => target.Consume(myConfig.SessionMessage), Times.Once());
+            Assert.That(mySessionPublisher.SessionMessagesReceived.Count, Is.EqualTo(expected));
+        }
+
+        public void TheSessionMessageAtIndex_ShouldExactlyMatchTheOneSent(int index)
+        {
+            var received = mySessionPublisher.SessionMessagesReceived[index];
+
+            Assert.That(received.Id, Is.EqualTo(myConfig.SessionMessage.Id));
         }
 
         public void TheSessionStartMessageIsSent()

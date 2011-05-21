@@ -90,7 +90,9 @@
     <Compile Include="CmdLineArgTests.cs" />
     <Compile Include="Drivers\AutomationLoader.cs" />
     <Compile Include="Drivers\AutomationProfile.cs" />
+    <Compile Include="Drivers\AutomationSessionPublisher.cs" />
     <Compile Include="Drivers\AutomationScheduler.cs" />
+    <Compile Include="Drivers\AutomationResultPublisher.cs" />
     <Compile Include="Growl\NotificationFinaliserTests.cs" />
     <Compile Include="Mocks\MockMessenger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
