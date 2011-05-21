@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using NUnit.Framework;
 using StoryQ;
 using Wolfpack.Core.Interfaces.Entities;
@@ -24,7 +26,17 @@ namespace Wolfpack.Tests.System
                                                               Uri = "http://ipv4.fiddler:802/Wolfpack",
                                                               SessionMessage = new HealthCheckAgentStart
                                                                                    {
-                                                                                       
+                                                                                       Activities = new List<PluginDescriptor>(),
+                                                                                       Agent = new AgentInfo
+                                                                                                   {
+                                                                                                     AgentId = "TestAgent",
+                                                                                                     SiteId = "TestSiteId"
+                                                                                                   },
+                                                                                                   Checks = new List<PluginDescriptor>(),
+                                                                                                   DiscoveryStarted = DateTime.UtcNow,
+                                                                                                   DiscoveryCompleted = DateTime.UtcNow,
+                                                                                                   UnhealthyActivities = new List<PluginDescriptor>(),
+                                                                                                   UnhealthyChecks = new List<PluginDescriptor>()
                                                                                    }
                                                           }))
             {
@@ -32,8 +44,8 @@ namespace Wolfpack.Tests.System
                     .Given(domain.TheActivityIsCorrectlyConfigured)
                     .And(domain.TheAgentIsStarted)
                     .When(domain.TheSessionStartMessageIsSent)
-                    .Then(domain.ThereShouldBe_SessionMessagesReceived, 1)
-                        .And(domain.TheSessionMessageAtIndex_ShouldExactlyMatchTheOneSent, 0)
+                    .Then(domain.ThereShouldBe_SessionMessagesReceived, 2)
+                        .And(domain.TheSessionMessageAtIndex_ShouldExactlyMatchTheOneSent, 1)
                     .ExecuteWithReport();
             }
         }

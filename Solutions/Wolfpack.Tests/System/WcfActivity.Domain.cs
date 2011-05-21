@@ -1,7 +1,6 @@
-using Moq;
+using System.Threading;
 using NUnit.Framework;
 using Wolfpack.Core.Interfaces.Entities;
-using Wolfpack.Core.Interfaces.Magnum;
 using Wolfpack.Core.Wcf;
 using Wolfpack.Tests.Bdd;
 using Wolfpack.Tests.Drivers;
@@ -21,6 +20,8 @@ namespace Wolfpack.Tests.System
         private readonly WcfActivityDomainConfig myConfig;
         private readonly AutomationSessionPublisher mySessionPublisher;
         private readonly AutomationResultPublisher myResultPublisher;
+
+        ManualResetEvent myWait = new ManualResetEvent(false);
 
         public WcfActivityDomain(WcfActivityDomainConfig config)
         {
@@ -69,6 +70,11 @@ namespace Wolfpack.Tests.System
                                                             Uri = myConfig.Uri
                                                         });
             publisher.Publish(myConfig.SessionMessage);
+            myAutomatedAgent.WaitUntil("Session msg is received", 5, () => mySessionPublisher.
+                                                                                  SessionMessagesReceived.Exists(
+                                                                                      msg => (msg.Id.CompareTo(
+                                                                                          myConfig.SessionMessage
+                                                                                              .Id) == 0)));
         }
 
         public void TheAgentIsStarted()

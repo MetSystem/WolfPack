@@ -1,3 +1,5 @@
+using System;
+using System.Threading;
 using Wolfpack.Core;
 using Wolfpack.Core.Interfaces;
 using Wolfpack.Core.Interfaces.Entities;
@@ -16,6 +18,7 @@ namespace Wolfpack.Tests.Drivers
         protected AutomationLoader<IHealthCheckResultPublisher> myResultPublisherLoader;
         protected AutomationLoader<IHealthCheckSchedulerPlugin> myCheckLoader;
         protected AutomationLoader<IActivityPlugin> myActivityLoader;
+        protected ManualResetEventSlim myWaitGate;
 
         public string Name
         {
@@ -29,6 +32,7 @@ namespace Wolfpack.Tests.Drivers
 
         private AutomationProfile()
         {
+            myWaitGate = new ManualResetEventSlim(false);
             myActivityLoader = new AutomationLoader<IActivityPlugin>();
             myCheckLoader = new AutomationLoader<IHealthCheckSchedulerPlugin>();
             myResultPublisherLoader = new AutomationLoader<IHealthCheckResultPublisher>();
@@ -78,6 +82,18 @@ namespace Wolfpack.Tests.Drivers
                                            myActivityLoader);
             myRole.Start();
             return this;
+        }
+
+        public void WaitUntil(string description, int seconds, Func<bool> check)
+        {
+            for (var i = 0; i < seconds; i++)
+            {
+                myWaitGate.Wait(1000);
+                if (check())
+                    return;
+            }
+
+            throw new TimeoutException(string.Format("Timed out after {0}s waiting for {1}", seconds, description));
         }
     }
 }
