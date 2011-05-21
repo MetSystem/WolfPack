@@ -23,7 +23,7 @@ namespace Wolfpack.Tests.System
         {
             using (var domain = new WcfActivityDomain(new WcfActivityDomainConfig
                                                           {
-                                                              Uri = "http://ipv4.fiddler:802/Wolfpack",
+                                                              Uri = "http://localhost:802/Wolfpack",
                                                               SessionMessage = new HealthCheckAgentStart
                                                                                    {
                                                                                        Activities = new List<PluginDescriptor>(),

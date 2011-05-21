@@ -1,5 +1,6 @@
 using System.Threading;
 using NUnit.Framework;
+using Wolfpack.Core;
 using Wolfpack.Core.Interfaces.Entities;
 using Wolfpack.Core.Wcf;
 using Wolfpack.Tests.Bdd;
@@ -57,8 +58,9 @@ namespace Wolfpack.Tests.System
         public void TheSessionMessageAtIndex_ShouldExactlyMatchTheOneSent(int index)
         {
             var received = mySessionPublisher.SessionMessagesReceived[index];
-
-            Assert.That(received.Id, Is.EqualTo(myConfig.SessionMessage.Id));
+            var rXml = SerialisationHelper<HealthCheckAgentStart>.DataContractSerialize(received);
+            var eXml = SerialisationHelper<HealthCheckAgentStart>.DataContractSerialize(myConfig.SessionMessage);
+            Assert.That(rXml, Is.EqualTo(eXml));
         }
 
         public void TheSessionStartMessageIsSent()
