@@ -22,7 +22,7 @@
   
   <Target Name="Merge" DependsOnTargets="ValidateParams">
     <!--
-    <Exec Command="%22$(ILMergePath)%22 /t:library /out:FluentGeoApi.dll IAgile.Platform.Geo.GeoApi.dll IAgile.Platform.Geo.dll Newtonsoft.Json.Net20.dll /v2" 
+    <Exec Command="%22$(ILMergePath)%22 /t:library /out:[the main output].dll [input dlls].dll /v2" 
           WorkingDirectory="$(TargetFolder)"/>
     -->
   </Target>
