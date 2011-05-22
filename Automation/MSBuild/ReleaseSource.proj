@@ -8,6 +8,7 @@
 		<pReleaseNumber/>
 		<pProjectFolder/>
 
+		<SolutionPath>$(pProjectFolder)\Solutions\$(pSolutionFile)</SolutionPath>
 		<ReleaseFolder>$(pProjectFolder)\Releases\v$(pReleaseNumber)</ReleaseFolder>
 		<TargetFolder>$(ReleaseFolder)\Source</TargetFolder>
 		<SourceZipFile>$(TargetFolder)\..\Source_v$(pReleaseNumber).zip</SourceZipFile>
@@ -45,7 +46,7 @@
 	<Target Name="CopySourceFiles">
 		<!-- Solution files -->
 		<BuildTask Action ="ParseSolutionItems"
-               SolutionFile="$(pSolutionFile)"
+               SolutionFile="$(SolutionPath)"
                TargetFolder="$(TargetFolder)">
 			<Output TaskParameter="OutputItems" ItemName="SolutionItems"/>
 		</BuildTask>
@@ -53,7 +54,7 @@
 
 		<!-- Project files -->
 		<BuildTask Action ="ParseSolutionProjects"
-               SolutionFile="$(pSolutionFile)"
+               SolutionFile="$(SolutionPath)"
                TargetFolder="$(TargetFolder)">
 			<Output TaskParameter="OutputItems" ItemName="ProjectFiles"/>
 		</BuildTask>
@@ -68,7 +69,7 @@
 		<Copy SourceFiles="@(ReferenceFiles)" DestinationFiles="@(ReferenceFiles->'%(Destination)')" />
 
 		<!-- Solution file -->
-		<Copy SourceFiles="$(pSolutionFile)" DestinationFolder="$(TargetFolder)" />       
+		<Copy SourceFiles="$(SolutionPath)" DestinationFolder="$(TargetFolder)" />       
 	</Target>
 
 	<Target Name="SetAssemblyVersion">

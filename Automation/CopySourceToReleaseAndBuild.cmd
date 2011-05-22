@@ -1,3 +1,3 @@
 pushd ..\
-msbuild.exe Automation\msbuild\ReleaseSource.proj /p:pSolutionFile=Solutions\Wolfpack.sln;pProjectFolder=%cd%;pReleaseNumber=%1
+msbuild.exe Automation\msbuild\ReleaseSource.proj /p:pProjectFolder=%cd%;pSolutionFile=Wolfpack.sln;pReleaseNumber=%1
 
