@@ -1,42 +1,21 @@
-using System.Threading;
-using NUnit.Framework;
-using Wolfpack.Core;
 using Wolfpack.Core.Interfaces.Entities;
 using Wolfpack.Core.Wcf;
-using Wolfpack.Tests.Bdd;
-using Wolfpack.Tests.Drivers;
 
 namespace Wolfpack.Tests.System
 {
-    public class WcfActivityDomainConfig
+    public class WcfActivityDomainConfig : CommunicationActivityDomainConfig
     {
         public string Uri { get; set; }
-        public HealthCheckAgentStart SessionMessage { get; set; }
-        public HealthCheckResult ResultMessage { get; set; }
     }
 
-    public class WcfActivityDomain : BddTestDomain
+    public class WcfActivityDomain : CommunicationActivityDomainBase<WcfActivityDomainConfig>
     {
-        private readonly AutomationProfile myAutomatedAgent;
-        private readonly WcfActivityDomainConfig myConfig;
-        private readonly AutomationSessionPublisher mySessionPublisher;
-        private readonly AutomationResultPublisher myResultPublisher;
-
-        ManualResetEvent myWait = new ManualResetEvent(false);
-
         public WcfActivityDomain(WcfActivityDomainConfig config)
-        {
-            myConfig = config;
-            myAutomatedAgent = AutomationProfile.Configure();
-            mySessionPublisher = new AutomationSessionPublisher();
-            myResultPublisher = new AutomationResultPublisher();
-        }
-
-        public override void Dispose()
+            : base(config)
         {
         }
 
-        public void TheActivityIsCorrectlyConfigured()
+        public override void TheActivityIsCorrectlyConfigured()
         {
             myAutomatedAgent.Run(new WcfServiceHost(new WcfServiceHostConfig
                                                         {
@@ -50,20 +29,7 @@ namespace Wolfpack.Tests.System
                 .Run(myResultPublisher);
         }
 
-        public void ThereShouldBe_SessionMessagesReceived(int expected)
-        {
-            Assert.That(mySessionPublisher.SessionMessagesReceived.Count, Is.EqualTo(expected));
-        }
-
-        public void TheSessionMessageAtIndex_ShouldExactlyMatchTheOneSent(int index)
-        {
-            var received = mySessionPublisher.SessionMessagesReceived[index];
-            var rXml = SerialisationHelper<HealthCheckAgentStart>.DataContractSerialize(received);
-            var eXml = SerialisationHelper<HealthCheckAgentStart>.DataContractSerialize(myConfig.SessionMessage);
-            Assert.That(rXml, Is.EqualTo(eXml));
-        }
-
-        public void TheSessionStartMessageIsSent()
+        public override void TheSessionStartMessageIsSent()
         {
             var publisher = new WcfSessionPublisher(new WcfPublisherConfiguration
                                                         {
@@ -72,16 +38,11 @@ namespace Wolfpack.Tests.System
                                                             Uri = myConfig.Uri
                                                         });
             publisher.Publish(myConfig.SessionMessage);
-            myAutomatedAgent.WaitUntil("Session msg is received", 5, () => mySessionPublisher.
-                                                                                  SessionMessagesReceived.Exists(
-                                                                                      msg => (msg.Id.CompareTo(
-                                                                                          myConfig.SessionMessage
-                                                                                              .Id) == 0)));
-        }
-
-        public void TheAgentIsStarted()
-        {
-            myAutomatedAgent.Start();
+            myAutomatedAgent.WaitUntil("Session msg is received", 10, () => mySessionPublisher.
+                                                                               SessionMessagesReceived.Exists(
+                                                                                   msg => (msg.Id.CompareTo(
+                                                                                       myConfig.SessionMessage
+                                                                                           .Id) == 0)));
         }
     }
 }

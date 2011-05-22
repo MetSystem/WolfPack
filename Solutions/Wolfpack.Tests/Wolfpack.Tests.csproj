@@ -46,6 +46,14 @@
     <Reference Include="Moq">
       <HintPath>..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
     </Reference>
+    <Reference Include="NServiceBus, Version=2.5.0.0, Culture=neutral, PublicKeyToken=349438b4be075135, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\NServiceBus\v2.5\NServiceBus.dll</HintPath>
+    </Reference>
+    <Reference Include="NServiceBus.Core, Version=2.5.0.0, Culture=neutral, PublicKeyToken=349438b4be075135, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\NServiceBus\v2.5\NServiceBus.Core.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.5.10.11092\lib\nunit.framework.dll</HintPath>
     </Reference>
@@ -67,6 +75,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -96,6 +105,9 @@
     <Compile Include="Growl\NotificationFinaliserTests.cs" />
     <Compile Include="Mocks\MockMessenger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="System\NsbActivity.Domain.cs" />
+    <Compile Include="System\NsbActivity.Specs.cs" />
+    <Compile Include="System\CommunicationActivityDomainBase.cs" />
     <Compile Include="System\WcfActivity.Domain.cs" />
     <Compile Include="System\WcfActivity.Specs.cs" />
     <Compile Include="Timers\TwentyFourSevenTimerTests.cs" />

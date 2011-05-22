@@ -14,6 +14,7 @@ namespace Wolfpack.Tests.Drivers
     public class AutomationProfile : IRoleProfile
     {
         protected IRolePlugin myRole;
+        protected AutomationLoader<IStartupPlugin> myStartupLoader;
         protected AutomationLoader<IHealthCheckSessionPublisher> mySessionPublisherLoader;
         protected AutomationLoader<IHealthCheckResultPublisher> myResultPublisherLoader;
         protected AutomationLoader<IHealthCheckSchedulerPlugin> myCheckLoader;
@@ -33,6 +34,7 @@ namespace Wolfpack.Tests.Drivers
         private AutomationProfile()
         {
             myWaitGate = new ManualResetEventSlim(false);
+            myStartupLoader = new AutomationLoader<IStartupPlugin>();
             myActivityLoader = new AutomationLoader<IActivityPlugin>();
             myCheckLoader = new AutomationLoader<IHealthCheckSchedulerPlugin>();
             myResultPublisherLoader = new AutomationLoader<IHealthCheckResultPublisher>();
@@ -42,6 +44,12 @@ namespace Wolfpack.Tests.Drivers
         public static AutomationProfile Configure()
         {
            return new AutomationProfile(); 
+        }
+
+        public AutomationProfile Run(IStartupPlugin plugin)
+        {
+            myStartupLoader.Add(plugin);
+            return this;
         }
 
         public AutomationProfile Run(IHealthCheckSchedulerPlugin plugin)
@@ -70,6 +78,8 @@ namespace Wolfpack.Tests.Drivers
 
         public AutomationProfile Start()
         {
+            RunStartupPlugins();
+
             Messenger.Initialise(new MagnumMessenger());
 
             myRole = new Agent.Roles.Agent(new AgentConfiguration
@@ -84,6 +94,14 @@ namespace Wolfpack.Tests.Drivers
             return this;
         }
 
+        protected virtual void RunStartupPlugins()
+        {
+            IStartupPlugin[] plugins;
+
+            if (!myStartupLoader.Load(out plugins, p => p.InitialiseIfEnabled()))
+                return;
+        }
+
         public void WaitUntil(string description, int seconds, Func<bool> check)
         {
             for (var i = 0; i < seconds; i++)
@@ -93,7 +111,7 @@ namespace Wolfpack.Tests.Drivers
                     return;
             }
 
-            throw new TimeoutException(string.Format("Timed out after {0}s waiting for {1}", seconds, description));
+            throw new TimeoutException(string.Format("Timed out after {0}s waiting for event '{1}'", seconds, description));
         }
     }
 }
