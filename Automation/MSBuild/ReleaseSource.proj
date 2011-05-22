@@ -68,6 +68,14 @@
 		</BuildTask>
 		<Copy SourceFiles="@(ReferenceFiles)" DestinationFiles="@(ReferenceFiles->'%(Destination)')" />
 
+		<!-- NuGet Package files -->
+		<BuildTask Action ="GetSolutionFiles"
+               SourceFolder="$(pProjectFolder)\Solutions\packages"
+               TargetFolder="$(TargetFolder)">
+			<Output TaskParameter="OutputItems" ItemName="NuGetPackageFiles"/>
+		</BuildTask>
+		<Copy SourceFiles="@(NuGetPackageFiles)" DestinationFiles="@(NuGetPackageFiles->'%(Destination)')" />
+
 		<!-- Solution file -->
 		<Copy SourceFiles="$(SolutionPath)" DestinationFolder="$(TargetFolder)" />       
 	</Target>
