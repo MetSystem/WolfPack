@@ -132,11 +132,6 @@
     <Compile Include="Containers\InterceptorBase.cs" />
     <Compile Include="Containers\WindsorContainer.cs" />
     <Compile Include="Database\AdhocCommandBase.cs" />
-    <Compile Include="Database\MongoDb\AgentData.cs" />
-    <Compile Include="Database\MongoDb\MongoDbConfiguration.cs" />
-    <Compile Include="Database\MongoDb\MongoDbHealthCheckResultPublisher.cs" />
-    <Compile Include="Database\MongoDb\MongoDbHealthCheckSessionPublisher.cs" />
-    <Compile Include="Database\MongoDb\MongoDbPublisherBase.cs" />
     <Compile Include="Database\Oracle\OracleAdhocCommand.cs" />
     <Compile Include="Database\Oracle\OracleStatement.cs" />
     <Compile Include="Database\SmartConnectionString.cs" />
