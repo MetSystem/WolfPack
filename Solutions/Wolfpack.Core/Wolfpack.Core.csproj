@@ -118,11 +118,13 @@
     <Compile Include="Bus\HealthCheckResultNotification.cs" />
     <Compile Include="Checks\FileInfoCheck.cs" />
     <Compile Include="Checks\FolderInfoCheck.cs" />
+    <Compile Include="Checks\HealthCheckBase.cs" />
     <Compile Include="Checks\MsmqQueueInfoCheck.cs" />
     <Compile Include="Checks\MsmqQueueNotEmptyCheck.cs" />
     <Compile Include="Checks\OracleScalarCheck.cs" />
     <Compile Include="Checks\ScalarCheckBase.cs" />
     <Compile Include="Checks\SqlScalarCheck.cs" />
+    <Compile Include="Checks\StreamThresholdCheckBase.cs" />
     <Compile Include="Checks\UrlPingCheck.cs" />
     <Compile Include="Checks\WindowsServiceStartupCheck.cs" />
     <Compile Include="Checks\WindowsServiceStateCheck.cs" />

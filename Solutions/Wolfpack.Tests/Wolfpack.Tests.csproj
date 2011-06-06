@@ -92,6 +92,8 @@
     <Compile Include="Bdd\BddTestDomain.cs" />
     <Compile Include="Bdd\GeckoboardDataServiceDomain.cs" />
     <Compile Include="Bdd\HealthCheckDomain.cs" />
+    <Compile Include="Checks\StreamThresholdBased.Specs.cs" />
+    <Compile Include="Checks\StreamThresholdBased.Domain.cs" />
     <Compile Include="Checks\WindowServiceStartup.Domain.cs" />
     <Compile Include="Checks\WindowServiceStartup.Specs.cs" />
     <Compile Include="Checks\WindowServiceState.Domain.cs" />
