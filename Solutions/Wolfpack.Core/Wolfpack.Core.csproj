@@ -116,6 +116,7 @@
     <Compile Include="Bus\BusZeroConfig.cs" />
     <Compile Include="Bus\HealthCheckAgentStartNotification.cs" />
     <Compile Include="Bus\HealthCheckResultNotification.cs" />
+    <Compile Include="Checks\DiskSpaceCheck.cs" />
     <Compile Include="Checks\CpuCheck.cs" />
     <Compile Include="Checks\FileInfoCheck.cs" />
     <Compile Include="Checks\FolderInfoCheck.cs" />
