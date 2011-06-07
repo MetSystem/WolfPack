@@ -20,7 +20,7 @@ namespace Wolfpack.Tests.Checks
         {
             using (var domain = new StreamThresholdBasedDomain())
             {
-                Feature.WithScenario("Configured not to publish stream data and no alert threshold has been specified but a lower then threshold result is generated")
+                Feature.WithScenario("No stream or threshold set")
                     .Given(domain.TheCheckComponent)
                     .When(domain.TheHealthCheckIsInvoked)
                     .Then(domain.ShouldHavePublished_Messages, 0);

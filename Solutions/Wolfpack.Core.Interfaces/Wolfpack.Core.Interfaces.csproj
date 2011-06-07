@@ -51,6 +51,7 @@
     <Compile Include="Entities\Binding.cs" />
     <Compile Include="Entities\BindingConfiguration.cs" />
     <Compile Include="Entities\ConfigBase.cs" />
+    <Compile Include="Entities\StreamThresholdCheckConfigBase.cs" />
     <Compile Include="Entities\CriticalFailureDetails.cs" />
     <Compile Include="Entities\HealthCheckAgentStart.cs" />
     <Compile Include="Entities\HealthCheckData.cs" />

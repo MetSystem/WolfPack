@@ -2,10 +2,10 @@ using Wolfpack.Core.Interfaces.Entities;
 
 namespace Wolfpack.Core.Checks
 {
-    public abstract class StreamThresholdCheckBase : HealthCheckBase
+    public abstract class StreamThresholdCheckBase<T> : HealthCheckBase 
+        where T : StreamThresholdCheckConfigBase
     {
-        public bool StreamData { get; set; }
-        public double? Threshold { get; set; }
+        protected T myConfig;
 
         protected override void Publish(HealthCheckData message)
         {
@@ -14,7 +14,7 @@ namespace Wolfpack.Core.Checks
             if (breached)
                 AdjustMessageForBreach(message);
 
-            if (StreamData || breached)
+            if (myConfig.StreamData || breached)
                 base.Publish(message);
         }
 
@@ -25,11 +25,11 @@ namespace Wolfpack.Core.Checks
 
         protected virtual bool IsThresholdBreached(double? resultCount)
         {
-            if (!Threshold.HasValue)
+            if (!myConfig.Threshold.HasValue)
                 return false;
             if (!resultCount.HasValue)
                 return false;
-            return (resultCount.Value > Threshold.Value);
+            return (resultCount.Value > myConfig.Threshold.Value);
         }
     }
 }
