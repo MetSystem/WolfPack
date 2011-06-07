@@ -35,12 +35,12 @@ namespace Wolfpack.Core.Checks
             var sample = myCounter.NextSample();
             Thread.Sleep(1000);
             var sample2 = myCounter.NextSample();
-            var value = Math.Round(CounterSampleCalculator.ComputeCounterValue(sample, sample2));
+            var value = 100 - Math.Round(CounterSampleCalculator.ComputeCounterValue(sample, sample2));
 
             Publish(new HealthCheckData
                         {
                             Identity = Identity,
-                            Info = string.Format("Free disk space on drive '{0}' is {1}%", myConfig.Drive, value),
+                            Info = string.Format("Disk space used on drive '{0}' is {1}%", myConfig.Drive, value),
                             Result = true,
                             ResultCount = value
                         });
@@ -51,7 +51,7 @@ namespace Wolfpack.Core.Checks
         {
             return new PluginDescriptor
             {
-                Description = "Reports the free disk space as %",
+                Description = "Reports the used disk space as %",
                 TypeId = new Guid("F99F603F-B010-450D-8860-248340003E58"),
                 Name = myConfig.FriendlyId
             };
