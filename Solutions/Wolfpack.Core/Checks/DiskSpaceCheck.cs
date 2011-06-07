@@ -42,7 +42,9 @@ namespace Wolfpack.Core.Checks
                             Identity = Identity,
                             Info = string.Format("Disk space used on drive '{0}' is {1}%", myConfig.Drive, value),
                             Result = true,
-                            ResultCount = value
+                            ResultCount = value,
+                            // allows you to find/filter on the specific drive when reporting
+                            Tags = myConfig.Drive
                         });
 
         }
