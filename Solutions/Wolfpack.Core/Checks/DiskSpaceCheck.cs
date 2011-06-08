@@ -19,8 +19,8 @@ namespace Wolfpack.Core.Checks
         /// default ctor
         /// </summary>
         public DiskSpaceCheck(DiskSpaceCheckConfig config)
+            : base(config)
         {
-            myConfig = config;
         }
 
         public override void  Initialise()

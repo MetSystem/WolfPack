@@ -99,6 +99,7 @@
     <Compile Include="Checks\WindowServiceState.Domain.cs" />
     <Compile Include="Checks\WindowServiceState.Specs.cs" />
     <Compile Include="CmdLineArgTests.cs" />
+    <Compile Include="Drivers\AutomationHealthCheck.cs" />
     <Compile Include="Drivers\AutomationLoader.cs" />
     <Compile Include="Drivers\AutomationProfile.cs" />
     <Compile Include="Drivers\AutomationSessionPublisher.cs" />

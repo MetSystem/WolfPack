@@ -7,6 +7,11 @@ namespace Wolfpack.Core.Checks
     {
         protected T myConfig;
 
+        protected StreamThresholdCheckBase(T config)
+        {
+            myConfig = config;
+        }
+
         protected override void Publish(HealthCheckData message)
         {
             var breached = IsThresholdBreached(message.ResultCount);

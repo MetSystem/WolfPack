@@ -18,8 +18,8 @@ namespace Wolfpack.Core.Checks
         /// default ctor
         /// </summary>
         public CpuCheck(CpuCheckConfig config)
+            : base(config)
         {
-            myConfig = config;
         }
 
         public override void  Initialise()
