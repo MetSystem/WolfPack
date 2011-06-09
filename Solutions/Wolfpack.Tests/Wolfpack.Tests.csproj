@@ -92,6 +92,8 @@
     <Compile Include="Bdd\BddTestDomain.cs" />
     <Compile Include="Bdd\GeckoboardDataServiceDomain.cs" />
     <Compile Include="Bdd\HealthCheckDomain.cs" />
+    <Compile Include="BuildParser\NCoverSummaryReportParser.Domain.cs" />
+    <Compile Include="BuildParser\NCoverSummaryReportParser.Specs.cs" />
     <Compile Include="Checks\StreamThresholdBased.Specs.cs" />
     <Compile Include="Checks\StreamThresholdBased.Domain.cs" />
     <Compile Include="Checks\WindowServiceStartup.Domain.cs" />
@@ -122,6 +124,10 @@
     <ProjectReference Include="..\Wolfpack.Agent\Wolfpack.Agent.csproj">
       <Project>{5A1F7719-5EC2-46C3-9E4A-1BAD421EE291}</Project>
       <Name>Wolfpack.Agent</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Wolfpack.Contrib.BuildParser\Wolfpack.Contrib.BuildParser.csproj">
+      <Project>{268EDFED-8801-4FE8-B5FF-08FB6DC6352D}</Project>
+      <Name>Wolfpack.Contrib.BuildParser</Name>
     </ProjectReference>
     <ProjectReference Include="..\Wolfpack.Core.Interfaces.Castle\Wolfpack.Core.Interfaces.Castle.csproj">
       <Project>{98CD5D7E-5A81-4F65-9E56-F589311899C3}</Project>
