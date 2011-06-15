@@ -28,16 +28,23 @@ namespace Wolfpack.Core.Bridge.FileSystem
                                                                  {
                                                                      string data;
 
+                                                                     Logger.Debug("FileSystemBridge: Processing file '{0}'", filename);
                                                                      using (var sr = new StreamReader(filename))
                                                                      {
                                                                          data = sr.ReadToEnd();
                                                                      }
-
-                                                                     var result =
-                                                                         SerialisationHelper<HealthCheckResult>.
-                                                                             DataContractDeserialize(data);
-
-                                                                     Messenger.Publish(result);
+                                                                   
+                                                                     switch (Path.GetFileName(filename)[0])
+                                                                     {
+                                                                         case 'S':
+                                                                             Messenger.Publish(SerialisationHelper<HealthCheckAgentStart>.
+                                                                                     DataContractDeserialize(data));
+                                                                             break;
+                                                                         case 'R':
+                                                                             Messenger.Publish(SerialisationHelper<HealthCheckResult>.
+                                                                                     DataContractDeserialize(data));
+                                                                             break;
+                                                                     }
                                                                      File.Delete(filename);
                                                                  });
         }

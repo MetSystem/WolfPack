@@ -51,7 +51,7 @@ namespace Wolfpack.Core.Bridge.FileSystem
 
         public void Consume(HealthCheckAgentStart message)
         {
-            Publish(message, message.Id.ToString());
+            Publish(message, "S" + message.Id);
         }
     }
 
@@ -65,7 +65,7 @@ namespace Wolfpack.Core.Bridge.FileSystem
 
         public void Consume(HealthCheckResult message)
         {
-            Publish(message, message.Id.ToString());
+            Publish(message, "R" + message.Id);
         }
     }
 }
