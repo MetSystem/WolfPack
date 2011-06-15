@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{80978B3A-CE91-478C-9F4C-F317D1C3A09F}</ProjectGuid>
+    <ProjectGuid>{4B298374-8549-47E0-8D35-F3560F72FCE1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Wolfpack.Contrib.BuildAnalytics</RootNamespace>
-    <AssemblyName>Wolfpack.Contrib.BuildAnalytics</AssemblyName>
+    <RootNamespace>Wolfpack.Contrib.LogParser</RootNamespace>
+    <AssemblyName>Wolfpack.Contrib.LogParser</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,17 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="HtmlAgilityPack">
-      <HintPath>..\packages\HtmlAgilityPack.1.4.0\lib\HtmlAgilityPack.dll</HintPath>
-    </Reference>
-    <Reference Include="ICSharpCode.SharpZipLib">
-      <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
-    </Reference>
-    <Reference Include="Magnum">
-      <HintPath>..\packages\Magnum.1.1.1.0\lib\NET40\Magnum.dll</HintPath>
-    </Reference>
-    <Reference Include="Sharp2City">
-      <HintPath>..\References\Sharp2City\Sharp2City.dll</HintPath>
+    <Reference Include="Interop.MSUtil">
+      <HintPath>..\References\LogParser\Interop.MSUtil.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -58,21 +50,28 @@
     <Compile Include="..\Build\Common\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Interfaces\Entities\BuildParserConfigBase.cs" />
-    <Compile Include="Publishers\BuildResultPublisherBase.cs" />
-    <Compile Include="Parsers\StoryQXmlReportParser.cs" />
-    <Compile Include="Parsers\NCoverHtmlSummaryReportParser.cs" />
+    <Compile Include="CSVLogParserCheck.cs" />
+    <Compile Include="EVTLogParserCheck.cs" />
+    <Compile Include="FSLogParserCheck.cs" />
+    <Compile Include="IISLogParserCheck.cs" />
+    <Compile Include="IISW3CLogParserCheck.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Checks\TeamCityBuildNotificationCheck.cs" />
+    <Compile Include="REGLogParserCheck.cs" />
+    <Compile Include="ScalarLogParserCheckBase.cs" />
+    <Compile Include="TextLineLogParserCheck.cs" />
+    <Compile Include="TSVLogParserCheck.cs" />
+    <Compile Include="URLSCANLogParserCheck.cs" />
+    <Compile Include="W3CLogParserCheck.cs" />
+    <Compile Include="XMLLogParserCheck.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <Content Include="MonitorWang.Contrib.Checks.LogParser.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Wolfpack.Core.Interfaces.Magnum\Wolfpack.Core.Interfaces.Magnum.csproj">
-      <Project>{2CFB5B81-6F29-43C7-A539-CF185A5AFD0E}</Project>
-      <Name>Wolfpack.Core.Interfaces.Magnum</Name>
-    </ProjectReference>
+    <None Include="Config\logparser.binding.castle.config" />
+    <None Include="Config\logparser.check.castle.config" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Wolfpack.Core.Interfaces\Wolfpack.Core.Interfaces.csproj">
       <Project>{21083526-1E2F-468C-A08B-D2CAC99EC4FC}</Project>
       <Name>Wolfpack.Core.Interfaces</Name>
@@ -82,10 +81,13 @@
       <Name>Wolfpack.Core</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Config\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy $(TargetDir)$(TargetName).* $(SolutionDir)Wolfpack.Agent\bin\Debug /Y /R /I
+xcopy $(TargetDir)Interop.MSUtil.dll $(SolutionDir)Wolfpack.Agent\bin\Debug /Y /R
+xcopy $(ProjectDir)Config\*.config $(SolutionDir)Wolfpack.Agent\bin\Debug\Config /Y /R /I</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

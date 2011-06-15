@@ -14,12 +14,12 @@ namespace Wolfpack.Contrib.BuildAnalytics.Parsers
 
     public class NCoverHtmlSummaryReportParser : FilteredResultPublisherBase<NCoverHtmlSummaryReportParserConfig>
     {
-        public NCoverHtmlSummaryReportParser(NCoverHtmlSummaryReportParserConfig config) 
-            : base(config, msg => msg.Check.Result.GetValueOrDefault(false))
+        public NCoverHtmlSummaryReportParser(NCoverHtmlSummaryReportParserConfig config)
+            : base(config, config.TargetHealthCheckName)
         {
         }
 
-        protected override void Publish(HealthCheckResult originalMessage)
+        protected override void Publish(HealthCheckResult buildResult)
         {
             if (string.IsNullOrWhiteSpace(Config.ReportFile))
                 return;

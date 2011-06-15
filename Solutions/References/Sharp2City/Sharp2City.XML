@@ -4,6 +4,98 @@
         <name>Sharp2City</name>
     </assembly>
     <members>
+        <member name="T:Sharp2City.ProcessArtifactsCallback">
+            <summary>
+            A method that processes the downloaded artifact.
+            </summary>
+            <param name="fileName">A name of the temporary file of the artifacts.</param>
+            <remarks>The Download is only temporary available; it will be deleted after the execution
+            of this method.</remarks>
+        </member>
+        <member name="T:Sharp2City.TeamCityBuild">
+            <summary>
+              Information about a Team City Build
+            </summary>
+        </member>
+        <member name="T:Sharp2City.TeamCityBuildBase">
+            <summary>
+            </summary>
+        </member>
+        <member name="F:Sharp2City.TeamCityBuildBase.buildId">
+            <summary>
+              The Build Id
+            </summary>
+        </member>
+        <member name="F:Sharp2City.TeamCityBuildBase.buildTypeId">
+            <summary>
+              The Build Type Id of the build configuration this build belongs to.
+            </summary>
+        </member>
+        <member name="F:Sharp2City.TeamCityBuildBase.status">
+            <summary>
+              The Build Status
+            </summary>
+        </member>
+        <member name="M:Sharp2City.TeamCityBuildBase.#ctor(Sharp2City.XmlDependencyBuild)">
+            <summary>
+              Initializes a new instance of the <see cref="T:Sharp2City.TeamCityBuild"/> class.
+            </summary>
+            <param name="xmlDependencyBuild">The deserialized Response from TeamCity</param>
+        </member>
+        <member name="M:Sharp2City.TeamCityBuildBase.ToString">
+            <summary>
+              Returns a <see cref="T:System.String"/> that represents this instance.
+            </summary>
+            <returns>
+              A <see cref="T:System.String"/> that represents this instance.
+            </returns>
+        </member>
+        <member name="P:Sharp2City.TeamCityBuildBase.BuildId">
+            <summary>
+              Gets the BuildId of the Build
+            </summary>
+        </member>
+        <member name="P:Sharp2City.TeamCityBuildBase.BuildStatus">
+            <summary>
+              Gets the Status of the Build
+            </summary>
+        </member>
+        <member name="P:Sharp2City.TeamCityBuildBase.BuildTypeId">
+            <summary>
+              Gets the BuildTypeId of the Build
+            </summary>
+        </member>
+        <member name="F:Sharp2City.TeamCityBuild.dependencyBuilds">
+            <summary>
+            Any builds this build depends on.
+            </summary>
+        </member>
+        <member name="M:Sharp2City.TeamCityBuild.#ctor(Sharp2City.XmlBuildDetailed)">
+            <summary>
+              Initializes a new instance of the <see cref="T:Sharp2City.TeamCityBuild"/> class.
+            </summary>
+            <param name="xmlBuildDetailed">The deserialized Response from TeamCity</param>
+        </member>
+        <member name="P:Sharp2City.TeamCityBuild.DependencyBuilds">
+            <summary>
+              Gets the builds this build is dependent on.
+            </summary>
+        </member>
+        <member name="P:Sharp2City.TeamCityBuild.StartDate">
+            <summary>
+             Start date of the build
+            </summary>
+        </member>
+        <member name="P:Sharp2City.TeamCityBuild.FinishDate">
+            <summary>
+            Finish date of the build
+            </summary>
+        </member>
+        <member name="P:Sharp2City.TeamCityBuild.StatusText">
+            <summary>
+            Descriptive status from TeamCity
+            </summary>
+        </member>
         <member name="T:Sharp2City.TeamCityBuildConfiguration">
             <summary>
               Information about a TeamCity Build Configuration
@@ -74,67 +166,42 @@
               Gets the URL of the TeamCity Webpage
             </summary>
         </member>
-        <member name="T:Sharp2City.TeamCityBuildBase">
+        <member name="M:Sharp2City.TeamCityProject.ToString">
             <summary>
-            </summary>
-        </member>
-        <member name="F:Sharp2City.TeamCityBuildBase.buildId">
-            <summary>
-              The Build Id
-            </summary>
-        </member>
-        <member name="F:Sharp2City.TeamCityBuildBase.buildTypeId">
-            <summary>
-              The Build Type Id of the build configuration this build belongs to.
-            </summary>
-        </member>
-        <member name="F:Sharp2City.TeamCityBuildBase.status">
-            <summary>
-              The Build Status
-            </summary>
-        </member>
-        <member name="M:Sharp2City.TeamCityBuildBase.#ctor(Sharp2City.XmlDependencyBuild)">
-            <summary>
-              Initializes a new instance of the <see cref="T:Sharp2City.TeamCityBuild"/> class.
-            </summary>
-            <param name="xmlDependencyBuild">The deserialized Response from TeamCity</param>
-        </member>
-        <member name="M:Sharp2City.TeamCityBuildBase.ToString">
-            <summary>
-              Returns a <see cref="T:System.String"/> that represents this instance.
+            Returns a <see cref="T:System.String"/> that represents the current <see cref="T:Sharp2City.TeamCityProject"/>.
             </summary>
             <returns>
-              A <see cref="T:System.String"/> that represents this instance.
+            A <see cref="T:System.String"/> that represents the current <see cref="T:Sharp2City.TeamCityProject"/>.
             </returns>
         </member>
-        <member name="P:Sharp2City.TeamCityBuildBase.BuildId">
+        <member name="P:Sharp2City.TeamCityProject.Archived">
             <summary>
-              Gets the BuildId of the Build
+            Gets a value indicating whether this Project is archived or not
             </summary>
         </member>
-        <member name="P:Sharp2City.TeamCityBuildBase.BuildStatus">
+        <member name="P:Sharp2City.TeamCityProject.Description">
             <summary>
-              Gets the Status of the Build
+            Gets the Description of the Project
             </summary>
         </member>
-        <member name="P:Sharp2City.TeamCityBuildBase.BuildTypeId">
+        <member name="P:Sharp2City.TeamCityProject.Href">
             <summary>
-              Gets the BuildTypeId of the Build
+            Gets the Details Url of the Project
             </summary>
         </member>
-        <member name="T:Sharp2City.BuildStatus">
+        <member name="P:Sharp2City.TeamCityProject.Id">
             <summary>
-              Specifies identifiers of the Build Status
+            Gets the ID of the Project
             </summary>
         </member>
-        <member name="F:Sharp2City.BuildStatus.Failed">
+        <member name="P:Sharp2City.TeamCityProject.Name">
             <summary>
-              Build has failed
+            Gets the Name of the Project
             </summary>
         </member>
-        <member name="F:Sharp2City.BuildStatus.Success">
+        <member name="P:Sharp2City.TeamCityProject.WebUrl">
             <summary>
-              Build was successful
+            Gets the Web URL of the Project
             </summary>
         </member>
         <member name="T:Sharp2City.TeamCityConnection">
@@ -191,14 +258,6 @@
             <param name = "uri">The Uri of the Resource to request</param>
             <returns>The Response</returns>
         </member>
-        <member name="T:Sharp2City.ProcessArtifactsCallback">
-            <summary>
-            A method that processes the downloaded artifact.
-            </summary>
-            <param name="fileName">A name of the temporary file of the artifacts.</param>
-            <remarks>The Download is only temporary available; it will be deleted after the execution
-            of this method.</remarks>
-        </member>
         <member name="T:Sharp2City.TeamCityClient">
             <summary>
               The Client for the Team City REST API
@@ -236,6 +295,17 @@
             <param name="userName">Name of the user.</param>
             <param name="password">The password.</param>
             <param name="useSsl">A value indicating whether to use SSL or not</param>
+        </member>
+        <member name="M:Sharp2City.TeamCityClient.#ctor(System.String,System.String,System.String,System.Boolean,System.Boolean)">
+            <summary>
+              Initializes a new instance of the <see cref="T:Sharp2City.TeamCityClient"/> class.
+            </summary>
+            <param name="hostName">Name of the host.</param>
+            <param name="userName">Name of the user.</param>
+            <param name="password">The password.</param>
+            <param name="useSsl">A value indicating whether to use SSL or not</param>
+            <param name="trustSslCertificate">if using SSL and the certificate is not valid (selfcert) then setting
+            this to true will ignore any certificate errors that would normally abort the connection</param>
         </member>
         <member name="M:Sharp2City.TeamCityClient.DownloadArtifacts(System.Int32,Sharp2City.ProcessArtifactsCallback)">
             <summary>
@@ -386,7 +456,12 @@
             Gets a value indicating whether to use SSL or not
             </summary>
         </member>
-        <member name="M:Sharp2City.TeamCityClient.DefaultAccessConfiguration.#ctor(System.String,System.String,System.String,System.Boolean)">
+        <member name="P:Sharp2City.ITeamCityAccessConfiguration.TrustSslCertificate">
+            <summary>
+            Set to true to ignore ssl certificate errors (self cert)
+            </summary>
+        </member>
+        <member name="M:Sharp2City.TeamCityClient.DefaultAccessConfiguration.#ctor(System.String,System.String,System.String,System.Boolean,System.Boolean)">
             <summary>
               Initializes a new instance of the <see cref="T:Sharp2City.TeamCityClient.DefaultAccessConfiguration"/> class.
             </summary>
@@ -394,6 +469,8 @@
             <param name="userName">The Username</param>
             <param name="password">The Password</param>
             <param name="useSsl">A value indicating whether to use SSL or not</param>
+            <param name="trustSslCertificate">if using SSL and the certificate is not valid (selfcert) then setting
+            this to true will ignore any certificate errors that would normally abort the connection</param>
         </member>
         <member name="P:Sharp2City.TeamCityClient.DefaultAccessConfiguration.HostName">
             <summary>
@@ -410,42 +487,6 @@
               Gets the Username
             </summary>
         </member>
-        <member name="T:Sharp2City.TeamCityBuild">
-            <summary>
-              Information about a Team City Build
-            </summary>
-        </member>
-        <member name="F:Sharp2City.TeamCityBuild.dependencyBuilds">
-            <summary>
-            Any builds this build depends on.
-            </summary>
-        </member>
-        <member name="M:Sharp2City.TeamCityBuild.#ctor(Sharp2City.XmlBuildDetailed)">
-            <summary>
-              Initializes a new instance of the <see cref="T:Sharp2City.TeamCityBuild"/> class.
-            </summary>
-            <param name="xmlBuildDetailed">The deserialized Response from TeamCity</param>
-        </member>
-        <member name="P:Sharp2City.TeamCityBuild.DependencyBuilds">
-            <summary>
-              Gets the builds this build is dependent on.
-            </summary>
-        </member>
-        <member name="P:Sharp2City.TeamCityBuild.StartDate">
-            <summary>
-             Start date of the build
-            </summary>
-        </member>
-        <member name="P:Sharp2City.TeamCityBuild.FinishDate">
-            <summary>
-            Finish date of the build
-            </summary>
-        </member>
-        <member name="P:Sharp2City.TeamCityBuild.StatusText">
-            <summary>
-            Descriptive status from TeamCity
-            </summary>
-        </member>
         <member name="T:Sharp2City.TeamCityDependencyBuild">
             <summary>
               Information about a Team City Dependency Build
@@ -457,42 +498,19 @@
             </summary>
             <param name="xmlDependencyBuild">The deserialized Response from TeamCity</param>
         </member>
-        <member name="M:Sharp2City.TeamCityProject.ToString">
+        <member name="T:Sharp2City.BuildStatus">
             <summary>
-            Returns a <see cref="T:System.String"/> that represents the current <see cref="T:Sharp2City.TeamCityProject"/>.
-            </summary>
-            <returns>
-            A <see cref="T:System.String"/> that represents the current <see cref="T:Sharp2City.TeamCityProject"/>.
-            </returns>
-        </member>
-        <member name="P:Sharp2City.TeamCityProject.Archived">
-            <summary>
-            Gets a value indicating whether this Project is archived or not
+              Specifies identifiers of the Build Status
             </summary>
         </member>
-        <member name="P:Sharp2City.TeamCityProject.Description">
+        <member name="F:Sharp2City.BuildStatus.Failed">
             <summary>
-            Gets the Description of the Project
+              Build has failed
             </summary>
         </member>
-        <member name="P:Sharp2City.TeamCityProject.Href">
+        <member name="F:Sharp2City.BuildStatus.Success">
             <summary>
-            Gets the Details Url of the Project
-            </summary>
-        </member>
-        <member name="P:Sharp2City.TeamCityProject.Id">
-            <summary>
-            Gets the ID of the Project
-            </summary>
-        </member>
-        <member name="P:Sharp2City.TeamCityProject.Name">
-            <summary>
-            Gets the Name of the Project
-            </summary>
-        </member>
-        <member name="P:Sharp2City.TeamCityProject.WebUrl">
-            <summary>
-            Gets the Web URL of the Project
+              Build was successful
             </summary>
         </member>
     </members>

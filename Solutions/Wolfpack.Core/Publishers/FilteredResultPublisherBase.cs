@@ -9,7 +9,7 @@ namespace Wolfpack.Core.Publishers
     {
         private readonly string myMatchFriendlyName;
         private readonly Func<HealthCheckResult, bool> myFilter;
-        protected abstract void Publish(HealthCheckResult originalMessage);
+        protected abstract void Publish(HealthCheckResult buildResult);
 
         protected T Config { get; private set; }
 

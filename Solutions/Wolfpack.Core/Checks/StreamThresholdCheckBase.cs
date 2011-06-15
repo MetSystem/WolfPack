@@ -2,14 +2,11 @@ using Wolfpack.Core.Interfaces.Entities;
 
 namespace Wolfpack.Core.Checks
 {
-    public abstract class StreamThresholdCheckBase<T> : HealthCheckBase 
+    public abstract class StreamThresholdCheckBase<T> : HealthCheckBase<T>
         where T : StreamThresholdCheckConfigBase
     {
-        protected T myConfig;
-
-        protected StreamThresholdCheckBase(T config)
+        protected StreamThresholdCheckBase(T config) : base(config)
         {
-            myConfig = config;
         }
 
         protected override void Publish(HealthCheckData message)

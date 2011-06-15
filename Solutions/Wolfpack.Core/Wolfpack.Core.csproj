@@ -106,6 +106,8 @@
     <Compile Include="AppStats\FileQueue\AppStatsFileQueuePublisher.cs" />
     <Compile Include="AppStats\IAppStatsEventOperations.cs" />
     <Compile Include="AppStats\IAppStatsPublisher.cs" />
+    <Compile Include="Bridge\FileSystem\FileSystemBridgeCheck.cs" />
+    <Compile Include="Bridge\FileSystem\FileSystemBridgePublisher.cs" />
     <Compile Include="Bus\AppStatNServiceBusPublisher.cs" />
     <Compile Include="Bus\AppStatsNServiceBus.cs" />
     <Compile Include="Bus\BusBuilder.cs" />
@@ -233,6 +235,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
