@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 namespace Wolfpack.Core.Interfaces.Entities
 {
-    [Serializable]
     public class HealthCheckAgentStart
     {
         /// <summary>
