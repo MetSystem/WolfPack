@@ -39,6 +39,7 @@ namespace Wolfpack.Contrib.BuildAnalytics.Parsers
 
             resultSummary.ForEach(rs => Messenger.Publish(new HealthCheckResult
                                                     {
+                                                        Agent = buildResult.Agent,
                                                         Check = new HealthCheckData
                                                                     {
                                                                         Identity = new PluginDescriptor
@@ -46,8 +47,10 @@ namespace Wolfpack.Contrib.BuildAnalytics.Parsers
                                                                                            Name = string.Format("{0}-StoryQ-{1}", buildResult.Check.Identity.Name,
                                                                                            rs.Result)
                                                                                        },
-                                                                                       ResultCount = rs.Count
-                                                                    }
+                                                                                       ResultCount = rs.Count,
+                                                                                       Tags = rs.Result
+                                                                    },
+                                                                    
                                                     }));
         }
     }

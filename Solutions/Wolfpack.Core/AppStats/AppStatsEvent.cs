@@ -1,11 +1,10 @@
 using System;
+using Wolfpack.Core.Interfaces.Entities;
 
 namespace Wolfpack.Core.AppStats
 {
     public class AppStatsEvent : AppStatsEventExtensions.IAppStatsPieChartContinuation<AppStatsEvent>
-    {
-        public static readonly DateTime BucketBaselineDate = new DateTime(2011, 01, 01);
-
+    {       
         public string SiteId { get; set; }
         public string AgentId { get; set; }
         public string CheckId { get; set; }
@@ -18,9 +17,9 @@ namespace Wolfpack.Core.AppStats
 
         public AppStatsEvent()
         {
-            MinuteBucket = (int)DateTime.UtcNow.Subtract(BucketBaselineDate).TotalMinutes;
-            HourBucket = (int)DateTime.UtcNow.Subtract(BucketBaselineDate).TotalHours;
-            DayBucket = (int)DateTime.UtcNow.Subtract(BucketBaselineDate).TotalDays;
+            MinuteBucket = (int)DateTime.UtcNow.Subtract(HealthCheckResult.BucketBaselineDate).TotalMinutes;
+            HourBucket = (int)DateTime.UtcNow.Subtract(HealthCheckResult.BucketBaselineDate).TotalHours;
+            DayBucket = (int)DateTime.UtcNow.Subtract(HealthCheckResult.BucketBaselineDate).TotalDays;
         }
 
         public AppStatsEvent One()

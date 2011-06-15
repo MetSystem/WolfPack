@@ -10,7 +10,7 @@ namespace Wolfpack.Core.AppStats.FileQueue
 
         public AppStatsFileQueuePublisher(string folder)
         {
-            myFolder = folder;
+            myFolder = SmartLocation.GetLocation(folder);
         }
 
         public override void Publish(AppStatsEvent stat)

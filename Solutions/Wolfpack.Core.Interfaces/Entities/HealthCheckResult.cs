@@ -5,6 +5,8 @@ namespace Wolfpack.Core.Interfaces.Entities
 {
     public class HealthCheckResult
     {
+        public static readonly DateTime BucketBaselineDate = new DateTime(2011, 01, 01);
+
         /// <summary>
         /// A unique identifier for this message
         /// </summary>
@@ -47,6 +49,11 @@ namespace Wolfpack.Core.Interfaces.Entities
         {
             Id = Guid.NewGuid();
             EventType = "Result";
+
+            MinuteBucket = (int)DateTime.UtcNow.Subtract(BucketBaselineDate).TotalMinutes;
+            HourBucket = (int)DateTime.UtcNow.Subtract(BucketBaselineDate).TotalHours;
+            DayBucket = (int)DateTime.UtcNow.Subtract(BucketBaselineDate).TotalDays;
+
         }
 
         /// <summary>

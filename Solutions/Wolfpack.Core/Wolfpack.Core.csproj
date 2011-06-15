@@ -107,7 +107,7 @@
     <Compile Include="AppStats\IAppStatsEventOperations.cs" />
     <Compile Include="AppStats\IAppStatsPublisher.cs" />
     <Compile Include="Bridge\FileSystem\FileSystemBridgeCheck.cs" />
-    <Compile Include="Bridge\FileSystem\FileSystemBridgePublisher.cs" />
+    <Compile Include="Bridge\FileSystem\FileSystemBridgePublishers.cs" />
     <Compile Include="Bus\AppStatNServiceBusPublisher.cs" />
     <Compile Include="Bus\AppStatsNServiceBus.cs" />
     <Compile Include="Bus\BusBuilder.cs" />
@@ -228,8 +228,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Growl\agent.png" />
-    <Content Include="Growl\growl.monitor.png" />
+    <Content Include="Growl\agent.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Growl\growl.monitor.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
