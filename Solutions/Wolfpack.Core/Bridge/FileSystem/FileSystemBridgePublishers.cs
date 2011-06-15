@@ -10,12 +10,12 @@ namespace Wolfpack.Core.Bridge.FileSystem
         public string Folder { get; set; }
     }
 
-    public class FileSystemBridgePublisher : PublisherBase, IHealthCheckResultPublisher, IHealthCheckSessionPublisher
+    public abstract class FileSystemBridgePublisherBase<T> : PublisherBase
     {
-        private readonly string myFolder;
+        protected readonly string myFolder;
         private readonly object mySyncLock = new object();
 
-        public FileSystemBridgePublisher(FileSystemBridgePublisherConfig config)
+        protected FileSystemBridgePublisherBase(FileSystemBridgePublisherConfig config)
         {
             myFolder = SmartLocation.GetLocation(config.Folder);
 
@@ -23,7 +23,7 @@ namespace Wolfpack.Core.Bridge.FileSystem
             FriendlyId = config.FriendlyId; 
         }
 
-        public void Publish<T>(T message, string id)
+        public void Publish(T message, string id)
         {
             // hmmm, performance?
             lock (mySyncLock)
@@ -39,13 +39,31 @@ namespace Wolfpack.Core.Bridge.FileSystem
                 }
             }
         }
+    }
 
-        public void Consume(HealthCheckResult message)
+    public class FileSystemBridgeSessionPublisher : FileSystemBridgePublisherBase<HealthCheckAgentStart>, IHealthCheckSessionPublisher
+    {
+
+        public FileSystemBridgeSessionPublisher(FileSystemBridgePublisherConfig config)
+            : base(config)
         {
-            Publish(message, message.Id.ToString());
         }
 
         public void Consume(HealthCheckAgentStart message)
+        {
+            Publish(message, message.Id.ToString());
+        }
+    }
+
+    public class FileSystemBridgeResultPublisher : FileSystemBridgePublisherBase<HealthCheckResult>, IHealthCheckResultPublisher
+    {
+
+        public FileSystemBridgeResultPublisher(FileSystemBridgePublisherConfig config)
+            : base(config)
+        {
+        }
+
+        public void Consume(HealthCheckResult message)
         {
             Publish(message, message.Id.ToString());
         }

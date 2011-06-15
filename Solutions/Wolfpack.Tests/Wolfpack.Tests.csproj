@@ -93,6 +93,8 @@
     <Compile Include="Bdd\MessengerEnabledDomain.cs" />
     <Compile Include="Bdd\GeckoboardDataServiceDomain.cs" />
     <Compile Include="Bdd\HealthCheckDomain.cs" />
+    <Compile Include="Bridges\FileSystemBridge.Domain.cs" />
+    <Compile Include="Bridges\FileSystemBridge.Specs.cs" />
     <Compile Include="BuildAnalytics\StoryQXmlReportParser.Domain.cs" />
     <Compile Include="BuildAnalytics\StoryQXmlReportParser.Specs.cs" />
     <Compile Include="BuildAnalytics\NCoverSummaryReportParser.Domain.cs" />

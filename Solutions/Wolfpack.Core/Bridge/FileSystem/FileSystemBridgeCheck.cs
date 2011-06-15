@@ -8,7 +8,7 @@ namespace Wolfpack.Core.Bridge.FileSystem
 {
     public class FileSystemBridgeCheckConfig : PluginConfigBase
     {
-        public string QueueFolder { get; set; }
+        public string Folder { get; set; }
     }
 
     public class FileSystemBridgeCheck : HealthCheckBase<FileSystemBridgeCheckConfig>
@@ -24,7 +24,7 @@ namespace Wolfpack.Core.Bridge.FileSystem
 
         public override void Execute()
         {
-            Directory.GetFiles(myConfig.QueueFolder).ForEach(filename =>
+            Directory.GetFiles(myConfig.Folder).ForEach(filename =>
                                                                  {
                                                                      string data;
 
@@ -37,7 +37,7 @@ namespace Wolfpack.Core.Bridge.FileSystem
                                                                          SerialisationHelper<HealthCheckResult>.
                                                                              DataContractDeserialize(data);
 
-                                                                     //Publish();
+                                                                     Messenger.Publish(result);
                                                                      File.Delete(filename);
                                                                  });
         }
@@ -46,7 +46,7 @@ namespace Wolfpack.Core.Bridge.FileSystem
         {
             return new PluginDescriptor
             {
-                Description = string.Format("Publishes file queue from folder {0}", myConfig.QueueFolder),
+                Description = string.Format("Publishes file queue from folder {0}", myConfig.Folder),
                 TypeId = new Guid("95F2CEB7-F49F-46A6-917F-40744CAA4C17"),
                 Name = myConfig.FriendlyId
             };
