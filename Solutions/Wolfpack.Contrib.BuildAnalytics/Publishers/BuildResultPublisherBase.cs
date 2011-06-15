@@ -28,8 +28,10 @@ namespace Wolfpack.Contrib.BuildAnalytics.Publishers
         /// <returns></returns>
         protected virtual string BuildArtifactFilename(HealthCheckResult buildResult, string template)
         {
-            var filename = template;
+            if (string.IsNullOrWhiteSpace(buildResult.Check.Tags))
+                return template;
 
+            var filename = template;
             var rx = new Regex("({buildid})", RegexOptions.IgnoreCase);
             filename = rx.Replace(filename, buildResult.Check.Tags);
 

@@ -90,6 +90,7 @@
     <Compile Include="Activities\GeckoboardDataService.Piechart.Specs.cs" />
     <Compile Include="Bdd\BddFeature.cs" />
     <Compile Include="Bdd\BddTestDomain.cs" />
+    <Compile Include="Bdd\MessengerEnabledDomain.cs" />
     <Compile Include="Bdd\GeckoboardDataServiceDomain.cs" />
     <Compile Include="Bdd\HealthCheckDomain.cs" />
     <Compile Include="BuildAnalytics\StoryQXmlReportParser.Domain.cs" />

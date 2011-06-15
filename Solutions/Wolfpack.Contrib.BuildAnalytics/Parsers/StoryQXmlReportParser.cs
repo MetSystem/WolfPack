@@ -3,6 +3,7 @@ using System.Xml.Linq;
 using System.Xml.XPath;
 using Wolfpack.Contrib.BuildAnalytics.Interfaces.Entities;
 using Wolfpack.Contrib.BuildAnalytics.Publishers;
+using Wolfpack.Core;
 using Wolfpack.Core.Interfaces.Entities;
 
 namespace Wolfpack.Contrib.BuildAnalytics.Parsers
@@ -36,7 +37,18 @@ namespace Wolfpack.Contrib.BuildAnalytics.Parsers
                  into resultGroups
                  select new {Result = resultGroups.Key, Count = resultGroups.Count()}).ToList();
 
-            resultSummary.ForEach(rs => { Publish(new HealthCheckResult()); });
+            resultSummary.ForEach(rs => Messenger.Publish(new HealthCheckResult
+                                                    {
+                                                        Check = new HealthCheckData
+                                                                    {
+                                                                        Identity = new PluginDescriptor
+                                                                                       {
+                                                                                           Name = string.Format("{0}-StoryQ-{1}", buildResult.Check.Identity.Name,
+                                                                                           rs.Result)
+                                                                                       },
+                                                                                       ResultCount = rs.Count
+                                                                    }
+                                                    }));
         }
     }
 }

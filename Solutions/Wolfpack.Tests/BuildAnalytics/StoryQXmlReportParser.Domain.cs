@@ -8,10 +8,12 @@ namespace Wolfpack.Tests.BuildAnalytics
     public class StoryQXmlReportParserDomainConfig
     {
         public string TargetHealthCheckName { get; set; }
-        public string ReportFile { get; set; }
+        public string ReportFileTemplate { get; set; }
+        public string ZipFileTemplate { get; set; }
+        public string BuildId { get; set; }
     }
 
-    public class StoryQXmlReportParserDomain : BddTestDomain
+    public class StoryQXmlReportParserDomain : MessengerEnabledDomain
     {
         protected StoryQXmlReportParser myParser;
         private readonly StoryQXmlReportParserDomainConfig myConfig;
@@ -33,7 +35,7 @@ namespace Wolfpack.Tests.BuildAnalytics
                                                                  TargetHealthCheckName = myConfig.TargetHealthCheckName,
                                                                  FriendlyId = "Automation-StoryQXmlReportParser",
                                                                  Enabled = true,
-                                                                 ReportFileTemplate = myConfig.ReportFile
+                                                                 ReportFileTemplate = myConfig.ReportFileTemplate
                                                              });
         }
 
@@ -47,14 +49,10 @@ namespace Wolfpack.Tests.BuildAnalytics
                                                                     {
                                                                         Name = myConfig.TargetHealthCheckName
                                                                     },
-                                                     Result = true
+                                                     Result = true,
+                                                     Tags = myConfig.BuildId
                                                  }
                                  });
-        }
-
-        public void TheCoverageSummaryValuesShouldBeAvailable()
-        {
-            throw new NotImplementedException();
         }
     }
 }

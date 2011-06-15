@@ -20,14 +20,16 @@ namespace Wolfpack.Tests.BuildAnalytics
         {
             using (var domain = new StoryQXmlReportParserDomain(new StoryQXmlReportParserDomainConfig
                                                                         {
-                                                                            TargetHealthCheckName = "test",
-                                                                            ReportFile = @"C:\Projects\Wolfpack\Trunk\Solutions\Wolfpack.Tests\bin\Debug\StoryQ_Report\storyq.xml"
+                                                                            TargetHealthCheckName = "StoryQTest",
+                                                                            ReportFileTemplate = @"C:\Projects\Wolfpack\Trunk\Solutions\Wolfpack.Tests\bin\Debug\StoryQ_Report\storyq.xml",
+                                                                            BuildId = "12345"
+
                                                                         }))
             {
                 Feature.WithScenario("A valid NCover Summry Html report file is available")
                     .Given(domain.TheParserComponent)
                     .When(domain.TheParserIsInvoked)
-                    .Then(domain.TheCoverageSummaryValuesShouldBeAvailable)
+                    .Then(domain.ShouldHavePublished_Messages, 3)
                     .ExecuteWithReport();
             }
         }        
