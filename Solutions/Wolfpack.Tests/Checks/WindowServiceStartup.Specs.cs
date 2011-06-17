@@ -61,7 +61,7 @@ namespace Wolfpack.Tests.Checks
                                                   })
                     .When(domain.TheHealthCheckIsInvoked)
                     .Then(domain.ShouldHavePublished_Messages, 1)
-                    .And(domain.TheMessageShouldIndicateFailure)
+                    .And(domain.TheDataMessageShouldIndicateFailure)
                     .ExecuteWithReport();
             }
         }

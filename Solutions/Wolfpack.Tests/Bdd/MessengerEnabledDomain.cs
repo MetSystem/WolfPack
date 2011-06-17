@@ -1,4 +1,5 @@
 
+using System;
 using Wolfpack.Core;
 using Wolfpack.Core.Interfaces.Entities;
 using Wolfpack.Tests.Mocks;
@@ -16,24 +17,44 @@ namespace Wolfpack.Tests.Bdd
             Messenger.Initialise(MessengerMock);
         }
 
-        protected HealthCheckResult ResultMessage(int index)
+        protected T ResultMessage<T>(int index)
         {
-            return (HealthCheckResult)MessengerMock.Sent[index];
+            return (T)MessengerMock.Sent[index];
         }
 
-        public virtual void TheMessageShouldIndicateSuccess()
+        private static bool? GetDataResult(HealthCheckData msg)
         {
-            TheMessageAtPosition_ShouldHaveA_Result(0, true);
+            return msg.Result;
         }
 
-        public virtual void TheMessageShouldIndicateFailure()
+        private static bool? GetResult(HealthCheckResult msg)
         {
-            TheMessageAtPosition_ShouldHaveA_Result(0, false);
+            return msg.Check.Result;
         }
 
-        public virtual void TheMessageAtPosition_ShouldHaveA_Result(int index, bool expectedResult)
+        public virtual void TheDataMessageShouldIndicateSuccess()
+        {
+            TheMessageAtPosition_ShouldHaveA_Result<HealthCheckData>(0, true, GetDataResult);
+        }
+
+        public virtual void TheResultMessageShouldIndicateSuccess()
+        {
+            TheMessageAtPosition_ShouldHaveA_Result<HealthCheckResult>(0, true, GetResult);
+        }
+
+        public virtual void TheDataMessageShouldIndicateFailure()
+        {
+            TheMessageAtPosition_ShouldHaveA_Result<HealthCheckData>(0, false, GetDataResult);
+        }
+
+        public virtual void TheResultMessageShouldIndicateFailure()
+        {
+            TheMessageAtPosition_ShouldHaveA_Result<HealthCheckResult>(0, false, GetResult);
+        }
+
+        public virtual void TheMessageAtPosition_ShouldHaveA_Result<T>(int index, bool expectedResult, Func<T, bool?> getResult)
         {            
-            Assert.That(ResultMessage(index).Check.Result == expectedResult, Is.True);
+            Assert.That(getResult(ResultMessage<T>(index)) == expectedResult, Is.True);
         }
 
         public virtual void ShouldHavePublished_Messages(int expected)
