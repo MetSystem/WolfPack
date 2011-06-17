@@ -18,16 +18,16 @@ namespace Wolfpack.Tests.Bridges
         [Test]
         public void HappyPath()
         {
-            using (var domain = new FileSystemBridgeDomain(new FileSystemBridgeDomainConfig()
+            using (var domain = new FileSystemBridgeDomain(new FileSystemBridgeDomainConfig
                                                                         {
                                                                             Folder = @"filequeue"
                                                                         }))
             {
                 Feature.WithScenario("Happy Path")
                     .Given(domain.TheBridgeComponents)
-                        .And(domain.ThePublisherIsInvoked)
+                        .And(domain.ThePublishersAreInvoked)
                     .When(domain.TheConsumerIsInvoked)
-                    .Then(domain.ShouldHavePublished_Messages, 1)
+                    .Then(domain.ShouldHavePublished_Messages, 2)
                     .ExecuteWithReport();
             }
         }        

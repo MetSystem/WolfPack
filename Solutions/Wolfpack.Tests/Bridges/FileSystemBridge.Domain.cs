@@ -1,5 +1,4 @@
 using System;
-using Wolfpack.Contrib.BuildAnalytics.Parsers;
 using Wolfpack.Core.Bridge.FileSystem;
 using Wolfpack.Core.Interfaces.Entities;
 using Wolfpack.Tests.Bdd;
@@ -13,7 +12,8 @@ namespace Wolfpack.Tests.Bridges
 
     public class FileSystemBridgeDomain : MessengerEnabledDomain
     {
-        protected FileSystemBridgeResultPublisher myPublisher;
+        protected FileSystemBridgeSessionPublisher mySessionPublisher;
+        protected FileSystemBridgeResultPublisher myResultPublisher;
         protected FileSystemBridgeCheck myConsumer;
         private readonly FileSystemBridgeDomainConfig myConfig;
 
@@ -29,7 +29,13 @@ namespace Wolfpack.Tests.Bridges
 
         public void TheBridgeComponents()
         {
-            myPublisher = new FileSystemBridgeResultPublisher(new FileSystemBridgePublisherConfig
+            mySessionPublisher = new FileSystemBridgeSessionPublisher(new FileSystemBridgePublisherConfig
+                                                                  {
+                                                                      Enabled = true,
+                                                                      Folder = myConfig.Folder,
+                                                                      FriendlyId = "AutomationFileSysPublisher"
+                                                                  });
+            myResultPublisher = new FileSystemBridgeResultPublisher(new FileSystemBridgePublisherConfig
                                                                   {
                                                                       Enabled = true,
                                                                       Folder = myConfig.Folder,
@@ -43,10 +49,20 @@ namespace Wolfpack.Tests.Bridges
                                                        });
         }
 
-        public void ThePublisherIsInvoked()
+        public void ThePublishersAreInvoked()
         {
-            myPublisher.Publish(new HealthCheckResult
+            mySessionPublisher.Consume(new HealthCheckAgentStart
+                                           {
+                                             Id = Guid.NewGuid(),
+                                             Agent  = new AgentInfo
+                                                          {
+                                                              AgentId = "AutomationAgent",
+                                                              SiteId = "AutomationSite"
+                                                          }
+                                           });
+            myResultPublisher.Consume(new HealthCheckResult
                                     {
+                                        Id = Guid.NewGuid(),
                                         Check = new HealthCheckData
                                                     {
                                                         Identity = new PluginDescriptor
@@ -55,8 +71,7 @@ namespace Wolfpack.Tests.Bridges
                                                                        },
                                                         Result = true
                                                     }
-                                    },
-                                Guid.NewGuid().ToString());
+                                    });
         }
 
         public void TheConsumerIsInvoked()

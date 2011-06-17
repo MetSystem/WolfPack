@@ -23,7 +23,7 @@ namespace Wolfpack.Core.Bridge.FileSystem
             FriendlyId = config.FriendlyId; 
         }
 
-        public void Publish(T message, string id)
+        protected void Publish(T message, string id)
         {
             // hmmm, performance?
             lock (mySyncLock)

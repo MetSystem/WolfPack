@@ -1,5 +1,6 @@
 using System;
 using Sharp2City;
+using Wolfpack.Core;
 using Wolfpack.Core.Checks;
 using Wolfpack.Core.Interfaces.Entities;
 
@@ -34,7 +35,7 @@ namespace Wolfpack.Contrib.BuildAnalytics.Checks
 
         public override void Execute()
         {
-            // use sharp2city here...
+            Logger.Debug("TeamCityBuildNotificationCheck inspecting {0}/{1}", myConfig.ProjectName, myConfig.ConfigurationName);
             var tc = new TeamCityClient(myConfig.BuildServerUrl,
                                         myConfig.UserId, myConfig.Password,
                                         myConfig.UseSsl, myConfig.TrustDuffSslCertificate);

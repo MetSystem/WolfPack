@@ -62,6 +62,8 @@ namespace Wolfpack.Contrib.BuildAnalytics.Publishers
                     var relativeFilename = string.IsNullOrWhiteSpace(Config.ReportFileTemplate) 
                         ? defaultFilename 
                         : BuildArtifactFilename(buildResult, Config.ReportFileTemplate);
+                    // zip folders are / delimited
+                    relativeFilename = relativeFilename.Replace(@"\", "/");
                     
                     using (var fs = File.OpenRead(zipFilename))
                     {
@@ -71,7 +73,7 @@ namespace Wolfpack.Contrib.BuildAnalytics.Publishers
                         {
                             if (!zipEntry.IsFile)
                                 continue; // Ignore directories
-                            if (string.Compare(Path.GetFileName(zipEntry.Name), relativeFilename, true) != 0)
+                            if (string.Compare(zipEntry.Name, relativeFilename, true) != 0)
                                 continue;
 
                             var buffer = new byte[4096]; // 4K is optimum
@@ -80,10 +82,12 @@ namespace Wolfpack.Contrib.BuildAnalytics.Publishers
                             using (var ms = new MemoryStream())
                             {
                                 StreamUtils.Copy(zipStream, ms, buffer);
+                                ms.Seek(0, SeekOrigin.Begin);
 
                                 using (var msr = new StreamReader(ms))
                                     content = msr.ReadToEnd();
-                            }                            
+                            }
+                            break;
                         }
                     }
                 }
@@ -108,7 +112,7 @@ namespace Wolfpack.Contrib.BuildAnalytics.Publishers
                 }
             }
 
-            return true;
+            return !string.IsNullOrWhiteSpace(content);
         }
     }
 }

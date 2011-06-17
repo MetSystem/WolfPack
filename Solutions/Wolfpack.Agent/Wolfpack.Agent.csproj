@@ -102,6 +102,7 @@
     </None>
     <None Include="Config\publisher.castle.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </None>
     <None Include="Config\role.castle.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

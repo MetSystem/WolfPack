@@ -44,8 +44,7 @@ namespace Wolfpack.Contrib.BuildAnalytics.Parsers
                                                                     {
                                                                         Identity = new PluginDescriptor
                                                                                        {
-                                                                                           Name = string.Format("{0}-StoryQ-{1}", buildResult.Check.Identity.Name,
-                                                                                           rs.Result)
+                                                                                           Name = string.Format("{0}-StoryQ", buildResult.Check.Identity.Name)
                                                                                        },
                                                                                        ResultCount = rs.Count,
                                                                                        Tags = rs.Result

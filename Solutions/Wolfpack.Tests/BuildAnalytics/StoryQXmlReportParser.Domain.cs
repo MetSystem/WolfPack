@@ -30,12 +30,13 @@ namespace Wolfpack.Tests.BuildAnalytics
 
         public void TheParserComponent()
         {
-            myParser = new StoryQXmlReportParser(new StoryQXmlReportParserConfig()
+            myParser = new StoryQXmlReportParser(new StoryQXmlReportParserConfig
                                                              {
                                                                  TargetHealthCheckName = myConfig.TargetHealthCheckName,
                                                                  FriendlyId = "Automation-StoryQXmlReportParser",
                                                                  Enabled = true,
-                                                                 ReportFileTemplate = myConfig.ReportFileTemplate
+                                                                 ReportFileTemplate = myConfig.ReportFileTemplate,
+                                                                 ZipFileTemplate = myConfig.ZipFileTemplate
                                                              });
         }
 
