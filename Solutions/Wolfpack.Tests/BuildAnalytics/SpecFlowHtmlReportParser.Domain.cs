@@ -5,7 +5,7 @@ using Wolfpack.Tests.Bdd;
 
 namespace Wolfpack.Tests.BuildAnalytics
 {
-    public class StoryQXmlReportParserDomainConfig
+    public class SpecFlowHtmlReportParserDomainConfig
     {
         public string TargetHealthCheckName { get; set; }
         public string ReportFileTemplate { get; set; }
@@ -13,12 +13,12 @@ namespace Wolfpack.Tests.BuildAnalytics
         public string BuildId { get; set; }
     }
 
-    public class StoryQXmlReportParserDomain : MessengerEnabledDomain
+    public class SpecFlowHtmlReportParserDomain : MessengerEnabledDomain
     {
-        protected StoryQXmlReportParser myParser;
-        private readonly StoryQXmlReportParserDomainConfig myConfig;
+        protected SpecFlowHtmlReportParser myParser;
+        private readonly SpecFlowHtmlReportParserDomainConfig myConfig;
 
-        public StoryQXmlReportParserDomain(StoryQXmlReportParserDomainConfig config)
+        public SpecFlowHtmlReportParserDomain(SpecFlowHtmlReportParserDomainConfig config)
         {
             myConfig = config;
         }
@@ -30,10 +30,10 @@ namespace Wolfpack.Tests.BuildAnalytics
 
         public void TheParserComponent()
         {
-            myParser = new StoryQXmlReportParser(new StoryQXmlReportParserConfig
+            myParser = new SpecFlowHtmlReportParser(new SpecFlowHtmlReportParserConfig
                                                              {
                                                                  TargetHealthCheckName = myConfig.TargetHealthCheckName,
-                                                                 FriendlyId = "Automation-StoryQXmlReportParser",
+                                                                 FriendlyId = "Automation-SpecFlowHtmlReportParser",
                                                                  Enabled = true,
                                                                  ReportFileTemplate = myConfig.ReportFileTemplate,
                                                                  ZipFileTemplate = myConfig.ZipFileTemplate

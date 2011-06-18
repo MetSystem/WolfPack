@@ -3,7 +3,6 @@ using System.Xml.Linq;
 using System.Xml.XPath;
 using Wolfpack.Contrib.BuildAnalytics.Interfaces.Entities;
 using Wolfpack.Contrib.BuildAnalytics.Publishers;
-using Wolfpack.Core;
 using Wolfpack.Core.Interfaces.Entities;
 
 namespace Wolfpack.Contrib.BuildAnalytics.Parsers
@@ -14,6 +13,8 @@ namespace Wolfpack.Contrib.BuildAnalytics.Parsers
 
     public class StoryQXmlReportParser : BuildResultPublisherBase<StoryQXmlReportParserConfig>
     {
+        public const string StoryQReport = "StoryQ";
+
         public StoryQXmlReportParser(StoryQXmlReportParserConfig config)
             : base(config, config.TargetHealthCheckName)
         {
@@ -37,20 +38,7 @@ namespace Wolfpack.Contrib.BuildAnalytics.Parsers
                  into resultGroups
                  select new {Result = resultGroups.Key, Count = resultGroups.Count()}).ToList();
 
-            resultSummary.ForEach(rs => Messenger.Publish(new HealthCheckResult
-                                                    {
-                                                        Agent = buildResult.Agent,
-                                                        Check = new HealthCheckData
-                                                                    {
-                                                                        Identity = new PluginDescriptor
-                                                                                       {
-                                                                                           Name = string.Format("{0}-StoryQ", buildResult.Check.Identity.Name)
-                                                                                       },
-                                                                                       ResultCount = rs.Count,
-                                                                                       Tags = rs.Result
-                                                                    },
-                                                                    
-                                                    }));
+            resultSummary.ForEach(rs => PublishStat(buildResult, StoryQReport, rs.Count, rs.Result));
         }
     }
 }

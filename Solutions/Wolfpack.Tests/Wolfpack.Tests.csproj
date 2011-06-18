@@ -77,10 +77,22 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+    <Content Include="TestData\12345\StoryQ.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\AcceptanceTestReport.htm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestData\StoryQ.zip">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="TestData\StoryQ_SubFolder.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\SpecFlow.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\SpecFlow_SubFolder.zip">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -101,6 +113,8 @@
     <Compile Include="Bdd\HealthCheckDomain.cs" />
     <Compile Include="Bridges\FileSystemBridge.Domain.cs" />
     <Compile Include="Bridges\FileSystemBridge.Specs.cs" />
+    <Compile Include="BuildAnalytics\SpecFlowHtmlReportParser.Domain.cs" />
+    <Compile Include="BuildAnalytics\SpecFlowHtmlReportParser.Specs.cs" />
     <Compile Include="BuildAnalytics\StoryQXmlReportParser.Domain.cs" />
     <Compile Include="BuildAnalytics\StoryQXmlReportParser.Specs.cs" />
     <Compile Include="BuildAnalytics\NCoverSummaryReportParser.Domain.cs" />

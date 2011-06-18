@@ -9,14 +9,14 @@ namespace Wolfpack.Tests.BuildAnalytics
     {
         protected override Feature DescribeFeature()
         {
-            return new Story("Be able to stream data and optionally set a threshold that triggers an alert")
-                .InOrderTo("Capture data and receive alerts")
-                .AsA("user")
-                .IWant("The component to behave correctly");
+            return new Story("Be able to consume the statistcs from a StoryQ report")
+                .InOrderTo("Visualise and monitor storyq information")
+                .AsA("Sys Admin")
+                .IWant("To be able to provide a report and have it parsed into health check result messages");
         }
 
         [Test]
-        public void UnzippedReport()
+        public void NotZippedReportInSetLocation()
         {
             using (var domain = new StoryQXmlReportParserDomain(new StoryQXmlReportParserDomainConfig
                                                                         {
@@ -27,6 +27,25 @@ namespace Wolfpack.Tests.BuildAnalytics
                                                                         }))
             {
                 Feature.WithScenario("A valid unzipped storyq xml report file is available")
+                    .Given(domain.TheParserComponent)
+                    .When(domain.TheParserIsInvoked)
+                    .Then(domain.ShouldHavePublished_Messages, 2)
+                    .ExecuteWithReport();
+            }
+        }        
+
+        [Test]
+        public void NotZippedReportInBuildLocation()
+        {
+            using (var domain = new StoryQXmlReportParserDomain(new StoryQXmlReportParserDomainConfig
+                                                                        {
+                                                                            TargetHealthCheckName = "StoryQTest",
+                                                                            ReportFileTemplate = @"TestData\12345\storyq.xml",
+                                                                            BuildId = "12345"
+
+                                                                        }))
+            {
+                Feature.WithScenario("A valid unzipped storyq xml report file is available in the build location")
                     .Given(domain.TheParserComponent)
                     .When(domain.TheParserIsInvoked)
                     .Then(domain.ShouldHavePublished_Messages, 2)

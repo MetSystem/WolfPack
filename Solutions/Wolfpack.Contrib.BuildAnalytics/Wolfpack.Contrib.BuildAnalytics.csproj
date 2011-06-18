@@ -59,6 +59,7 @@
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Interfaces\Entities\BuildParserConfigBase.cs" />
+    <Compile Include="Parsers\SpecFlowHtmlReportParser.cs" />
     <Compile Include="Publishers\BuildResultPublisherBase.cs" />
     <Compile Include="Parsers\StoryQXmlReportParser.cs" />
     <Compile Include="Parsers\NCoverHtmlSummaryReportParser.cs" />

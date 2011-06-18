@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using ICSharpCode.SharpZipLib.Core;
 using ICSharpCode.SharpZipLib.Zip;
 using Wolfpack.Contrib.BuildAnalytics.Interfaces.Entities;
+using Wolfpack.Core;
 using Wolfpack.Core.Interfaces.Entities;
 using Wolfpack.Core.Publishers;
 
@@ -113,6 +114,38 @@ namespace Wolfpack.Contrib.BuildAnalytics.Publishers
             }
 
             return !string.IsNullOrWhiteSpace(content);
+        }
+
+        protected long? ExtractStat(string reportText)
+        {
+            var rx = new Regex("[0-9]");
+            var statText = rx.Match(reportText).Value;
+
+            long stat;
+            if (long.TryParse(statText, out stat))
+                return stat;
+            return null;
+        }
+
+        protected void PublishStat(HealthCheckResult buildResult, string category, long? stat, string tag)
+        {
+            Messenger.Publish(new HealthCheckResult
+            {
+                Agent = buildResult.Agent,
+                Check = new HealthCheckData
+                {
+                    Identity = new PluginDescriptor
+                    {
+                        Name =
+                            string.Format("{0}-SpecFlow",
+                                          buildResult.Check.Identity.
+                                              Name)
+                    },
+                    ResultCount = stat,
+                    Tags = tag
+                },
+
+            });
         }
     }
 }
