@@ -118,7 +118,7 @@ namespace Wolfpack.Contrib.BuildAnalytics.Publishers
 
         protected long? ExtractStat(string reportText)
         {
-            var rx = new Regex("[0-9]");
+            var rx = new Regex(@"\d+");
             var statText = rx.Match(reportText).Value;
 
             long stat;

@@ -17,6 +17,8 @@ namespace Wolfpack.Core.Publishers
             string friendlyName)
         {
             Config = config;
+            Enabled = config.Enabled;
+            FriendlyId = config.FriendlyId;
 
             myMatchFriendlyName = friendlyName;
             myFilter = MatchOnFriendlyName;
