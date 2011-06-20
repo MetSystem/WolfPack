@@ -68,6 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Config\buildanalyser.castle.config" />
+    <None Include="Config\buildparser.castle.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -90,6 +91,7 @@
     <PostBuildEvent>xcopy $(TargetDir)$(TargetName).* $(SolutionDir)Wolfpack.Agent\bin\Debug /Y /R /I
 xcopy $(TargetDir)ICSharpCode.SharpZipLib.dll $(SolutionDir)Wolfpack.Agent\bin\Debug /Y /R
 xcopy $(TargetDir)Sharp2City.dll $(SolutionDir)Wolfpack.Agent\bin\Debug /Y /R
+xcopy $(TargetDir)HtmlAgilityPack.dll $(SolutionDir)Wolfpack.Agent\bin\Debug /Y /R
 xcopy $(ProjectDir)Config\*.config $(SolutionDir)Wolfpack.Agent\bin\Debug\Config /Y /R /I</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
