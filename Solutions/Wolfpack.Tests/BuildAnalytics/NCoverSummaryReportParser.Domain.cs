@@ -1,4 +1,4 @@
-using System;
+
 using Wolfpack.Contrib.BuildAnalytics.Parsers;
 using Wolfpack.Core.Interfaces.Entities;
 using Wolfpack.Tests.Bdd;
@@ -11,10 +11,10 @@ namespace Wolfpack.Tests.BuildAnalytics
         public string ReportFile { get; set; }
     }
 
-    public class NCoverSummaryReportParserDomain : BddTestDomain
+    public class NCoverSummaryReportParserDomain : MessengerEnabledDomain
     {
         protected NCoverHtmlSummaryReportParser myParser;
-        private NCoverSummaryReportParserDomainConfig myConfig;
+        private readonly NCoverSummaryReportParserDomainConfig myConfig;
 
         public NCoverSummaryReportParserDomain(NCoverSummaryReportParserDomainConfig config)
         {
@@ -33,7 +33,7 @@ namespace Wolfpack.Tests.BuildAnalytics
                                                                  TargetHealthCheckName = myConfig.TargetHealthCheckName,
                                                                  FriendlyId = "Automation-NCoverHtmlSummaryReportParser",
                                                                  Enabled = true,
-                                                                 ReportFile = myConfig.ReportFile
+                                                                 ReportFileTemplate = myConfig.ReportFile
                                                              });
         }
 
@@ -50,11 +50,6 @@ namespace Wolfpack.Tests.BuildAnalytics
                                                      Result = true
                                                  }
                                  });
-        }
-
-        public void TheCoverageSummaryValuesShouldBeAvailable()
-        {
-            throw new NotImplementedException();
         }
     }
 }

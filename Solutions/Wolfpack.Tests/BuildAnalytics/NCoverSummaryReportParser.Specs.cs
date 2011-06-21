@@ -21,13 +21,13 @@ namespace Wolfpack.Tests.BuildAnalytics
             using (var domain = new NCoverSummaryReportParserDomain(new NCoverSummaryReportParserDomainConfig
                                                                         {
                                                                             TargetHealthCheckName = "test",
-                                                                            ReportFile = @"c:\temp\ncover\report\report.html"
+                                                                            ReportFile = @"testdata\ncover_summary_report.html"
                                                                         }))
             {
                 Feature.WithScenario("A valid NCover Summry Html report file is available")
                     .Given(domain.TheParserComponent)
                     .When(domain.TheParserIsInvoked)
-                    .Then(domain.TheCoverageSummaryValuesShouldBeAvailable)
+                    .Then(domain.ShouldHavePublished_Messages, 4)
                     .ExecuteWithReport();
             }
         }        

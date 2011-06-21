@@ -1,19 +1,19 @@
-using System;
+
 using HtmlAgilityPack;
-using System.Linq;
+using Wolfpack.Contrib.BuildAnalytics.Interfaces.Entities;
+using Wolfpack.Contrib.BuildAnalytics.Publishers;
 using Wolfpack.Core.Interfaces.Entities;
-using Wolfpack.Core.Publishers;
 
 namespace Wolfpack.Contrib.BuildAnalytics.Parsers
 {
-    public class NCoverHtmlSummaryReportParserConfig : PluginConfigBase
+    public class NCoverHtmlSummaryReportParserConfig : BuildParserConfigBase
     {
-        public string TargetHealthCheckName { get; set; }
-        public string ReportFile { get; set; }
     }
 
-    public class NCoverHtmlSummaryReportParser : FilteredResultPublisherBase<NCoverHtmlSummaryReportParserConfig>
+    public class NCoverHtmlSummaryReportParser : BuildResultPublisherBase<NCoverHtmlSummaryReportParserConfig>
     {
+        public const string NCoverReport = "NCover";
+
         public NCoverHtmlSummaryReportParser(NCoverHtmlSummaryReportParserConfig config)
             : base(config, config.TargetHealthCheckName)
         {
@@ -21,15 +21,22 @@ namespace Wolfpack.Contrib.BuildAnalytics.Parsers
 
         protected override void Publish(HealthCheckResult buildResult)
         {
-            if (string.IsNullOrWhiteSpace(Config.ReportFile))
+            if (string.IsNullOrWhiteSpace(Config.ZipFileTemplate) &&
+                string.IsNullOrWhiteSpace(Config.ReportFileTemplate))
+                return;
+
+            string reportContent;
+            if (!GetContent(buildResult, "ncover-summary-report.html", out reportContent))
                 return;
 
             var report = new HtmlDocument();
-            report.Load(Config.ReportFile);
+            report.LoadHtml(reportContent);
             var nodes = report.DocumentNode.SelectNodes("//div[@id='page_stats']/div//span");
 
-            if (nodes != null)
-                nodes.Take(3).ToList().ForEach(n => Console.WriteLine(n.InnerText));
+            PublishStat(buildResult, NCoverReport, ExtractStat(nodes[0].InnerText), "symbol");
+            PublishStat(buildResult, NCoverReport, ExtractStat(nodes[1].InnerText), "branch");
+            PublishStat(buildResult, NCoverReport, ExtractStat(nodes[2].InnerText), "method");
+            PublishStat(buildResult, NCoverReport, ExtractStat(nodes[3].InnerText), "cyclomatic-complexity-avg");
         }
     }
 }

@@ -38,7 +38,7 @@ namespace Wolfpack.Core.Publishers
             Publish(message);
         }
 
-        protected bool MatchOnFriendlyName(HealthCheckResult message)
+        protected virtual bool MatchOnFriendlyName(HealthCheckResult message)
         {
             return (string.Compare(message.Check.Identity.Name, myMatchFriendlyName,
                                StringComparison.InvariantCultureIgnoreCase) == 0);

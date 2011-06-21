@@ -13,12 +13,23 @@ namespace Wolfpack.Contrib.BuildAnalytics.Publishers
     public abstract class BuildResultPublisherBase<T> : FilteredResultPublisherBase<T>
         where T : BuildParserConfigBase
     {
-        protected BuildResultPublisherBase(T config, string friendlyName) : base(config, friendlyName)
+        protected BuildResultPublisherBase(T config, string friendlyName)
+            : base(config, friendlyName)
         {
         }
 
         protected BuildResultPublisherBase(T config, Func<HealthCheckResult, bool> filter) : base(config, filter)
         {
+        }
+
+        /// <summary>
+        /// This ensures we only invoke the parser if the build is successful AND matches the target name
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        protected override bool MatchOnFriendlyName(HealthCheckResult message)
+        {
+            return message.Check.Result.GetValueOrDefault(false) && base.MatchOnFriendlyName(message);
         }
 
         /// <summary>
@@ -116,18 +127,18 @@ namespace Wolfpack.Contrib.BuildAnalytics.Publishers
             return !string.IsNullOrWhiteSpace(content);
         }
 
-        protected long? ExtractStat(string reportText)
+        protected double? ExtractStat(string reportText)
         {
-            var rx = new Regex(@"\d+");
+            var rx = new Regex(@"[-+]?\d*\.?\d+");
             var statText = rx.Match(reportText).Value;
 
-            long stat;
-            if (long.TryParse(statText, out stat))
+            double stat;
+            if (double.TryParse(statText, out stat))
                 return stat;
             return null;
         }
 
-        protected void PublishStat(HealthCheckResult buildResult, string category, long? stat, string tag)
+        protected void PublishStat(HealthCheckResult buildResult, string category, double? stat, string tag)
         {
             Messenger.Publish(new HealthCheckResult
             {
@@ -137,9 +148,9 @@ namespace Wolfpack.Contrib.BuildAnalytics.Publishers
                     Identity = new PluginDescriptor
                     {
                         Name =
-                            string.Format("{0}-SpecFlow",
+                            string.Format("{0}-{1}",
                                           buildResult.Check.Identity.
-                                              Name)
+                                              Name, category)
                     },
                     ResultCount = stat,
                     Tags = tag

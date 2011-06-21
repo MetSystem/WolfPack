@@ -88,6 +88,26 @@ namespace Wolfpack.Tests.BuildAnalytics
                     .Then(domain.ShouldHavePublished_Messages, 2)
                     .ExecuteWithReport();
             }
+        }
+ 
+        [Test]
+        public void FailedBuildNotInvoked()
+        {
+            using (var domain = new StoryQXmlReportParserDomain(new StoryQXmlReportParserDomainConfig
+            {
+                TargetHealthCheckName = "StoryQTest",
+                ReportFileTemplate = @"TestData\storyq.xml",
+                BuildId = "12345",
+                BuildResult = false
+
+            }))
+            {
+                Feature.WithScenario("A valid unzipped storyq xml report file is available but the trigger build result is failure")
+                    .Given(domain.TheParserComponent)
+                    .When(domain.TheParserIsInvoked)
+                    .Then(domain.ShouldHavePublished_Messages, 0)
+                    .ExecuteWithReport();
+            }
         }        
     }
 }

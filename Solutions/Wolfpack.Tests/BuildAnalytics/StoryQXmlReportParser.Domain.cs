@@ -11,6 +11,12 @@ namespace Wolfpack.Tests.BuildAnalytics
         public string ReportFileTemplate { get; set; }
         public string ZipFileTemplate { get; set; }
         public string BuildId { get; set; }
+        public bool? BuildResult { get; set; }
+
+        public StoryQXmlReportParserDomainConfig()
+        {
+            BuildResult = true;
+        }
     }
 
     public class StoryQXmlReportParserDomain : MessengerEnabledDomain
@@ -50,7 +56,7 @@ namespace Wolfpack.Tests.BuildAnalytics
                                                                     {
                                                                         Name = myConfig.TargetHealthCheckName
                                                                     },
-                                                     Result = true,
+                                                     Result = myConfig.BuildResult,
                                                      Tags = myConfig.BuildId
                                                  }
                                  });
