@@ -176,6 +176,7 @@
     <Compile Include="Geckoboard\IGeckoboardDataService.cs" />
     <Compile Include="Geckoboard\IGeckoboardDataServiceImpl.cs" />
     <Compile Include="Geckoboard\QueryString.cs" />
+    <Compile Include="Geckoboard\GeckoboardFileBridgeCheck.cs" />
     <Compile Include="Growl\GrowlConfiguration.cs" />
     <Compile Include="Growl\GrowlConnection.cs" />
     <Compile Include="Growl\GrowlHealthCheckPublishers.cs" />
