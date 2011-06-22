@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using RestSharp;
 using Wolfpack.Core.Checks;
 using Wolfpack.Core.Interfaces.Entities;
 
@@ -9,9 +10,17 @@ namespace Wolfpack.Core.Geckoboard
 {
     public class GeckoboardFileBridgeCheckConfig : PluginConfigBase
     {
+        /// <summary>
+        /// The address of your Wolfpack Geckoboard Data Service eg: http://localhost/geckoboard
+        /// </summary>
+        public string BaseUri { get; set; }
+        /// <summary>
+        /// The location to save the files
+        /// </summary>
         public string OutputFolder { get; set; }
         /// <summary>
-        /// A list of Geckoboard Data Service Urls to call
+        /// A list of Geckoboard Data Service Urls to call in the format, filename;uri
+        /// where the uri is the fragment from the BaseUri above eg: piechart/sommecheckid/any/sum
         /// </summary>
         public List<string> Reports { get; set;}
     }
@@ -23,7 +32,7 @@ namespace Wolfpack.Core.Geckoboard
         public class GeckoboardFileReport
         {
             public string Filename { get; set; }
-            public string Url { get; set; }
+            public string ResourceUri { get; set; }
         }
 
         protected List<GeckoboardFileReport> myReportsToRun;
@@ -47,7 +56,7 @@ namespace Wolfpack.Core.Geckoboard
                                     reportsToRun.Add(new GeckoboardFileReport
                                                          {
                                                              Filename = parts[0],
-                                                             Url = parts[1]
+                                                             ResourceUri = parts[1]
                                                          });
                                 });
             return reportsToRun;
@@ -55,47 +64,56 @@ namespace Wolfpack.Core.Geckoboard
 
         public override void Execute()
         {
+            var restClient = new RestClient(myConfig.BaseUri);
+
             Logger.Debug("Calling Geckoboard Data Service urls...");
             myReportsToRun.ForEach(report =>
+                                       {
+                                           try
+                                           {
+                                               var request = new RestRequest(report.ResourceUri, Method.POST);
+                                               var response = restClient.Execute(request);
+
+                                               if (response.ResponseStatus != ResponseStatus.Completed)
+                                                   // handle this how?
+                                                   return;
+                                               if (response.StatusCode != HttpStatusCode.OK)
+                                                   // handle this how?
+                                                   return;
+
+                                               var outputFile = SmartLocation.GetLocation(Path.Combine(
+                                                   myConfig.OutputFolder,
+                                                   report.Filename));
+                                               using (var sw = new StreamWriter(outputFile))
                                                {
-                                                   using (var wc = new WebClient())
-                                                   {
-                                                       try
-                                                       {
-                                                           var content = wc.DownloadString(report.Url);
+                                                   sw.Write(response.Content);
+                                               }
+                                           }
+                                           catch (WebException wex)
+                                           {
+                                               var extraInfo = string.Empty;
 
-                                                           var outputFile = SmartLocation.GetLocation(Path.Combine(
-                                                               myConfig.OutputFolder,
-                                                               report.Filename));
-                                                           using (var sw = new StreamWriter(outputFile))
-                                                           {
-                                                               sw.Write(content);
-                                                           }
-                                                       }
-                                                       catch (WebException wex)
-                                                       {
-                                                           var extraInfo = string.Empty;
+                                               if (wex.Status == WebExceptionStatus.ProtocolError)
+                                               {
+                                                   extraInfo = string.Format(", Http state: {0}, '{1}'",
+                                                                             (int) ((HttpWebResponse) wex.Response)
+                                                                                       .StatusCode,
+                                                                             ((HttpWebResponse) wex.Response).
+                                                                                 StatusDescription);
+                                               }
 
-                                                           if (wex.Status == WebExceptionStatus.ProtocolError)
-                                                           {
-                                                               extraInfo = string.Format(", Http state: {0}, '{1}'",
-                                                                                         (int)((HttpWebResponse)wex.Response)
-                                                                                             .StatusCode,
-                                                                                         ((HttpWebResponse)wex.Response).
-                                                                                             StatusDescription);
-                                                           }
-
-                                                           var result = new HealthCheckData
-                                                           {
-                                                               Identity = Identity,
-                                                               Info = string.Format("Url '{0}' failed with code '{1}'{2}",
-                                                                   report.Url, wex.Status, extraInfo),
-                                                               Result = false
-                                                           };
-                                                           Messenger.Publish(result);
-                                                       }
-                                                   }
-                                               });
+                                               var result = new HealthCheckData
+                                                                {
+                                                                    Identity = Identity,
+                                                                    Info =
+                                                                        string.Format(
+                                                                            "Url '{0}' failed with code '{1}'{2}",
+                                                                            report.ResourceUri, wex.Status, extraInfo),
+                                                                    Result = false
+                                                                };
+                                               Messenger.Publish(result);
+                                           }
+                                       });
         }
 
         protected override PluginDescriptor BuildIdentity()
@@ -103,7 +121,7 @@ namespace Wolfpack.Core.Geckoboard
             return new PluginDescriptor
                        {
                            Description = "Calls a Geckoboard Data Service url and saves the data to file",
-                           TypeId = new Guid("54246DEB-36F2-4e9b-9BFA-B75BF40A8B7A"),
+                           TypeId = new Guid("678D0FBE-FF45-495A-BF9E-A4E34805C552"),
                            Name = myConfig.FriendlyId
                        };
         }

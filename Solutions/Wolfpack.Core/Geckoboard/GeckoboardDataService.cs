@@ -54,7 +54,7 @@ namespace Wolfpack.Core.Geckoboard
         /// 
         /// </summary>
         /// <returns></returns>
-        [WebHelp(Comment = "This will return geckoboard piechart data for...")]
+        [WebHelp(Comment = "This will provide the JSON data for a Geckoboard Piechart widget")]
         [WebInvoke(UriTemplate = "piechart/sites", ResponseFormat = WebMessageFormat.Json, Method = "POST")]
         public virtual GeckoPieChart GetGeckoboardPieChartForAllSites()
         {
@@ -66,7 +66,7 @@ namespace Wolfpack.Core.Geckoboard
         /// 
         /// </summary>
         /// <returns></returns>
-        [WebHelp(Comment = "This will return geckoboard piechart data for...")]
+        [WebHelp(Comment = "This will provide the JSON data for a Geckoboard Piechart widget")]
         [WebInvoke(UriTemplate = "piechart/sites/{site}", ResponseFormat = WebMessageFormat.Json, Method = "POST")]
         public virtual GeckoPieChart GetGeckoboardPieChartForSite(string site)
         {
@@ -78,7 +78,7 @@ namespace Wolfpack.Core.Geckoboard
         /// 
         /// </summary>
         /// <returns></returns>
-        [WebHelp(Comment = "This will return geckoboard piechart data for...")]
+        [WebHelp(Comment = "This will provide the JSON data for a Geckoboard Piechart widget")]
         [WebInvoke(UriTemplate = "piechart/{check}/{outcome}/{operation}", ResponseFormat = WebMessageFormat.Json, Method = "POST")]
         public GeckoPieChart GetGeckoboardPieChartForCheck(string check, string outcome, string operation)
         {
@@ -96,7 +96,7 @@ namespace Wolfpack.Core.Geckoboard
                                                                           });
         }
 
-        [WebHelp(Comment = "This will geckoboard linechart data for...")]
+        [WebHelp(Comment = "This will provide the JSON data for a Geckoboard Linechart widget")]
         [WebInvoke(UriTemplate = "linechart/{check}/{outcome}/{operation}/per/{rate}", ResponseFormat = WebMessageFormat.Json, Method = "POST")]
         public GeckoLineChart GetGeckoboardLineChartForCheckRate(string check, string outcome, string operation, string rate)
         {
@@ -129,7 +129,7 @@ namespace Wolfpack.Core.Geckoboard
         /// <param name="site"></param>
         /// <param name="check"></param>
         /// <returns></returns>
-        [WebHelp(Comment = "This will geckoboard geck-o-meter data for...")]
+        [WebHelp(Comment = "This will provide the JSON data for a Geckoboard Geck-o-Meter widget")]
         [WebInvoke(UriTemplate = "geckometer/sites/{site}/{check}", ResponseFormat = WebMessageFormat.Json, Method = "POST")]
         public virtual GeckoMeter GetGeckoboardGeckoMeterForSiteCheck(string site, string check)
         {
@@ -149,7 +149,7 @@ namespace Wolfpack.Core.Geckoboard
         /// <param name="site"></param>
         /// <param name="check"></param>
         /// <returns></returns>
-        [WebHelp(Comment = "This will geckoboard linechart data for...")]
+        [WebHelp(Comment = "This will provide the JSON data for a Geckoboard Comparison widget")]
         [WebInvoke(UriTemplate = "comparison/sites/{site}/{check}", ResponseFormat = WebMessageFormat.Json, Method = "POST")]
         public virtual GeckoComparison GetGeckoboardComparisonForSiteCheck(string site, string check)
         {

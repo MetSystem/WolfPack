@@ -113,7 +113,7 @@ namespace Wolfpack.Core.Geckoboard.DataProvider
                              .InsertParameterIf(() => !string.IsNullOrEmpty(args.Site), "@pSiteId", args.Site)
                              .AppendIf(() => !string.IsNullOrEmpty(args.Agent), "AND AgentId=")
                              .InsertParameterIf(() => !string.IsNullOrEmpty(args.Agent), "@pAgentId", args.Agent)
-                             .AppendIf(() => !string.IsNullOrEmpty(args.Tag), "AND tag=")
+                             .AppendIf(() => !string.IsNullOrEmpty(args.Tag), "AND tags=")
                              .InsertParameterIf(() => !string.IsNullOrEmpty(args.Tag), "@pTag", args.Tag)
                              .Append("GROUP BY {0}", args.Bucket)
                              .OrderBy(args.Bucket));
@@ -127,7 +127,7 @@ namespace Wolfpack.Core.Geckoboard.DataProvider
                              .InsertParameter("@pSiteId", args.Site)
                              .Append(") AND (CheckId=")
                              .InsertParameter("@pCheckId", args.Check).Append(")")
-                             .AppendIf(() => !string.IsNullOrEmpty(args.Tag), "AND (tag='{0}')", args.Tag));
+                             .AppendIf(() => !string.IsNullOrEmpty(args.Tag), "AND (tags='{0}')", args.Tag));
         }
 
         protected override AdhocCommandBase GetComparisonDataForSiteCheckCommand(ComparisonArgs args)
@@ -138,7 +138,7 @@ namespace Wolfpack.Core.Geckoboard.DataProvider
                              .InsertParameter("@pSiteId", args.Site)
                              .Append(") AND (CheckId=")
                              .InsertParameter("@pCheckId", args.Check).Append(")")
-                             .AppendIf(() => !string.IsNullOrEmpty(args.Tag), "AND (tag='{0}')", args.Tag)
+                             .AppendIf(() => !string.IsNullOrEmpty(args.Tag), "AND (tags='{0}')", args.Tag)
                              .OrderBy("GeneratedOnUtc"));
         }
     }
