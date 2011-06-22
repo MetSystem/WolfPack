@@ -29,7 +29,13 @@ namespace Wolfpack.Contrib.BuildAnalytics.Publishers
         /// <returns></returns>
         protected override bool MatchOnFriendlyName(HealthCheckResult message)
         {
-            return message.Check.Result.GetValueOrDefault(false) && base.MatchOnFriendlyName(message);
+            if (Config.MatchBuildResult.HasValue)
+            {
+                if (Config.MatchBuildResult.Value != message.Check.Result)
+                    return false;
+            }
+
+            return base.MatchOnFriendlyName(message);
         }
 
         /// <summary>

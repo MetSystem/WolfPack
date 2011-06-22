@@ -35,7 +35,7 @@ namespace Wolfpack.Contrib.BuildAnalytics.Checks
 
         public override void Execute()
         {
-            Logger.Debug("TeamCityBuildNotificationCheck inspecting {0}/{1}", myConfig.ProjectName, myConfig.ConfigurationName);
+            Logger.Debug("\tTeamCityBuildNotificationCheck inspecting {0}/{1}", myConfig.ProjectName, myConfig.ConfigurationName);
             var tc = new TeamCityClient(myConfig.BuildServerUrl,
                                         myConfig.UserId, myConfig.Password,
                                         myConfig.UseSsl, myConfig.TrustDuffSslCertificate);

@@ -27,7 +27,7 @@ namespace Wolfpack.Tests.BuildAnalytics
                 Feature.WithScenario("A valid NCover Summry Html report file is available")
                     .Given(domain.TheParserComponent)
                     .When(domain.TheParserIsInvoked)
-                    .Then(domain.ShouldHavePublished_Messages, 4)
+                    .Then(domain.ShouldHavePublished_Messages, 2)
                     .ExecuteWithReport();
             }
         }        

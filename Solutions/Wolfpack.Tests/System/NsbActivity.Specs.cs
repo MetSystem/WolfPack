@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 using StoryQ;
-using Wolfpack.Core.Bus;
 using Wolfpack.Core.Interfaces.Entities;
 using Wolfpack.Tests.Bdd;
 
