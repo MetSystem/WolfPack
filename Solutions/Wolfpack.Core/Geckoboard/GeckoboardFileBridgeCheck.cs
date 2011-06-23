@@ -80,10 +80,13 @@ namespace Wolfpack.Core.Geckoboard
                                                if (response.StatusCode != HttpStatusCode.OK)
                                                    // handle this how?
                                                    return;
-
+                                               
                                                var outputFile = SmartLocation.GetLocation(Path.Combine(
                                                    myConfig.OutputFolder,
                                                    report.Filename));
+                                               
+                                               Logger.Debug("\tWriting response from {0} to {1}", response.ResponseUri, outputFile);
+
                                                using (var sw = new StreamWriter(outputFile))
                                                {
                                                    sw.Write(response.Content);

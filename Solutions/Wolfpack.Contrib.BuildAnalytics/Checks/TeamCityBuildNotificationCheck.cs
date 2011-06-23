@@ -46,13 +46,20 @@ namespace Wolfpack.Contrib.BuildAnalytics.Checks
 
             // new build, publish it
             myLastBuildId = build.BuildId;
+            var buildResult = (build.BuildStatus == BuildStatus.Success);
+
+            Logger.Debug("\tBuild {0} for '{1}/{2}' has been detected (Success:={3})", 
+                myLastBuildId, 
+                myConfig.ProjectName, myConfig.ConfigurationName,
+                buildResult);
+            
             var duration = build.FinishDate.Subtract(build.StartDate);
 
             Publish(new HealthCheckData
                         {
                             Identity = Identity,
                             Duration = duration,
-                            Result = (build.BuildStatus == BuildStatus.Success),
+                            Result = buildResult,
                             ResultCount = duration.TotalMinutes,
                             Info = string.Format("Status of build '{0}' for project '{1}: {2}",
                                                  myConfig.ConfigurationName, myConfig.ProjectName, build.StatusText),

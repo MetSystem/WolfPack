@@ -3,6 +3,7 @@ using System.Xml.Linq;
 using System.Xml.XPath;
 using Wolfpack.Contrib.BuildAnalytics.Interfaces.Entities;
 using Wolfpack.Contrib.BuildAnalytics.Publishers;
+using Wolfpack.Core;
 using Wolfpack.Core.Interfaces.Entities;
 
 namespace Wolfpack.Contrib.BuildAnalytics.Parsers
@@ -31,6 +32,8 @@ namespace Wolfpack.Contrib.BuildAnalytics.Parsers
                 return;
 
             // finally parse the content for the counts
+            Logger.Debug("\tExtracting stats from StoryQ report from build '{0}'...", buildResult.Check.Tags);
+
             var xdoc = XDocument.Parse(reportContent);
             var resultSummary =
                 (from results in xdoc.XPathSelectElements("/StoryQRun/Project/Namespace/Class/Method/Story/Result")

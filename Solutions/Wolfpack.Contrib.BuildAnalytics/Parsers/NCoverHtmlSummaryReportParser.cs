@@ -2,6 +2,7 @@
 using HtmlAgilityPack;
 using Wolfpack.Contrib.BuildAnalytics.Interfaces.Entities;
 using Wolfpack.Contrib.BuildAnalytics.Publishers;
+using Wolfpack.Core;
 using Wolfpack.Core.Interfaces.Entities;
 
 namespace Wolfpack.Contrib.BuildAnalytics.Parsers
@@ -38,6 +39,9 @@ namespace Wolfpack.Contrib.BuildAnalytics.Parsers
             string reportContent;
             if (!GetContent(buildResult, "ncover-summary-report.html", out reportContent))
                 return;
+
+            // extract data from report
+            Logger.Debug("\tExtracting stats from NCover report from build '{0}'...", buildResult.Check.Tags);
 
             var report = new HtmlDocument();
             report.LoadHtml(reportContent);

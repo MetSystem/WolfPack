@@ -68,7 +68,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Config\buildanalyser.castle.config" />
-    <None Include="Config\buildparser.castle.config" />
+    <None Include="Config\buildparser.castle.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
