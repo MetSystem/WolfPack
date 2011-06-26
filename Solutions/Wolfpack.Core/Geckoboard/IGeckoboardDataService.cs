@@ -47,13 +47,21 @@ namespace Wolfpack.Core.Geckoboard
         GeckoLineChart GetGeckoboardLineChartForCheckRate(string check, string outcome, string operation, string rate);
 
         /// <summary>
-        /// geckometer/sites/{site}/{check}
+        /// geckometer/{check}/average
         /// </summary>
-        /// <param name="site"></param>
         /// <param name="check"></param>
         /// <returns></returns>
         [OperationContract]
-        GeckoMeter GetGeckoboardGeckoMeterForSiteCheck(string site, string check);
+        GeckoMeter GetGeckoboardGeckoMeterForCheckAverage(string check);
+
+        /// <summary>
+        /// geckometer/{check}
+        /// </summary>
+        /// <param name="check"></param>
+        /// <returns></returns>
+        [OperationContract]
+        GeckoMeter GetGeckoboardGeckoMeterForCheck(string check);
+
         /// <summary>
         /// comparison/sites/{site}/{check}
         /// </summary>

@@ -126,18 +126,38 @@ namespace Wolfpack.Core.Geckoboard
         /// <summary>
         /// This will get the min, max and average resultcount for a specific site and check
         /// </summary>
-        /// <param name="site"></param>
         /// <param name="check"></param>
         /// <returns></returns>
         [WebHelp(Comment = "This will provide the JSON data for a Geckoboard Geck-o-Meter widget")]
-        [WebInvoke(UriTemplate = "geckometer/sites/{site}/{check}", ResponseFormat = WebMessageFormat.Json, Method = "POST")]
-        public virtual GeckoMeter GetGeckoboardGeckoMeterForSiteCheck(string site, string check)
+        [WebInvoke(UriTemplate = "geckometer/{check}/average", ResponseFormat = WebMessageFormat.Json, Method = "POST")]
+        public virtual GeckoMeter GetGeckoboardGeckoMeterForCheckAverage(string check)
         {
             Caching.NoCache();
-            return myImplementation.GetGeckoboardGeckoMeterForSiteCheck(new GeckometerArgs
+            return myImplementation.GetGeckoboardGeckoMeterForCheckAverage(new GeckometerArgs
             {
+                Site = QueryString.AsString("site"),
+                Agent = QueryString.AsString("agent"),
                 Check = check,
-                Site = site,
+                Tag = QueryString.AsString("tag"),
+                DecimalPlaces = GetDecimalPlacesFromRequest()
+            });
+        }               
+
+        /// <summary>
+        /// This will get the min, max and current (last) resultcount for a specific site and check
+        /// </summary>
+        /// <param name="check"></param>
+        /// <returns></returns>
+        [WebHelp(Comment = "This will provide the JSON data for a Geckoboard Geck-o-Meter widget")]
+        [WebInvoke(UriTemplate = "geckometer/{check}", ResponseFormat = WebMessageFormat.Json, Method = "POST")]
+        public virtual GeckoMeter GetGeckoboardGeckoMeterForCheck(string check)
+        {
+            Caching.NoCache();
+            return myImplementation.GetGeckoboardGeckoMeterForCheck(new GeckometerArgs
+            {                
+                Site = QueryString.AsString("site"),
+                Agent = QueryString.AsString("agent"),
+                Check = check,
                 Tag = QueryString.AsString("tag"),
                 DecimalPlaces = GetDecimalPlacesFromRequest()
             });

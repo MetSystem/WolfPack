@@ -31,11 +31,18 @@ namespace Wolfpack.Core.Geckoboard
         GeckoLineChart GetGeckoboardLineChartForCheckRate(LineChartArgs args);
 
         /// <summary>
-        /// This will get the min, max and average resultcount for a specific site and check
+        /// This will get the min, max and average resultcount for a check
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        GeckoMeter GetGeckoboardGeckoMeterForSiteCheck(GeckometerArgs args);
+        GeckoMeter GetGeckoboardGeckoMeterForCheckAverage(GeckometerArgs args);
+
+        /// <summary>
+        /// This will get the min, max and current (last) resultcount for a check
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        GeckoMeter GetGeckoboardGeckoMeterForCheck(GeckometerArgs args);
 
         /// <summary>
         /// This will get the last and previous to last resultcount for a specific site and check

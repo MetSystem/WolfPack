@@ -78,6 +78,7 @@ namespace Wolfpack.Core.Geckoboard.DataProvider
     public class GeckometerArgs
     {
         public string Site { get; set; }
+        public string Agent { get; set; }
         public string Check { get; set; }
         public string Tag { get; set; }
         public int DecimalPlaces { get; set; }
@@ -86,7 +87,7 @@ namespace Wolfpack.Core.Geckoboard.DataProvider
     public struct GeckometerData
     {
         public double Min { get; set; }
-        public double Avg { get; set; }
+        public double Value { get; set; }
         public double Max { get; set; }
     }
 

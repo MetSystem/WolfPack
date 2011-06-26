@@ -17,38 +17,6 @@ namespace Wolfpack.Core.Geckoboard
         }
 
         /// <summary>
-        /// This will get the min, max and average resultcount for a specific site and check
-        /// </summary>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        public virtual GeckoMeter GetGeckoboardGeckoMeterForSiteCheck(GeckometerArgs args)
-        {
-            var data = new GeckoMeter
-            {
-                DecimalPlaces = args.DecimalPlaces
-            };
-
-            try
-            {
-                var rawData = myDataProvider.GetGeckoMeterDataForSiteCheck(args);
-
-                data.Item = rawData.Avg;
-                data.Min.Text = "Min";
-                data.Min.Value = rawData.Min;
-                data.Max.Text = "Max";
-                data.Max.Value = rawData.Max;
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(Logger.Event.During("GetGeckoboardGeckoMeterForSiteCheck")
-                    .Encountered(ex));
-                throw;
-            }
-
-            return data;
-        }               
-        
-        /// <summary>
         /// This will get the last and previous to last resultcount for a specific site and check
         /// </summary>
         /// <param name="args"></param>

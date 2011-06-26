@@ -119,15 +119,33 @@ namespace Wolfpack.Core.Geckoboard.DataProvider
                              .OrderBy(args.Bucket));
         }
 
-        protected override AdhocCommandBase GetGeckoMeterDataForSiteCheckCommand(GeckometerArgs args)
+        protected override AdhocCommandBase GetGeckoMeterDataForCheckAverageCommand(GeckometerArgs args)
         {
             return SqlServerAdhocCommand.UsingSmartConnection(myConfig.ConnectionString)
                 .WithSql(SqlServerStatement.Create(
-                    "SELECT MIN(ResultCount) [Min], MAX(ResultCount) [Max], AVG(ResultCount) [Avg] FROM AgentData WHERE (ResultCount IS NOT NULL) AND (EventType = 'Result') AND (SiteId=")
-                             .InsertParameter("@pSiteId", args.Site)
-                             .Append(") AND (CheckId=")
-                             .InsertParameter("@pCheckId", args.Check).Append(")")
-                             .AppendIf(() => !string.IsNullOrEmpty(args.Tag), "AND (tags='{0}')", args.Tag));
+                    "SELECT MIN(ResultCount) [Min], MAX(ResultCount) [Max], AVG(ResultCount) [Avg] FROM AgentData WHERE (ResultCount IS NOT NULL) AND (EventType = 'Result') AND CheckId=")
+                             .InsertParameter("@pCheckId", args.Check)
+                             .AppendIf(() => !string.IsNullOrEmpty(args.Site), "AND SiteId=")
+                             .InsertParameterIf(() => !string.IsNullOrEmpty(args.Site), "@pSiteId", args.Site)
+                             .AppendIf(() => !string.IsNullOrEmpty(args.Agent), "AND AgentId=")
+                             .InsertParameterIf(() => !string.IsNullOrEmpty(args.Agent), "@pAgentId", args.Agent)
+                             .AppendIf(() => !string.IsNullOrEmpty(args.Tag), "AND tags=")
+                             .InsertParameterIf(() => !string.IsNullOrEmpty(args.Tag), "@pTag", args.Tag));
+        }
+
+        protected override AdhocCommandBase GetGeckoMeterDataForCheckCommand(GeckometerArgs args)
+        {
+            return SqlServerAdhocCommand.UsingSmartConnection(myConfig.ConnectionString)
+                .WithSql(SqlServerStatement.Create(
+                    "SELECT TOP 1 ResultCount [Last] FROM AgentData WHERE (ResultCount IS NOT NULL) AND (EventType = 'Result') AND CheckId=")
+                             .InsertParameter("@pCheckId", args.Check)
+                             .AppendIf(() => !string.IsNullOrEmpty(args.Site), "AND SiteId=")
+                             .InsertParameterIf(() => !string.IsNullOrEmpty(args.Site), "@pSiteId", args.Site)
+                             .AppendIf(() => !string.IsNullOrEmpty(args.Agent), "AND AgentId=")
+                             .InsertParameterIf(() => !string.IsNullOrEmpty(args.Agent), "@pAgentId", args.Agent)
+                             .AppendIf(() => !string.IsNullOrEmpty(args.Tag), "AND tags=")
+                             .InsertParameterIf(() => !string.IsNullOrEmpty(args.Tag), "@pTag", args.Tag)
+                             .OrderBy("GeneratedOnUtc"));
         }
 
         protected override AdhocCommandBase GetComparisonDataForSiteCheckCommand(ComparisonArgs args)

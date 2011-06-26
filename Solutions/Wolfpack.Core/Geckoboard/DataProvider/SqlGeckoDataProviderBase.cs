@@ -112,18 +112,18 @@ namespace Wolfpack.Core.Geckoboard.DataProvider
             return data;
         }
 
-        protected abstract AdhocCommandBase GetGeckoMeterDataForSiteCheckCommand(GeckometerArgs args);
-        public GeckometerData GetGeckoMeterDataForSiteCheck(GeckometerArgs args)
+        protected abstract AdhocCommandBase GetGeckoMeterDataForCheckAverageCommand(GeckometerArgs args);
+        public GeckometerData GetGeckoMeterDataForCheckAverage(GeckometerArgs args)
         {
             var data = new GeckometerData();
 
-            using (var cmd = GetGeckoMeterDataForSiteCheckCommand(args))
+            using (var cmd = GetGeckoMeterDataForCheckAverageCommand(args))
             {
                 using (var reader = cmd.ExecuteReader())
                 {
                     if (reader.Read())
                     {
-                        data.Avg = (reader["Avg"] == DBNull.Value)
+                        data.Value = (reader["Avg"] == DBNull.Value)
                                         ? 0
                                         : Convert.ToDouble(reader["Avg"]);
                         data.Min = (reader["Min"] == DBNull.Value)
@@ -132,6 +132,27 @@ namespace Wolfpack.Core.Geckoboard.DataProvider
                         data.Max = (reader["Max"] == DBNull.Value)
                                              ? 0
                                              : Convert.ToDouble(reader["Max"]);
+                    }
+                }
+            }
+
+            return data;
+        }
+
+        protected abstract AdhocCommandBase GetGeckoMeterDataForCheckCommand(GeckometerArgs args);
+        public GeckometerData GetGeckoMeterDataForCheck(GeckometerArgs args)
+        {
+            var data = GetGeckoMeterDataForCheckAverage(args);
+
+            using (var cmd = GetGeckoMeterDataForCheckCommand(args))
+            {
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        data.Value = (reader["Last"] == DBNull.Value)
+                                        ? 0
+                                        : Convert.ToDouble(reader["Last"]);
                     }
                 }
             }
