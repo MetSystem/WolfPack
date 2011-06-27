@@ -28,6 +28,13 @@ namespace Wolfpack.Core.Geckoboard
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
+        GeckoLineChart GetGeckoboardLineChartForCheck(LineChartArgs args);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
         GeckoLineChart GetGeckoboardLineChartForCheckRate(LineChartArgs args);
 
         /// <summary>

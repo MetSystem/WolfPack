@@ -97,6 +97,30 @@ namespace Wolfpack.Core.Geckoboard
         }
 
         [WebHelp(Comment = "This will provide the JSON data for a Geckoboard Linechart widget")]
+        [WebInvoke(UriTemplate = "linechart/{check}/{outcome}", ResponseFormat = WebMessageFormat.Json, Method = "POST")]
+        public GeckoLineChart GetGeckoboardLineChartForCheck(string check, string outcome)
+        {
+            var outcomeType = (OutcomeType)Enum.Parse(typeof(OutcomeType), outcome, true);
+
+            Caching.NoCache();
+            var data = myImplementation.GetGeckoboardLineChartForCheck(new LineChartArgs
+            {
+                Site = QueryString.AsString("site"),
+                Agent = QueryString.AsString("agent"),
+                Tag = QueryString.AsString("tag"),
+                Check = check,
+                Limit = QueryString.AsInt("limit", MAX_LINECHART_ITEMS),
+                MaxItems = MAX_LINECHART_ITEMS,
+                Sample = QueryString.AsInt("sample", 1),
+                ScaleYDecimalPlaces = GetDecimalPlacesFromRequest(),
+                DecimalPlaces = GetDecimalPlacesFromRequest(),
+                Outcome = outcomeType
+            });
+
+            return data;
+        }
+
+        [WebHelp(Comment = "This will provide the JSON data for a Geckoboard Linechart widget")]
         [WebInvoke(UriTemplate = "linechart/{check}/{outcome}/{operation}/per/{rate}", ResponseFormat = WebMessageFormat.Json, Method = "POST")]
         public GeckoLineChart GetGeckoboardLineChartForCheckRate(string check, string outcome, string operation, string rate)
         {

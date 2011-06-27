@@ -12,6 +12,7 @@ namespace Wolfpack.Core.Geckoboard.DataProvider
         IEnumerable<PieChartData> GetPieChartDataForAllSites();
         IEnumerable<PieChartData> GetPieChartDataForSite(string site);
         IEnumerable<PieChartData> GetGeckoboardPieChartForCheck(PieChartArgs args);
+        IEnumerable<LineChartData> GetLineChartDataForCheck(LineChartArgs args);
         IEnumerable<LineChartData> GetLineChartDataForCheckRate(LineChartArgs args);
         GeckometerData GetGeckoMeterDataForCheckAverage(GeckometerArgs args);
         GeckometerData GetGeckoMeterDataForCheck(GeckometerArgs args);

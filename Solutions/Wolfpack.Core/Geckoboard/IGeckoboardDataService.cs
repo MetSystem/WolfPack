@@ -33,6 +33,15 @@ namespace Wolfpack.Core.Geckoboard
         GeckoPieChart GetGeckoboardPieChartForCheck(string check, string outcome, string operation);
 
         /// <summary>
+        /// linechart/{check}/{outcome}
+        /// </summary>
+        /// <param name="check"></param>
+        /// <param name="outcome"></param>
+        /// <returns></returns>
+        [OperationContract]
+        GeckoLineChart GetGeckoboardLineChartForCheck(string check, string outcome);
+
+        /// <summary>
         /// linechart/{check}/{outcome}/{operation}/per/{rate}
         /// where 
         /// outcome = all|failure|success

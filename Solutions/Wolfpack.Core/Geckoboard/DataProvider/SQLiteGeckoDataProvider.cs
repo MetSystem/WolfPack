@@ -69,6 +69,22 @@ namespace Wolfpack.Core.Geckoboard.DataProvider
 
         }
 
+        protected override AdhocCommandBase GetLineChartDataForCheckCommand(LineChartArgs args)
+        {
+            var outcome = ConvertOutcome(args.Outcome);
+
+            return SQLiteAdhocCommand.UsingSmartConnection(myConfig.ConnectionString)
+                .WithSql(SQLiteStatement.Create(
+                    "SELECT ResultCount, GeneratedOnUtc FROM AgentData WHERE CheckId=")
+                             .InsertParameter("@pCheckId", args.Check)
+                             .AppendIf(() => !string.IsNullOrEmpty(outcome), "AND {0}", outcome)
+                             .AppendIfSupplied("AND SiteId=", "@pSiteId", args.Site)
+                             .AppendIfSupplied("AND AgentId=", "@pAgentId", args.Agent)
+                             .AppendIfSupplied("AND Tags=", "@pTags", args.Tag)
+                             .OrderBy("GeneratedOnUtc")
+                             .Append("LIMIT {0}", args.Limit));
+        }
+
         protected override AdhocCommandBase GetLineChartDataForCheckRateCommand(LineChartArgs args)
         {
             var outcome = ConvertOutcome(args.Outcome);
@@ -82,12 +98,9 @@ namespace Wolfpack.Core.Geckoboard.DataProvider
                     operation)
                              .InsertParameter("@pCheckId", args.Check)
                              .AppendIf(() => !string.IsNullOrEmpty(outcome), "AND {0}", outcome)
-                             .AppendIf(() => !string.IsNullOrEmpty(args.Site), "AND SiteId=")
-                             .InsertParameterIf(() => !string.IsNullOrEmpty(args.Site), "@pSiteId", args.Site)
-                             .AppendIf(() => !string.IsNullOrEmpty(args.Agent), "AND AgentId=")
-                             .InsertParameterIf(() => !string.IsNullOrEmpty(args.Agent), "@pAgentId", args.Agent)
-                             .AppendIf(() => !string.IsNullOrEmpty(args.Tag), "AND tags=")
-                             .InsertParameterIf(() => !string.IsNullOrEmpty(args.Tag), "@pTag", args.Tag)
+                             .AppendIfSupplied("AND SiteId=", "@pSiteId", args.Site)
+                             .AppendIfSupplied("AND AgentId=", "@pAgentId", args.Agent)
+                             .AppendIfSupplied("AND Tags=", "@pTags", args.Tag)
                              .Append("GROUP BY {0}", args.Bucket)
                              .OrderBy(args.Bucket)
                              .Append("LIMIT {0}", args.Limit));

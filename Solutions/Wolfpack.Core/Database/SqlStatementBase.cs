@@ -57,6 +57,12 @@ namespace Wolfpack.Core.Database
             return test() ? Append(statement, true, args) : End();
         }
 
+        public virtual T AppendIfSupplied(string statement, string paramId, string value, params object[] args)
+        {
+            AppendIf(() => !string.IsNullOrEmpty(value), statement, args);
+            return InsertParameterIf(() => !string.IsNullOrEmpty(value), paramId, value);                
+        }
+
         /// <summary>
         /// This will append the text to the existing statement
         /// optionally including a space between existing statement
@@ -80,6 +86,7 @@ namespace Wolfpack.Core.Database
         /// optionally including a space between existing statement
         /// and this text.
         /// </summary>
+        /// <param name="test"></param>
         /// <param name="statement"></param>
         /// <param name="includeSpace"></param>
         /// <param name="args"></param>
@@ -88,7 +95,7 @@ namespace Wolfpack.Core.Database
         {
             return test() ? Append(statement, includeSpace, args) : End();
         }
-
+        
         public virtual T And()
         {
             myCmdBuilder.Append(" AND ");

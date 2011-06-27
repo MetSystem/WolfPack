@@ -60,7 +60,7 @@ namespace Wolfpack.Contrib.BuildAnalytics.Checks
                             Identity = Identity,
                             Duration = duration,
                             Result = buildResult,
-                            ResultCount = duration.TotalMinutes,
+                            ResultCount = duration.TotalSeconds,
                             Info = string.Format("Status of build '{0}' for project '{1}: {2}",
                                                  myConfig.ConfigurationName, myConfig.ProjectName, build.StatusText),
                             Tags = build.BuildId.ToString()

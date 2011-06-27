@@ -70,6 +70,28 @@ namespace Wolfpack.Core.Geckoboard.DataProvider
             return data;            
         }
 
+        protected abstract AdhocCommandBase GetLineChartDataForCheckCommand(LineChartArgs args);
+        public IEnumerable<LineChartData> GetLineChartDataForCheck(LineChartArgs args)
+        {
+            var data = new List<LineChartData>();
+            using (var cmd = GetLineChartDataForCheckCommand(args))
+            {
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        data.Add(new LineChartData
+                                     {
+                                         Value = Convert.ToDouble(reader["ResultCount"]),
+                                         When = Convert.ToDateTime(reader["GeneratedOnUtc"])
+                                     });
+                    }
+                }
+            }
+
+            return data;
+        }
+
         protected abstract AdhocCommandBase GetLineChartDataForCheckRateCommand(LineChartArgs args);
         public IEnumerable<LineChartData> GetLineChartDataForCheckRate(LineChartArgs args)
         {
