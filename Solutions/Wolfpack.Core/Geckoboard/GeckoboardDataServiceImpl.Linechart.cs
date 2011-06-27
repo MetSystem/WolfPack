@@ -64,7 +64,7 @@ namespace Wolfpack.Core.Geckoboard
                 // available, otherwise use a zero value
                 var mergedData = MergeLinechartData(dbData, zeroData);
                 // finally build the data result set
-                data = BuildLinechartData(args, mergedData, xAxis, yAxis);
+                data = BuildLinechartData(args, mergedData, xAxis, yAxis);            
                 CalculateLinechartSettings(args, data, yAxis, xAxis);
             }
             catch (Exception ex)
