@@ -81,7 +81,7 @@ namespace Wolfpack.Core.Geckoboard.DataProvider
                              .AppendIfSupplied("AND SiteId=", "@pSiteId", args.Site)
                              .AppendIfSupplied("AND AgentId=", "@pAgentId", args.Agent)
                              .AppendIfSupplied("AND Tags=", "@pTags", args.Tag)
-                             .OrderBy("GeneratedOnUtc")
+                             .OrderBy("GeneratedOnUtc", true)
                              .Append("LIMIT {0}", args.Limit));
         }
 
