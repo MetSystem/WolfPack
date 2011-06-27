@@ -13,6 +13,34 @@ namespace Wolfpack.Core.Geckoboard
             public const string X_Axis_DateFormat = "d-MMM/HH.mm";    
         }
 
+        public GeckoLineChart GetGeckoboardLineChartForCheck(LineChartArgs args)
+        {
+            GeckoLineChart data = null;
+
+            try
+            {
+                var yAxis = new GeckoValues();
+                var xAxis = new List<DateTime>();
+
+                CalculateLinechartSample(args);
+
+                // get the actual data from the provider
+                var dbData = myDataProvider.GetLineChartDataForCheck(args);
+
+                // finally build the data result set
+                data = BuildLinechartData(args, dbData, xAxis, yAxis);
+                CalculateLinechartSettings(args, data, yAxis, xAxis);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(Logger.Event.During("GetGeckoboardLineChartForCheck")
+                    .Encountered(ex));
+                throw;
+            }
+
+            return data;            
+        }
+
         public GeckoLineChart GetGeckoboardLineChartForCheckRate(LineChartArgs args)
         {
             GeckoLineChart data = null;
@@ -24,17 +52,18 @@ namespace Wolfpack.Core.Geckoboard
 
                 CalculateLinechartSample(args);
 
-                DateTime oldestDate;
-                DateTime newestDate;
-                CalculateLinechartDateRange(args, out oldestDate, out newestDate);
-
                 // get the actual data from the provider and a "zero set" - a set
                 // of zero values for the entire date range
                 var dbData = myDataProvider.GetLineChartDataForCheckRate(args);
-                var zeroData = GenerateLinechartZeroSet(args, oldestDate, newestDate);
+
+                DateTime oldestDate;
+                DateTime newestDate;
+                CalculateLinechartDateRange(args, out oldestDate, out newestDate);
+                var zeroData = GenerateLinechartZeroSet(args, oldestDate, newestDate);                
                 // merge the two data sets, using the actual data value where
                 // available, otherwise use a zero value
                 var mergedData = MergeLinechartData(dbData, zeroData);
+                // finally build the data result set
                 data = BuildLinechartData(args, mergedData, xAxis, yAxis);
                 CalculateLinechartSettings(args, data, yAxis, xAxis);
             }
