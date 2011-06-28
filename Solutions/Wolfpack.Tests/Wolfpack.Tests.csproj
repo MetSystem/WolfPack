@@ -1,0 +1,189 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{4409B842-D0FE-4DBC-ADA8-B7CA52689E6E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Wolfpack.Tests</RootNamespace>
+    <AssemblyName>Wolfpack.Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Castle.Core">
+      <HintPath>..\References\Castle\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Growl.Connector">
+      <HintPath>..\packages\Growl.0.6\lib\Growl.Connector.dll</HintPath>
+    </Reference>
+    <Reference Include="Growl.CoreLibrary">
+      <HintPath>..\packages\Growl.0.6\lib\Growl.CoreLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="Magnum, Version=1.1.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Magnum.1.1.1.0\lib\NET40\Magnum.dll</HintPath>
+    </Reference>
+    <Reference Include="Moq">
+      <HintPath>..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="NServiceBus, Version=2.5.0.0, Culture=neutral, PublicKeyToken=349438b4be075135, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\NServiceBus\v2.5\NServiceBus.dll</HintPath>
+    </Reference>
+    <Reference Include="NServiceBus.Core, Version=2.5.0.0, Culture=neutral, PublicKeyToken=349438b4be075135, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\NServiceBus\v2.5\NServiceBus.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit.2.5.10.11092\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.mocks">
+      <HintPath>..\packages\NUnit.2.5.10.11092\lib\nunit.mocks.dll</HintPath>
+    </Reference>
+    <Reference Include="pnunit.framework">
+      <HintPath>..\packages\NUnit.2.5.10.11092\lib\pnunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="StoryQ">
+      <HintPath>..\packages\StoryQ.2.0.5\lib\StoryQ.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+    <Content Include="TestData\12345\StoryQ.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\AcceptanceTestReport.htm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\ncover_summary_report.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\StoryQ.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\StoryQ_SubFolder.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\SpecFlow.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\SpecFlow_SubFolder.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Build\Common\AssemblyVersion.cs">
+      <Link>Properties\AssemblyVersion.cs</Link>
+    </Compile>
+    <Compile Include="..\Build\Common\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Activities\GeckoboardDataService.Linechart.Domain.cs" />
+    <Compile Include="Activities\GeckoboardDataService.Linechart.Specs.cs" />
+    <Compile Include="Activities\GeckoboardDataService.Piechart.Specs.cs" />
+    <Compile Include="Bdd\BddFeature.cs" />
+    <Compile Include="Bdd\BddTestDomain.cs" />
+    <Compile Include="Bdd\MessengerEnabledDomain.cs" />
+    <Compile Include="Bdd\GeckoboardDataServiceDomain.cs" />
+    <Compile Include="Bdd\HealthCheckDomain.cs" />
+    <Compile Include="Bridges\FileSystemBridge.Domain.cs" />
+    <Compile Include="Bridges\FileSystemBridge.Specs.cs" />
+    <Compile Include="BuildAnalytics\SpecFlowHtmlReportParser.Domain.cs" />
+    <Compile Include="BuildAnalytics\SpecFlowHtmlReportParser.Specs.cs" />
+    <Compile Include="BuildAnalytics\StoryQXmlReportParser.Domain.cs" />
+    <Compile Include="BuildAnalytics\StoryQXmlReportParser.Specs.cs" />
+    <Compile Include="BuildAnalytics\NCoverSummaryReportParser.Domain.cs" />
+    <Compile Include="BuildAnalytics\NCoverSummaryReportParser.Specs.cs" />
+    <Compile Include="Checks\StreamThresholdBased.Specs.cs" />
+    <Compile Include="Checks\StreamThresholdBased.Domain.cs" />
+    <Compile Include="Checks\WindowServiceStartup.Domain.cs" />
+    <Compile Include="Checks\WindowServiceStartup.Specs.cs" />
+    <Compile Include="Checks\WindowServiceState.Domain.cs" />
+    <Compile Include="Checks\WindowServiceState.Specs.cs" />
+    <Compile Include="CmdLineArgTests.cs" />
+    <Compile Include="Drivers\AutomationHealthCheck.cs" />
+    <Compile Include="Drivers\AutomationLoader.cs" />
+    <Compile Include="Drivers\AutomationProfile.cs" />
+    <Compile Include="Drivers\AutomationSessionPublisher.cs" />
+    <Compile Include="Drivers\AutomationScheduler.cs" />
+    <Compile Include="Drivers\AutomationResultPublisher.cs" />
+    <Compile Include="Growl\NotificationFinaliserTests.cs" />
+    <Compile Include="Mocks\MockMessenger.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="System\NsbActivity.Domain.cs" />
+    <Compile Include="System\NsbActivity.Specs.cs" />
+    <Compile Include="System\CommunicationActivityDomainBase.cs" />
+    <Compile Include="System\WcfActivity.Domain.cs" />
+    <Compile Include="System\WcfActivity.Specs.cs" />
+    <Compile Include="Timers\TwentyFourSevenTimerTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="license.txt" />
+    <Content Include="TestData\StoryQ.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Wolfpack.Agent\Wolfpack.Agent.csproj">
+      <Project>{5A1F7719-5EC2-46C3-9E4A-1BAD421EE291}</Project>
+      <Name>Wolfpack.Agent</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Wolfpack.Contrib.BuildAnalytics\Wolfpack.Contrib.BuildAnalytics.csproj">
+      <Project>{80978B3A-CE91-478C-9F4C-F317D1C3A09F}</Project>
+      <Name>Wolfpack.Contrib.BuildAnalytics</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Wolfpack.Core.Interfaces.Castle\Wolfpack.Core.Interfaces.Castle.csproj">
+      <Project>{98CD5D7E-5A81-4F65-9E56-F589311899C3}</Project>
+      <Name>Wolfpack.Core.Interfaces.Castle</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Wolfpack.Core.Interfaces.Magnum\Wolfpack.Core.Interfaces.Magnum.csproj">
+      <Project>{2CFB5B81-6F29-43C7-A539-CF185A5AFD0E}</Project>
+      <Name>Wolfpack.Core.Interfaces.Magnum</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Wolfpack.Core.Interfaces\Wolfpack.Core.Interfaces.csproj">
+      <Project>{21083526-1E2F-468C-A08B-D2CAC99EC4FC}</Project>
+      <Name>Wolfpack.Core.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Wolfpack.Core\Wolfpack.Core.csproj">
+      <Project>{EEFB2D36-3C15-4420-8A07-2D3CB381741D}</Project>
+      <Name>Wolfpack.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
