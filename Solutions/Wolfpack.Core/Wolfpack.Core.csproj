@@ -106,8 +106,9 @@
     <Compile Include="AppStats\AppStatsConfigBuilder.cs" />
     <Compile Include="AppStats\AppStatsEngine.cs" />
     <Compile Include="AppStats\AppStatsEvent.cs" />
-    <Compile Include="AppStats\AppStatsEventExtensions.cs" />
+    <Compile Include="AppStats\AppStatsEventExtensions.Piechart.cs" />
     <Compile Include="AppStats\AppStatsPublisherBase.cs" />
+    <Compile Include="AppStats\AppStatsEventExtensions.Geo.cs" />
     <Compile Include="AppStats\FileQueue\AppStatsFileQueue.cs" />
     <Compile Include="AppStats\FileQueue\AppStatsFileQueuePublishCheck.cs" />
     <Compile Include="AppStats\FileQueue\AppStatsFileQueuePublisher.cs" />
