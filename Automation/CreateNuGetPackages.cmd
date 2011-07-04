@@ -10,10 +10,10 @@ copy Wolfpack.Agent\bin\debug\Wolfpack.Core.dll NuGet\Templates\Wolfpack.HealthC
 copy Wolfpack.Agent\bin\debug\Wolfpack.Core.Interfaces.dll NuGet\Templates\Wolfpack.HealthCheck\lib\net40
 
 del NuGet\Templates\Wolfpack.Contrib.BuildAnalytics\lib\net40\delete.me
-copy Wolfpack.Agent\bin\debug\Wolfpack.Contrib.BuildAnalytics.dll NuGet\Templates\Wolfpack.HealthCheck\lib\net40
-copy Wolfpack.Agent\bin\debug\Wolfpack.Contrib.BuildAnalytics.pdb NuGet\Templates\Wolfpack.HealthCheck\lib\net40
-copy Wolfpack.Agent\bin\debug\Sharp2City.dll NuGet\Templates\Wolfpack.HealthCheck\lib\net40
-copy Wolfpack.Agent\bin\debug\Sharp2City.xml NuGet\Templates\Wolfpack.HealthCheck\lib\net40
+copy Wolfpack.Agent\bin\debug\Wolfpack.Contrib.BuildAnalytics.dll NuGet\Templates\Wolfpack.Contrib.BuildAnalytics\lib\net40
+copy Wolfpack.Agent\bin\debug\Wolfpack.Contrib.BuildAnalytics.pdb NuGet\Templates\Wolfpack.Contrib.BuildAnalytics\lib\net40
+copy Wolfpack.Agent\bin\debug\Sharp2City.dll NuGet\Templates\Wolfpack.Contrib.BuildAnalytics\lib\net40
+copy Wolfpack.Agent\bin\debug\Sharp2City.xml NuGet\Templates\Wolfpack.Contrib.BuildAnalytics\lib\net40
 
 popd
 pushd ..\
