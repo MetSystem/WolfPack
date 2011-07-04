@@ -8,7 +8,7 @@
     /// param the AppStatsEvent object passed to the ext. method - this should also explicitly
     /// implement your continuation interface(s)
     /// </summary>
-    public static class AppStatsEventExtensions
+    public static partial class AppStatsEventExtensions
     {            
         public static IAppStatsPieChartContinuation<AppStatsEvent> PieChart(this AppStatsEvent stat, string id)
         {
