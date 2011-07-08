@@ -6,6 +6,16 @@ namespace Wolfpack.Core.Geckoboard
     [ServiceContract(Namespace = "http://wolfpack.iagileservices.com/dataservices/geckoboard")]
     public interface IGeckoboardDataService
     {
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="check"></param>
+        /// <param name="outcome"></param>
+        /// <returns></returns>
+        [OperationContract]
+        GeckoMap GetGeckoboardMapForCheck(string check, string outcome);
+
         /// <summary>
         /// piechart/sites
         /// </summary>

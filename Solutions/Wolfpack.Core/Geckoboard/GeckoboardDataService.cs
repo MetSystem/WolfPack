@@ -54,6 +54,27 @@ namespace Wolfpack.Core.Geckoboard
         /// 
         /// </summary>
         /// <returns></returns>
+        [WebHelp(Comment = "This will provide the JSON data for a Geckoboard Map widget")]
+        [WebInvoke(UriTemplate = "map/{check}/{outcome}", ResponseFormat = WebMessageFormat.Json, Method = "POST")]
+        public virtual GeckoMap GetGeckoboardMapForCheck(string check, string outcome)
+        {
+            var outcomeType = (OutcomeType)Enum.Parse(typeof(OutcomeType), outcome, true);
+
+
+            Caching.NoCache();            
+            return myImplementation.GetGeckoboardMapForCheck(new MapArgs
+                                                                 {
+                                                                     Site = QueryString.AsString("site"),
+                                                                     Agent = QueryString.AsString("agent"),
+                                                                     Check = check,
+                                                                     Tag = QueryString.AsString("tag"),
+                                                                 });
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [WebHelp(Comment = "This will provide the JSON data for a Geckoboard Piechart widget")]
         [WebInvoke(UriTemplate = "piechart/sites", ResponseFormat = WebMessageFormat.Json, Method = "POST")]
         public virtual GeckoPieChart GetGeckoboardPieChartForAllSites()

@@ -9,6 +9,12 @@ namespace Wolfpack.Core.Geckoboard
         /// 
         /// </summary>
         /// <returns></returns>
+        GeckoMap GetGeckoboardMapForCheck(MapArgs args);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         GeckoPieChart GetGeckoboardPieChartForAllSites();
 
         /// <summary>
