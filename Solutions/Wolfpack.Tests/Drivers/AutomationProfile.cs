@@ -14,11 +14,13 @@ namespace Wolfpack.Tests.Drivers
     public class AutomationProfile : IRoleProfile
     {
         protected IRolePlugin myRole;
+        protected IGeoLocator myGeoLocator;
         protected AutomationLoader<IStartupPlugin> myStartupLoader;
         protected AutomationLoader<IHealthCheckSessionPublisher> mySessionPublisherLoader;
         protected AutomationLoader<IHealthCheckResultPublisher> myResultPublisherLoader;
         protected AutomationLoader<IHealthCheckSchedulerPlugin> myCheckLoader;
         protected AutomationLoader<IActivityPlugin> myActivityLoader;
+        
         protected ManualResetEventSlim myWaitGate;
 
         public string Name
@@ -76,6 +78,12 @@ namespace Wolfpack.Tests.Drivers
             return this;
         }
 
+        public AutomationProfile Run(IGeoLocator plugin)
+        {
+            myGeoLocator = plugin;
+            return this;
+        }
+
         public AutomationProfile Start()
         {
             RunStartupPlugins();
@@ -89,7 +97,8 @@ namespace Wolfpack.Tests.Drivers
                                            mySessionPublisherLoader,
                                            myResultPublisherLoader,
                                            myCheckLoader,
-                                           myActivityLoader);
+                                           myActivityLoader,
+                                           myGeoLocator);
             myRole.Start();
             return this;
         }

@@ -22,10 +22,6 @@
 
         public interface IAppStatsGeoContinuation<T>
         {
-            T IpAddress(string ipAddress);
-            T Hostname(string hostName);
-            T City(string countryCode, string city);
-            T City(string countryCode, string regionCode, string city);
             T Point(string latitude, string longitude);
         }
     }

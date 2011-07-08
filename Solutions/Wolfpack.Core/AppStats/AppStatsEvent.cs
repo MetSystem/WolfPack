@@ -48,57 +48,12 @@ namespace Wolfpack.Core.AppStats
             return this;
         }
 
-        AppStatsEvent AppStatsEventExtensions.IAppStatsGeoContinuation<AppStatsEvent>.IpAddress(string ipAddress)
-        {
-            if (Geo == null)
-                Geo = new GeoData();
-            if (Geo.Dns == null)
-                Geo.Dns = new DnsGeoData();
-            Geo.Dns.IpAddress = ipAddress;
-            return this;
-        }
-
-        AppStatsEvent AppStatsEventExtensions.IAppStatsGeoContinuation<AppStatsEvent>.Hostname(string hostName)
-        {
-            if (Geo == null)
-                Geo = new GeoData();
-            if (Geo.Dns == null)
-                Geo.Dns = new DnsGeoData();
-            Geo.Dns.Hostname = hostName;
-            return this;
-        }
-
-        AppStatsEvent AppStatsEventExtensions.IAppStatsGeoContinuation<AppStatsEvent>.City(string countryCode, string city)
-        {
-            if (Geo == null)
-                Geo = new GeoData();
-            if (Geo.City == null)
-                Geo.City = new CityGeoData();
-            Geo.City.CountryCode = countryCode;
-            Geo.City.City = city;
-            return this;
-        }
-
-        AppStatsEvent AppStatsEventExtensions.IAppStatsGeoContinuation<AppStatsEvent>.City(string countryCode, string regionCode, string city)
-        {
-            if (Geo == null)
-                Geo = new GeoData();
-            if (Geo.City == null)
-                Geo.City = new CityGeoData();
-            Geo.City.CountryCode = countryCode;
-            Geo.City.RegionCode = regionCode;
-            Geo.City.City = city;
-            return this;
-        }
-
         AppStatsEvent AppStatsEventExtensions.IAppStatsGeoContinuation<AppStatsEvent>.Point(string latitude, string longitude)
         {
             if (Geo == null)
                 Geo = new GeoData();
-            if (Geo.Point == null)
-                Geo.Point = new PointGeoData();
-            Geo.Point.Latitude = latitude;
-            Geo.Point.Longitude = longitude;
+            Geo.Latitude = latitude;
+            Geo.Longitude = longitude;
             return this;
         }
     }

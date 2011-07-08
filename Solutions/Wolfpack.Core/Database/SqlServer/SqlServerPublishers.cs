@@ -60,6 +60,10 @@ namespace Wolfpack.Core.Database.SqlServer
                 AddColumnIfMissing("MinuteBucket", "INT", true);
                 AddColumnIfMissing("HourBucket", "INT", true);
                 AddColumnIfMissing("DayBucket", "INT", true);
+                // Geo - point
+                AddColumnIfMissing("GeoLatitude", "VARCHAR(12)", true);
+                AddColumnIfMissing("GeoLongitude", "VARCHAR(12)", true);
+
                 Logger.Debug("\tSuccess, AgentData table established");
             }
             catch (Exception)
