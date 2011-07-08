@@ -165,6 +165,7 @@
     <Compile Include="Filters\SuccessFilter.cs" />
     <Compile Include="Geckoboard\Caching.cs" />
     <Compile Include="Geckoboard\ColourPicker.cs" />
+    <Compile Include="Geckoboard\Entities\GeckoMap.cs" />
     <Compile Include="Geckoboard\GeckoboardDataServiceImpl.Geckometer.cs" />
     <Compile Include="Geckoboard\DataProvider\DataEntities.cs" />
     <Compile Include="Geckoboard\DataProvider\IGeckoboardDataProvider.cs" />

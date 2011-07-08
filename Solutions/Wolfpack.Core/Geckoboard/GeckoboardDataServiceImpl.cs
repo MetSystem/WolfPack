@@ -16,6 +16,11 @@ namespace Wolfpack.Core.Geckoboard
             myColourPicker = colourPicker;
         }
 
+        public GeckoMap GetGeckoboardMapForCheck(MapArgs args)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// This will get the last and previous to last resultcount for a specific site and check
         /// </summary>

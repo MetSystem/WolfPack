@@ -18,6 +18,15 @@ namespace Wolfpack.Core.Geckoboard.DataProvider
         Success
     }
 
+
+    public class MapArgs
+    {
+        public string Agent { get; set; }
+        public string Site { get; set; }
+        public string Check { get; set; }
+        public string Tag { get; set; }
+    }
+
     public struct PieChartData
     {
         public string Label { get; set; }
