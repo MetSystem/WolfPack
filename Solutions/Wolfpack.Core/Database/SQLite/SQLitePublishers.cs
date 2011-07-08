@@ -63,6 +63,10 @@ namespace Wolfpack.Core.Database.SQLite
                 AddColumnIfMissing("MinuteBucket", "INTEGER", true);
                 AddColumnIfMissing("HourBucket", "INTEGER", true);
                 AddColumnIfMissing("DayBucket", "INTEGER", true);
+                // Geo - point
+                AddColumnIfMissing("GeoLatitude", "TEXT", true);
+                AddColumnIfMissing("GeoLongitude", "TEXT", true);
+
                 Logger.Debug("\tSuccess, AgentData table established");
             }
             catch (Exception)

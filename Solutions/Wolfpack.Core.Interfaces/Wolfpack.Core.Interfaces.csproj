@@ -65,6 +65,7 @@
     <Compile Include="IActivityPlugin.cs" />
     <Compile Include="ICanBeSwitchedOff.cs" />
     <Compile Include="IDataProviderPlugin.cs" />
+    <Compile Include="IGeoLocator.cs" />
     <Compile Include="IHealthCheckPlugin.cs" />
     <Compile Include="IHealthCheckSchedulerPlugin.cs" />
     <Compile Include="ILoader.cs" />

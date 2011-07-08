@@ -15,6 +15,7 @@ namespace Wolfpack.Agent.Roles
         protected readonly ILoader<IHealthCheckResultPublisher> myResultPublisherLoader;
         protected readonly ILoader<IHealthCheckSchedulerPlugin> myChecksLoader;
         protected readonly ILoader<IActivityPlugin> myActivitiesLoader;
+        protected readonly IGeoLocator myGeoLocator;
         protected PluginDescriptor myIdentity;
 
         protected AgentInfo myAgentInfo;
@@ -23,13 +24,15 @@ namespace Wolfpack.Agent.Roles
             ILoader<IHealthCheckSessionPublisher> sessionPublisherLoader,
             ILoader<IHealthCheckResultPublisher> resultPublisherLoader,
             ILoader<IHealthCheckSchedulerPlugin> checksLoader,
-            ILoader<IActivityPlugin> activitiesLoader)
+            ILoader<IActivityPlugin> activitiesLoader,
+            IGeoLocator geoLocator)
         {
             mySessionPublisherLoader = sessionPublisherLoader;
             myResultPublisherLoader = resultPublisherLoader;
             myChecksLoader = checksLoader;
             myActivitiesLoader = activitiesLoader;
             myAgentInfo = BuildAgentInfo(config);
+            myGeoLocator = geoLocator;
 
             myIdentity = new PluginDescriptor
                              {
@@ -157,6 +160,12 @@ namespace Wolfpack.Agent.Roles
                 Agent = myAgentInfo,
                 Check = message
             };
+
+            // if the geo data has not already been set by the health check
+            if ((result.Check != null) && (result.Check.Geo == null))
+            {
+                result.Check.Geo = myGeoLocator.Locate();
+            }
 
             Messenger.Publish(result);
         }

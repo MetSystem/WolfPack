@@ -46,6 +46,11 @@ namespace Wolfpack.Core.Interfaces.Entities
         public DateTime GeneratedOnUtc { get; set; }
 
         /// <summary>
+        /// 
+        /// </summary>
+        public GeoData Geo { get; set; }
+        
+        /// <summary>
         /// How long the check took to execute
         /// </summary>
         public TimeSpan Duration { get; set; }

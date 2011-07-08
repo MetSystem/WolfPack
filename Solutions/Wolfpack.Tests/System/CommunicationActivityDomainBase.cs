@@ -18,8 +18,8 @@ namespace Wolfpack.Tests.System
     public abstract class CommunicationActivityDomainBase<T> : BddTestDomain
         where T : CommunicationActivityDomainConfig
     {
-        protected AutomationProfile myAutomatedAgent;
         protected T myConfig;
+        protected AutomationProfile myAutomatedAgent;        
         protected AutomationSessionPublisher mySessionPublisher;
         protected AutomationResultPublisher myResultPublisher;
 
