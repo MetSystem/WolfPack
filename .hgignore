@@ -33,3 +33,4 @@ _ReSharper*/
 *.swp
 *.user
 *.bin
+Automation/PushNuGetPackages.cmd

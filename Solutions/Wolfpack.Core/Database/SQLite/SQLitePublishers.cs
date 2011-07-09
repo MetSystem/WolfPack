@@ -174,9 +174,9 @@ namespace Wolfpack.Core.Database.SQLite
         {
             var data = SerialisationHelper<HealthCheckResult>.DataContractSerialize(message);
 
-            using (var cmd = SQLiteAdhocCommand.UsingSmartConnection(myConfig.ConnectionString)
-                .WithSql(SQLiteStatement.Create("INSERT INTO AgentData (")
-                .Append("TypeId,EventType,SiteId,AgentId,CheckId,Result,ResultCount,GeneratedOnUtc,ReceivedOnUtc,Data,Tags,Version,MinuteBucket,HourBucket,DayBucket")
+            var statement = SQLiteStatement.Create("INSERT INTO AgentData (")
+                .Append(
+                    "TypeId,EventType,SiteId,AgentId,CheckId,Result,ResultCount,GeneratedOnUtc,ReceivedOnUtc,Data,Tags,Version,MinuteBucket,HourBucket,DayBucket")
                 .AppendIf(() => (message.Check.Geo != null), ",Longitude,Latitude")
                 .Append(") VALUES (")
                 .InsertParameter("@pTypeId", message.Check.Identity.TypeId).Append(",")
@@ -193,12 +193,18 @@ namespace Wolfpack.Core.Database.SQLite
                 .InsertParameter("@pVersion", message.Id).Append(",")
                 .InsertParameter("@pMinuteBucket", message.MinuteBucket).Append(",")
                 .InsertParameter("@pHourBucket", message.HourBucket).Append(",")
-                .InsertParameter("@pDayBucket", message.DayBucket)
-                .AppendIf(() => (message.Check.Geo != null), ",")
-                .InsertParameterIf(() => (message.Check.Geo != null), "@pLongitude", message.Check.Geo.Longitude)
-                .AppendIf(() => (message.Check.Geo != null), ",")
-                .InsertParameterIf(() => (message.Check.Geo != null), "@pLatitude", message.Check.Geo.Latitude)
-                .Append(")")))
+                .InsertParameter("@pDayBucket", message.DayBucket);
+
+            if (message.Check.Geo != null)
+            {
+                statement.Append(",")
+                    .InsertParameter("@pLongitude", message.Check.Geo.Longitude).Append(",")
+                    .InsertParameter("@pLatitude", message.Check.Geo.Latitude);
+            }
+            statement.Append(")");
+
+            using (var cmd = SQLiteAdhocCommand.UsingSmartConnection(myConfig.ConnectionString)
+                .WithSql(statement))
             {
                 cmd.ExecuteNonQuery();
             }
