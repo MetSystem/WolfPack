@@ -25,6 +25,7 @@ namespace Wolfpack.Core.Geckoboard.DataProvider
         public string Site { get; set; }
         public string Check { get; set; }
         public string Tag { get; set; }
+        public OutcomeType Outcome { get; set; }
     }
 
     public struct PieChartData

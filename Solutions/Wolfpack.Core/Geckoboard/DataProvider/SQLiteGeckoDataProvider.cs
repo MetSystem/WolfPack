@@ -4,6 +4,8 @@ using Wolfpack.Core.Database.SQLite;
 
 namespace Wolfpack.Core.Geckoboard.DataProvider
 {
+    using System;
+
     public class SQLiteGeckoDataProviderConfig
     {
         public string ConnectionString { get; set; }
@@ -34,6 +36,21 @@ namespace Wolfpack.Core.Geckoboard.DataProvider
             : this()
         {
             myConfig = config;
+        }
+
+        protected override AdhocCommandBase GetMapDataForCheckCommand(MapArgs args)
+        {
+            var outcome = ConvertOutcome(args.Outcome);
+
+            return SQLiteAdhocCommand.UsingSmartConnection(myConfig.ConnectionString)
+                .WithSql(SQLiteStatement.Create(
+                    "SELECT DISTINCT Longitude, Latitude FROM AgentData WHERE CheckId=")
+                             .InsertParameter("@pCheckId", args.Check)
+                             .AppendIf(() => !string.IsNullOrEmpty(outcome), "AND {0}", outcome)
+                             .AppendIfSupplied("AND SiteId=", "@pSiteId", args.Site)
+                             .AppendIfSupplied("AND AgentId=", "@pAgentId", args.Agent)
+                             .AppendIfSupplied("AND Tags=", "@pTags", args.Tag)
+                             .Append("AND (Longitude IS NOT NULL) AND (Latitude IS NOT NULL)"));
         }
 
         protected override AdhocCommandBase GetPieChartDataForAllSitesCommand()

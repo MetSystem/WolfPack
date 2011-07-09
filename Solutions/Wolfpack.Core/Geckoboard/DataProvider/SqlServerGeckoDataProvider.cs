@@ -36,6 +36,21 @@ namespace Wolfpack.Core.Geckoboard.DataProvider
             myConfig = config;
         }
 
+        protected override AdhocCommandBase GetMapDataForCheckCommand(MapArgs args)
+        {
+            var outcome = ConvertOutcome(args.Outcome);
+
+            return SqlServerAdhocCommand.UsingSmartConnection(myConfig.ConnectionString)
+                .WithSql(SqlServerStatement.Create(
+                    "SELECT DISTINCT Longitude, Latitude FROM AgentData WHERE CheckId=")
+                             .InsertParameter("@pCheckId", args.Check)
+                             .AppendIf(() => !string.IsNullOrEmpty(outcome), "AND {0}", outcome)
+                             .AppendIfSupplied("AND SiteId=", "@pSiteId", args.Site)
+                             .AppendIfSupplied("AND AgentId=", "@pAgentId", args.Agent)
+                             .AppendIfSupplied("AND Tags=", "@pTags", args.Tag)
+                             .Append("AND (Longitude IS NOT NULL) AND (Latitude IS NOT NULL)"));
+        }
+
         protected override AdhocCommandBase GetPieChartDataForAllSitesCommand()
         {
             return SqlServerAdhocCommand.UsingSmartConnection(myConfig.ConnectionString)

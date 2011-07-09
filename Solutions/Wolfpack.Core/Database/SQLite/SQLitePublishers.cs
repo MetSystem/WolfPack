@@ -64,8 +64,8 @@ namespace Wolfpack.Core.Database.SQLite
                 AddColumnIfMissing("HourBucket", "INTEGER", true);
                 AddColumnIfMissing("DayBucket", "INTEGER", true);
                 // Geo - point
-                AddColumnIfMissing("GeoLatitude", "TEXT", true);
-                AddColumnIfMissing("GeoLongitude", "TEXT", true);
+                AddColumnIfMissing("Latitude", "TEXT", true);
+                AddColumnIfMissing("Longitude", "TEXT", true);
 
                 Logger.Debug("\tSuccess, AgentData table established");
             }
@@ -177,6 +177,7 @@ namespace Wolfpack.Core.Database.SQLite
             using (var cmd = SQLiteAdhocCommand.UsingSmartConnection(myConfig.ConnectionString)
                 .WithSql(SQLiteStatement.Create("INSERT INTO AgentData (")
                 .Append("TypeId,EventType,SiteId,AgentId,CheckId,Result,ResultCount,GeneratedOnUtc,ReceivedOnUtc,Data,Tags,Version,MinuteBucket,HourBucket,DayBucket")
+                .AppendIf(() => (message.Check.Geo != null), ",Longitude,Latitude")
                 .Append(") VALUES (")
                 .InsertParameter("@pTypeId", message.Check.Identity.TypeId).Append(",")
                 .InsertParameter("@pEventType", message.EventType).Append(",")
@@ -193,6 +194,10 @@ namespace Wolfpack.Core.Database.SQLite
                 .InsertParameter("@pMinuteBucket", message.MinuteBucket).Append(",")
                 .InsertParameter("@pHourBucket", message.HourBucket).Append(",")
                 .InsertParameter("@pDayBucket", message.DayBucket)
+                .AppendIf(() => (message.Check.Geo != null), ",")
+                .InsertParameterIf(() => (message.Check.Geo != null), "@pLongitude", message.Check.Geo.Longitude)
+                .AppendIf(() => (message.Check.Geo != null), ",")
+                .InsertParameterIf(() => (message.Check.Geo != null), "@pLatitude", message.Check.Geo.Latitude)
                 .Append(")")))
             {
                 cmd.ExecuteNonQuery();

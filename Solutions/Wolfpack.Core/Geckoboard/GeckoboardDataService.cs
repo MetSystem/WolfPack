@@ -60,7 +60,6 @@ namespace Wolfpack.Core.Geckoboard
         {
             var outcomeType = (OutcomeType)Enum.Parse(typeof(OutcomeType), outcome, true);
 
-
             Caching.NoCache();            
             return myImplementation.GetGeckoboardMapForCheck(new MapArgs
                                                                  {
@@ -68,6 +67,7 @@ namespace Wolfpack.Core.Geckoboard
                                                                      Agent = QueryString.AsString("agent"),
                                                                      Check = check,
                                                                      Tag = QueryString.AsString("tag"),
+                                                                     Outcome = outcomeType
                                                                  });
         }
 
