@@ -61,8 +61,8 @@ namespace Wolfpack.Core.Database.SqlServer
                 AddColumnIfMissing("HourBucket", "INT", true);
                 AddColumnIfMissing("DayBucket", "INT", true);
                 // Geo - point
-                AddColumnIfMissing("GeoLatitude", "VARCHAR(12)", true);
-                AddColumnIfMissing("GeoLongitude", "VARCHAR(12)", true);
+                AddColumnIfMissing("Latitude", "VARCHAR(12)", true);
+                AddColumnIfMissing("Longitude", "VARCHAR(12)", true);
 
                 Logger.Debug("\tSuccess, AgentData table established");
             }
@@ -177,6 +177,7 @@ namespace Wolfpack.Core.Database.SqlServer
                 .AppendIf(() => message.HourBucket.HasValue, "HourBucket,")
                 .AppendIf(() => message.DayBucket.HasValue, "DayBucket,")
                 .Append("Version")
+                .AppendIf(() => (message.Check.Geo != null), ",Longitude,Latitude")
                 .Append(") VALUES (")
                 .InsertParameter("@pTypeId", message.Check.Identity.TypeId).Append(",")
                 .InsertParameter("@pEventType", message.EventType).Append(",")
@@ -199,6 +200,10 @@ namespace Wolfpack.Core.Database.SqlServer
                 .InsertParameterIf(() => message.DayBucket.HasValue, "@pDayBucket", message.DayBucket)
                 .AppendIf(() => message.DayBucket.HasValue, ",")
                 .InsertParameter("@pVersion", message.Id)
+                .AppendIf(() => (message.Check.Geo != null), ",")
+                .InsertParameterIf(() => (message.Check.Geo != null), "@pLongitude", message.Check.Geo.Longitude)
+                .AppendIf(() => (message.Check.Geo != null), ",")
+                .InsertParameterIf(() => (message.Check.Geo != null), "@pLatitude", message.Check.Geo.Latitude)
                 .Append(")")))
             {
                 cmd.ExecuteNonQuery();

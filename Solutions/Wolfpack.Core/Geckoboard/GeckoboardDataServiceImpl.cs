@@ -4,6 +4,8 @@ using Wolfpack.Core.Geckoboard.Entities;
 
 namespace Wolfpack.Core.Geckoboard
 {
+    using System.Collections.Generic;
+
     public partial class GeckoboardDataServiceImpl : IGeckoboardDataServiceImpl
     {
         protected IGeckoboardDataProvider myDataProvider;
@@ -18,7 +20,24 @@ namespace Wolfpack.Core.Geckoboard
 
         public GeckoMap GetGeckoboardMapForCheck(MapArgs args)
         {
-            throw new NotImplementedException();
+            var data = new GeckoMap();
+
+            try
+            {
+                var rawData = myDataProvider.GetMapDataForCheck(args);
+                data.Points = new MapDataPoints
+                                  {
+                                      Points = new List<MapData>(rawData)
+                                  };
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(Logger.Event.During("GetGeckoboardMapForCheck")
+                    .Encountered(ex));
+                throw;
+            }
+
+            return data;
         }
 
         /// <summary>

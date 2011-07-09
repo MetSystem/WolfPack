@@ -5,11 +5,36 @@ using Wolfpack.Core.Database;
 
 namespace Wolfpack.Core.Geckoboard.DataProvider
 {
+    using Entities;
+
     public abstract class SqlGeckoDataProviderBase : IGeckoboardDataProvider
     {
         public static readonly DateTime BucketBaselineDate = new DateTime(2011, 01, 01);
 
         public string FriendlyId { get; set;}
+
+
+        protected abstract AdhocCommandBase GetMapDataForCheckCommand(MapArgs args);
+        public IEnumerable<MapData> GetMapDataForCheck(MapArgs args)
+        {
+            var data = new List<MapData>();
+            using (var cmd = GetMapDataForCheckCommand(args))
+            {
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        data.Add(new MapData
+                        {
+                            Longitude = reader["Longitude"].ToString(),
+                            Latitude = reader["Latitude"].ToString()
+                        });
+                    }
+                }
+            }
+
+            return data;
+        }
 
         protected abstract AdhocCommandBase GetPieChartDataForAllSitesCommand();
         public IEnumerable<PieChartData> GetPieChartDataForAllSites()
@@ -22,7 +47,6 @@ namespace Wolfpack.Core.Geckoboard.DataProvider
             }
 
             return data;
-
         }
 
         protected abstract AdhocCommandBase GetPieChartDataForSiteCommand(string site);
