@@ -166,8 +166,7 @@ namespace Wolfpack.Core.Database.SqlServer
         {
             var data = SerialisationHelper<HealthCheckResult>.DataContractSerialize(message);
 
-            using (var cmd = SqlServerAdhocCommand.UsingSmartConnection(myConfig.ConnectionString)
-                .WithSql(SqlServerStatement.Create("INSERT INTO dbo.AgentData (")
+            var statement = SqlServerStatement.Create("INSERT INTO dbo.AgentData (")
                 .Append("TypeId,EventType,SiteId,AgentId,CheckId,")
                 .AppendIf(() => message.Check.Result.HasValue, "Result,")
                 .AppendIf(() => message.Check.ResultCount.HasValue, "ResultCount,")
@@ -192,19 +191,25 @@ namespace Wolfpack.Core.Database.SqlServer
                 .AppendIf(() => !string.IsNullOrEmpty(message.Check.Tags), ",")
                 .InsertParameter("@pGeneratedOnUtc", message.Check.GeneratedOnUtc).Append(",")
                 .InsertParameter("@pReceivedOnUtc", DateTime.UtcNow).Append(",")
-                .InsertParameter("@pData", data).Append(",")                
+                .InsertParameter("@pData", data).Append(",")
                 .InsertParameterIf(() => message.MinuteBucket.HasValue, "@pMinuteBucket", message.MinuteBucket)
                 .AppendIf(() => message.MinuteBucket.HasValue, ",")
                 .InsertParameterIf(() => message.HourBucket.HasValue, "@pHourBucket", message.HourBucket)
                 .AppendIf(() => message.HourBucket.HasValue, ",")
                 .InsertParameterIf(() => message.DayBucket.HasValue, "@pDayBucket", message.DayBucket)
                 .AppendIf(() => message.DayBucket.HasValue, ",")
-                .InsertParameter("@pVersion", message.Id)
-                .AppendIf(() => (message.Check.Geo != null), ",")
-                .InsertParameterIf(() => (message.Check.Geo != null), "@pLongitude", message.Check.Geo.Longitude)
-                .AppendIf(() => (message.Check.Geo != null), ",")
-                .InsertParameterIf(() => (message.Check.Geo != null), "@pLatitude", message.Check.Geo.Latitude)
-                .Append(")")))
+                .InsertParameter("@pVersion", message.Id);
+
+            if (message.Check.Geo != null)
+            {
+                statement.Append(",")
+                    .InsertParameter("@pLongitude", message.Check.Geo.Longitude).Append(",")
+                    .InsertParameter("@pLatitude", message.Check.Geo.Latitude);
+            }
+            statement.Append(")");
+
+            using (var cmd = SqlServerAdhocCommand.UsingSmartConnection(myConfig.ConnectionString)
+                .WithSql(statement))
             {
                 cmd.ExecuteNonQuery();
             }

@@ -79,6 +79,7 @@
     <None Include="App.config" />
     <None Include="Config\activity.castle.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </None>
     <None Include="Config\appstats.castle.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
