@@ -12,6 +12,7 @@ namespace Wolfpack.Tests.BuildAnalytics
         public string ZipFileTemplate { get; set; }
         public string BuildId { get; set; }
         public bool? BuildResult { get; set; }
+        public bool? ParserMatchesToResult { get; set; }
 
         public StoryQXmlReportParserDomainConfig()
         {
@@ -42,7 +43,8 @@ namespace Wolfpack.Tests.BuildAnalytics
                                                                  FriendlyId = "Automation-StoryQXmlReportParser",
                                                                  Enabled = true,
                                                                  ReportFileTemplate = myConfig.ReportFileTemplate,
-                                                                 ZipFileTemplate = myConfig.ZipFileTemplate
+                                                                 ZipFileTemplate = myConfig.ZipFileTemplate,
+                                                                 MatchBuildResult = myConfig.ParserMatchesToResult
                                                              });
         }
 

@@ -91,18 +91,56 @@ namespace Wolfpack.Tests.BuildAnalytics
         }
  
         [Test]
-        public void FailedBuildNotInvoked()
+        public void FailedBuildWithTriggerResultNotSet()
+        {
+            using (var domain = new StoryQXmlReportParserDomain(new StoryQXmlReportParserDomainConfig
+            {
+                TargetHealthCheckName = "StoryQTest",
+                ReportFileTemplate = @"TestData\storyq.xml",
+                BuildId = "12345"
+            }))
+            {
+                Feature.WithScenario("A valid unzipped storyq xml report file is available and the trigger result has not been set")
+                    .Given(domain.TheParserComponent)
+                    .When(domain.TheParserIsInvoked)
+                    .Then(domain.ShouldHavePublished_Messages, 2)
+                    .ExecuteWithReport();
+            }
+        }        
+
+        [Test]
+        public void FailedBuildWithParserTriggerSetToFalse()
         {
             using (var domain = new StoryQXmlReportParserDomain(new StoryQXmlReportParserDomainConfig
             {
                 TargetHealthCheckName = "StoryQTest",
                 ReportFileTemplate = @"TestData\storyq.xml",
                 BuildId = "12345",
-                BuildResult = false
-
+                BuildResult = false,
+                ParserMatchesToResult = false
             }))
             {
-                Feature.WithScenario("A valid unzipped storyq xml report file is available but the trigger build result is failure")
+                Feature.WithScenario("A valid unzipped storyq xml report file is available and the parser trigger result is set to false")
+                    .Given(domain.TheParserComponent)
+                    .When(domain.TheParserIsInvoked)
+                    .Then(domain.ShouldHavePublished_Messages, 2)
+                    .ExecuteWithReport();
+            }
+        }
+
+        [Test]
+        public void FailedBuildWithParserTriggerSetToTrue()
+        {
+            using (var domain = new StoryQXmlReportParserDomain(new StoryQXmlReportParserDomainConfig
+            {
+                TargetHealthCheckName = "StoryQTest",
+                ReportFileTemplate = @"TestData\storyq.xml",
+                BuildId = "12345",
+                BuildResult = false,
+                ParserMatchesToResult = true
+            }))
+            {
+                Feature.WithScenario("A valid unzipped storyq xml report file is available and the parser trigger result is set to true")
                     .Given(domain.TheParserComponent)
                     .When(domain.TheParserIsInvoked)
                     .Then(domain.ShouldHavePublished_Messages, 0)
