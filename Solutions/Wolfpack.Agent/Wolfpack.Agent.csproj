@@ -108,6 +108,7 @@
     </None>
     <None Include="Config\role.castle.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </None>
     <None Include="Config\scheduler.castle.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
