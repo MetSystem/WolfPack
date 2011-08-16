@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using Wolfpack.Core.Interfaces;
 using Wolfpack.Core.Interfaces.Entities;
+using Castle.Core;
 
 namespace Wolfpack.Core
 {
@@ -116,24 +117,39 @@ namespace Wolfpack.Core
 
         public bool Locate(string[] interfaceTypes, out Type[] matchingTypes, Predicate<Type> filter)
         {
-            Logger.Debug("Scanning for Interface Types: {0}", string.Join(",", interfaceTypes));
+            Logger.Info("Scanning for Interface Types: {0}", string.Join(",", interfaceTypes));
 
             var candidates = Directory.GetFiles(myBinFolder, "*.dll", SearchOption.TopDirectoryOnly).Concat(
                 Directory.GetFiles(myBinFolder, "*.exe", SearchOption.TopDirectoryOnly));
             var assembliesToScan = candidates.Where(
                 filename => !myFilesToExclude.Contains(filename));
 
-            var implementingTypes = from assemblyName in assembliesToScan
-                                    select Assembly.LoadFile(assemblyName)
-                                        into assembly
-                                        from type in assembly.GetExportedTypes()
-                                        where filter(type) &&
-                                        !type.IsAbstract &&
-                                        (Array.Find(interfaceTypes, interfaceToFind =>                                            
-                                            (type.GetInterface(interfaceToFind, true) != null)) != null)
-                                        select type;
+            var implementingTypes = new List<Type>();
+
+            assembliesToScan.ForEach(assemblyName =>
+                                         {
+                                             try
+                                             {
+                                                 Logger.Debug("\tScanning {0}...", Path.GetFileName(assemblyName));
+
+                                                 var assembly = Assembly.LoadFile(assemblyName);
+                                                 implementingTypes.AddRange(from type in assembly.GetExportedTypes()
+                                                         where filter(type) &&
+                                                         !type.IsAbstract &&
+                                                         (Array.Find(interfaceTypes, interfaceToFind =>
+                                                             (type.GetInterface(interfaceToFind, true) != null)) != null)
+                                                         select type);
+                                             }
+                                             catch (Exception ex)
+                                             {
+                                                 Logger.Error(Logger.Event.During("TypeDiscovery")
+                                                     .Description("Scanning {0}", assemblyName)
+                                                     .Encountered(ex));
+                                             }
+                                         });
 
             matchingTypes = implementingTypes.ToArray();
+            Logger.Info("Found {0} implementations", matchingTypes.Length);
             return (matchingTypes.Length > 0);
         }
     }

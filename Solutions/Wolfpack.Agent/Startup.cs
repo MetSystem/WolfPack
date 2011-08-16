@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Sidewinder;
 using Wolfpack.Agent.Profiles;
 using Wolfpack.Core;
 using Wolfpack.Core.Interfaces;
@@ -16,6 +17,16 @@ namespace Wolfpack.Agent
             {
                 // select a profile from the cmdline args /profile:[profile] switch
                 CmdLine.Init(args);
+
+                if (CmdLine.Value(CmdLine.SwitchNames.Update) &&
+                    UpdaterFactory.Setup(cfg => cfg.Update("Wolfpack", "net40", "http://www.myget.org/F/wolfpack/")
+                        .Update("sidewinder", "net40", "http://www.myget.org/F/sidewinder"))
+                        .Execute())
+                {
+                    Logger.Debug("*** UPDATE AVAILABLE!! SHUTTING DOWN ***");
+                    return;
+                }
+
                 var profile = LoadProfile();
                 var role = profile.Role;
 

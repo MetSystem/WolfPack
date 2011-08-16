@@ -11,7 +11,7 @@ namespace Wolfpack.Agent.Profiles
     public abstract class ProfileBase : IRoleProfile
     {
         public abstract string Name { get; }
-        public abstract void CreateRole();
+        public abstract void CustomiseRole();
 
         public IRolePlugin Role
         {
@@ -24,7 +24,7 @@ namespace Wolfpack.Agent.Profiles
                     .ResolveAll<IStartupPlugin>(c => c.InitialiseIfEnabled());
 
                 // hook to create custom role components
-                CreateRole();
+                CustomiseRole();
 
                 // finally resolve the role component
                 return Container.Resolve<IRolePlugin>();

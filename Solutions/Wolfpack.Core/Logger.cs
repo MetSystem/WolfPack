@@ -82,6 +82,14 @@ namespace Wolfpack.Core
             myLogger.DebugFormat(format, args);
         }
 
+        public static void Info(string format, params object[] args)
+        {
+            if (!myLogger.IsInfoEnabled)
+                return;
+
+            myLogger.InfoFormat(format, args);
+        }
+
         public static void Error(string format, params object[] args)
         {
             if (!myLogger.IsErrorEnabled)

@@ -154,7 +154,12 @@ namespace Wolfpack.Core.Containers
             if (!Directory.Exists(configFilesLocation))
                 return;
 
-            foreach (var extraConfig in Directory.GetFiles(configFilesLocation, "*.castle.config"))
+            ProcessFolder(store, configFilesLocation);
+        }
+
+        protected void ProcessFolder(Castle.MicroKernel.SubSystems.Configuration.IConfigurationStore store, string path)
+        {
+            foreach (var extraConfig in Directory.GetFiles(path, "*.castle.config"))
             {
                 try
                 {
@@ -170,6 +175,8 @@ namespace Wolfpack.Core.Containers
                     throw new InvalidOperationException("Failed to load configuration: " + extraConfig, ex);
                 }
             }
+            
+            Directory.GetDirectories(path).ForEach(folder => ProcessFolder(store, folder));
         }
     }
 }

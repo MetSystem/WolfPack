@@ -14,7 +14,8 @@ namespace Wolfpack.Core.Loaders
             components = new IHealthCheckSchedulerPlugin[0];
 
             Binding[] bindings;
-            var bindingLoader = new HealthCheckBindingLoader();
+            var bindingLoader = new HealthCheckBindingLoader();   
+         
             if (!bindingLoader.Load(out bindings))
                 return false;
 

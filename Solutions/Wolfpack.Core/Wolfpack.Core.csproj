@@ -59,9 +59,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.4.0.2\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="Norm">
-      <HintPath>..\packages\NoRM.0.9.8\lib\Norm.dll</HintPath>
-    </Reference>
     <Reference Include="NServiceBus">
       <HintPath>..\References\NServiceBus\v2.5\NServiceBus.dll</HintPath>
     </Reference>
@@ -131,6 +128,7 @@
     <Compile Include="Checks\FileInfoCheck.cs" />
     <Compile Include="Checks\FolderInfoCheck.cs" />
     <Compile Include="Checks\HealthCheckBase.cs" />
+    <Compile Include="Checks\HostPingCheck.cs" />
     <Compile Include="Checks\MsmqQueueInfoCheck.cs" />
     <Compile Include="Checks\MsmqQueueNotEmptyCheck.cs" />
     <Compile Include="Checks\OracleScalarCheck.cs" />
