@@ -1,8 +1,9 @@
+
 namespace Wolfpack.Core.Interfaces
 {
     /// <summary>
     /// A profile enables rapid configuration of an agent. This involves
-    /// loading the <see cref="Container"/> with the correct components
+    /// loading the IoC container with the correct components
     /// </summary>
     public interface IRoleProfile
     {

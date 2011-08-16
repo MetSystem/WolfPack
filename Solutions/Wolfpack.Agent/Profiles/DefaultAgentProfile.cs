@@ -23,7 +23,7 @@ namespace Wolfpack.Agent.Profiles
             return typeof (Roles.Agent);
         }
 
-        public override void CreateRole()
+        public override void CustomiseRole()
         {            
             Container.RegisterAllWithInterception<IGrowlNotificationFinaliser, IGrowlNotificationFinaliserInterceptor>()
                 .RegisterAll<IHealthCheckSessionPublisher>()

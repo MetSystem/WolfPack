@@ -17,8 +17,3 @@ using System.Runtime.InteropServices;
 // to COM components.  If you need to access a type in this assembly from 
 // COM, set the ComVisible attribute to true on that type.
 [assembly: ComVisible(false)]
-
-// Instructs the compiler the check for CLS compliance
-// NOTE: This attribute DOES NOT MAKE this assembly CLS
-// compliant - its just a compiler directive
-[assembly: CLSCompliant(true)]

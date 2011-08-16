@@ -19,6 +19,7 @@ namespace Wolfpack.Agent
             public const string Uninstall = "Uninstall";
             public const string Username = "Username";
             public const string Password = "Password";
+            public const string Update = "Update";
         }
 
         protected static CmdLineArgs myArgs;
@@ -29,6 +30,7 @@ namespace Wolfpack.Agent
         {
             // setup our supported list of cmdline switches
             mySupportedSwitches = CmdLineSwitches.Init(
+                                       CustomSwitch.Build(SwitchNames.Update),
                                        CustomSwitch.Build(SwitchNames.Profile),
                                        CustomSwitch.Build(SwitchNames.Username),
                                        CustomSwitch.Build(SwitchNames.Password),
@@ -53,11 +55,11 @@ namespace Wolfpack.Agent
         /// <returns></returns>
         public static bool Value(string name, out string value)
         {
-            var switchName = "/" + name.ToLower();
+            var switchName = "/" + name.ToLower().TrimStart('/');
             value = string.Empty;
 
             var values = from arg in myArgs
-                         where arg.StartsWith(switchName)
+                         where arg.ToLower().StartsWith(switchName)
                          select arg;
 
             if (values.Count() == 0)
@@ -67,8 +69,14 @@ namespace Wolfpack.Agent
             return true;
         }
 
+        public static bool Value(string name)
+        {
+            var switchName = "/" + name.ToLower().TrimStart('/');
+            return myArgs.Any(arg => string.Compare(arg.ToLower(), switchName) == 0);
+        }
+
         /// <summary>
-        /// This will return a list of all custom cmdline switches
+        /// This will return a list of supplied & expanded args
         /// </summary>
         public static IEnumerable<string> All
         {
@@ -76,7 +84,15 @@ namespace Wolfpack.Agent
         }
 
         /// <summary>
-        /// This will return the set of expanded arguments
+        /// This will return a list of args supplied
+        /// </summary>
+        public static IEnumerable<string> Supplied
+        {
+            get { return myArgs; }
+        }
+
+        /// <summary>
+        /// This will return just the set of expanded arguments
         /// </summary>
         public static IEnumerable<string> Expanded
         {
@@ -84,7 +100,7 @@ namespace Wolfpack.Agent
         }
 
         /// <summary>
-        /// This will return a list of all custom cmdline switches
+        /// This will return a list of all supported switches
         /// </summary>
         public static CmdLineSwitches Switches
         {
