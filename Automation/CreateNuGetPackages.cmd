@@ -24,8 +24,8 @@ del NuGet\Templates\Wolfpack\lib\net40\delete.me
 del NuGet\Templates\Wolfpack\content\config\delete.me
 del NuGet\Templates\Wolfpack\content\growl\delete.me
 copy Wolfpack.Agent\bin\debug\*.* NuGet\Templates\Wolfpack\lib\net40
-copy Wolfpack.Agent\bin\debug\config\*.* NuGet\Templates\Wolfpack\content\config
-copy Wolfpack.Agent\bin\debug\growl\*.* NuGet\Templates\Wolfpack\content\growl
+xcopy Wolfpack.Agent\bin\debug\config\*.* NuGet\Templates\Wolfpack\content\config /Y /R /I /E
+xcopy Wolfpack.Agent\bin\debug\growl\*.* NuGet\Templates\Wolfpack\content\growl /Y /R /I /E
 
 popd
 pushd ..\
