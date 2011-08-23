@@ -1,118 +1,77 @@
 using System;
-using Wolfpack.Core.Interfaces;
+using System.Collections.Generic;
+using System.Net.NetworkInformation;
 using Wolfpack.Core.Interfaces.Entities;
 
 namespace Wolfpack.Core.Checks
 {
     /// <summary>
-    /// Pings a host with an ICMP message
+    /// Pings a set of hosts with an ICMP message
     /// </summary>
-    public class HostPingCheck : IHealthCheckPluginEx
+    public class HostPingCheck : HealthCheckBaseEx
     {
-        protected bool myEnabled;
-        protected PluginDescriptor  myIdentity;
+        protected int? myTimeout;
+        protected List<string> myHosts;
+        protected bool myPublishOnlyIfFailure;
 
         /// <summary>
         /// default ctor
         /// </summary>
-        public HostPingCheck(string friendlyName, bool enabled)
+        public HostPingCheck(string friendlyName, 
+            bool enabled,
+            bool publishOnlyIfFailure,
+            int? timeout,
+            List<string> hosts)
+            : base(friendlyName, enabled,
+            "Pings a host with an ICMP message and raises an alert if no response is returned",
+            new Guid("F29826F2-8930-4E76-8710-47F0C08A4461"))
         {
-            Enabled = enabled;
-            myIdentity = new PluginDescriptor
-            {
-                Description = "Pings a host with an ICMP message and raises an alert if no response is returned",
-                TypeId = new Guid("F29826F2-8930-4E76-8710-47F0C08A4461"),
-                Name = friendlyName
-            };
-        }
-
-        public Status Status { get; set; }
-
-        public bool Enabled
-        {
-            get { return myEnabled; }
-            set { myEnabled = value; }
-        }
-
-        public PluginDescriptor Identity
-        {
-            get { return myIdentity; }
+            myTimeout = timeout;
+            myHosts = hosts;
+            myPublishOnlyIfFailure = publishOnlyIfFailure;
         }
        
-        public void Initialise()
+        public override void Initialise()
         {
             Logger.Debug("Initialising HostPingCheck check for...");
-            //myConfig.Urls.ForEach(url => Logger.Debug("\t{0}", url));
+            myHosts.ForEach(host => Logger.Debug("\t{0}", host));
         }
 
-        public void Execute()
+        public override void Execute()
         {
             Logger.Debug("HostPingCheck is pinging...");
-            /*
-            myConfig.Urls.ToList().ForEach(url =>
-                                               {
-                                                   using (var wc = new WebClient())
-                                                   {
-                                                       try
-                                                       {
-                                                           var publish = !myConfig.PublishOnlyIfFailure;
-                                                           var outcome = true;
-                                                           var msg = string.Format("Successfully pinged url '{0}'", url);
 
-                                                           var timer = Stopwatch.StartNew();
-                                                           wc.DownloadString(url);
-                                                           timer.Stop();
+            myHosts.ForEach(host =>
+                                {
+                                    using (var pinger = new Ping())
+                                    {
+                                        var reply = myTimeout.HasValue 
+                                                              ? pinger.Send(host, myTimeout.Value) 
+                                                              : pinger.Send(host);
 
-                                                           // perform threshold check...
-                                                           if (myConfig.FailIfResponseMillisecondsOver.HasValue &&
-                                                               (myConfig.FailIfResponseMillisecondsOver.Value > 0) &&
-                                                               (timer.ElapsedMilliseconds > myConfig.FailIfResponseMillisecondsOver.Value))
-                                                           {
-                                                               // ok so we set a threshold and it was breached so...
-                                                               publish = true;
-                                                               outcome = false;
-                                                               msg = string.Format(
-                                                                       "Url '{0}' responded too slowly in {1}ms",
-                                                                       url, timer.ElapsedMilliseconds);
-                                                           }
+                                        var result = HealthCheckData.For(Identity, "Successfully pinged host '{0}'",
+                                                                         host)
+                                            .Succeeded()
+                                            .ResultCountIs(reply.RoundtripTime)
+                                            .AddTag(host)
+                                            .AddTag(reply.Status.ToString());
 
-                                                           if (!publish)
-                                                               return;
+                                        if (reply.Status == IPStatus.Success)
+                                        {
+                                            if (myPublishOnlyIfFailure)
+                                                return;
+                                        }
+                                        else
+                                        {
+                                            result.Info = string.Format("Failure ({0}) pinging host {1}", reply.Status,
+                                                                        host);
+                                            result.Failed();
+                                        }
 
-                                                           var result = new HealthCheckData
-                                                                            {
-                                                                                Identity = Identity,
-                                                                                Info = msg,
-                                                                                Result = outcome,
-                                                                                ResultCount = timer.ElapsedMilliseconds
-                                                                            };
-                                                           Messenger.Publish(result);
-                                                       }
-                                                       catch (WebException wex)
-                                                       {
-                                                           var extraInfo = string.Empty;
+                                        Messenger.Publish(result);
+                                    }
+                                });
 
-                                                           if (wex.Status == WebExceptionStatus.ProtocolError)
-                                                           {
-                                                               extraInfo = string.Format(", Http state: {0}, '{1}'",
-                                                                                         (int)((HttpWebResponse)wex.Response)
-                                                                                             .StatusCode,
-                                                                                         ((HttpWebResponse)wex.Response).
-                                                                                             StatusDescription);
-                                                           }
-
-                                                           var result = new HealthCheckData
-                                                           {
-                                                               Identity = Identity,
-                                                               Info = string.Format("Url '{0}' failed with code '{1}'{2}",
-                                                                   url, wex.Status, extraInfo),
-                                                               Result = false
-                                                           };
-                                                           Messenger.Publish(result);
-                                                       }
-                                                   }
-                                               });
-             */
         }
     }
 }

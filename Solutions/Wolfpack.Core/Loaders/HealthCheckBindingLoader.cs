@@ -38,70 +38,79 @@ namespace Wolfpack.Core.Loaders
 
             bindingConfigs.ToList().ForEach(bc =>
                                                 {
-                                                    IHealthCheckPlugin check;
-
-                                                    // new style health check load - direct from container
-                                                    var candidate = Container.Resolve(bc.HealthCheckConfigurationName);
-
-                                                    if (candidate is IHealthCheckPluginEx)
+                                                    try
                                                     {
-                                                        if (!((IHealthCheckPluginEx)candidate).Enabled)
-                                                            // healthcheck is disabled, skip it!
-                                                            return;
+                                                        IHealthCheckPlugin check;
 
-                                                        check = (IHealthCheckPlugin)candidate;
-                                                    }
-                                                    else
-                                                    {
-                                                        // legacy health check loader mechanism
-                                                        var checkConfig =
-                                                            Container.Resolve(bc.HealthCheckConfigurationName);
+                                                        // new style health check load - direct from container
+                                                        var candidate = Container.Resolve(bc.HealthCheckConfigurationName);
 
-                                                        var configSupportsEnabling = checkConfig as ICanBeSwitchedOff;
-                                                        if ((configSupportsEnabling != null) &&
-                                                            !configSupportsEnabling.Enabled)
-                                                            // skip this plugin, not enabled
-                                                            return;
+                                                        if (candidate is IHealthCheckPluginEx)
+                                                        {
+                                                            if (!((IHealthCheckPluginEx)candidate).Enabled)
+                                                                // healthcheck is disabled, skip it!
+                                                                return;
 
-                                                        // Load healthcheck.............
-                                                        var inferredCheckTypeName =
-                                                            checkConfig.GetType().Name.TrimEnd("config");
+                                                            check = (IHealthCheckPlugin)candidate;
+                                                        }
+                                                        else
+                                                        {
+                                                            // legacy health check loader mechanism
+                                                            var checkConfig =
+                                                                Container.Resolve(bc.HealthCheckConfigurationName);
 
-                                                        Type checkType;
-                                                        if (
-                                                            !GetType<IHealthCheckPlugin>(inferredCheckTypeName,
-                                                                                         out checkType))
+                                                            var configSupportsEnabling = checkConfig as ICanBeSwitchedOff;
+                                                            if ((configSupportsEnabling != null) &&
+                                                                !configSupportsEnabling.Enabled)
+                                                                // skip this plugin, not enabled
+                                                                return;
+
+                                                            // Load healthcheck.............
+                                                            var inferredCheckTypeName =
+                                                                checkConfig.GetType().Name.TrimEnd("config");
+
+                                                            Type checkType;
+                                                            if (
+                                                                !GetType<IHealthCheckPlugin>(inferredCheckTypeName,
+                                                                                             out checkType))
+                                                                throw new InvalidOperationException(
+                                                                    string.Format(
+                                                                        "Searching for type name '{0}'; found no matches. Check the HealthCheckConfigurationName property of your BindingConfigurations are valid",
+                                                                        inferredCheckTypeName));
+
+                                                            check = Activator.CreateInstance(checkType, checkConfig) as
+                                                                    IHealthCheckPlugin;
+                                                        }
+
+
+                                                        // Load scheduler.............
+                                                        var schedulerConfig = Container.Resolve(bc.ScheduleConfigurationName);
+
+                                                        var inferredSchedulerTypeName = schedulerConfig.GetType().Name.Replace("Config", string.Empty);
+
+                                                        Type schedulerType;
+                                                        if (!GetType<IHealthCheckSchedulerPlugin>(inferredSchedulerTypeName, out schedulerType))
                                                             throw new InvalidOperationException(
                                                                 string.Format(
-                                                                    "Searching for type name '{0}'; found no matches. Check the HealthCheckConfigurationName property of your BindingConfigurations are valid",
-                                                                    inferredCheckTypeName));
+                                                                    "Searching for type name '{0}'; found no matches. Check the ScheduleConfigurationName property of your BindingConfigurations are valid",
+                                                                    inferredSchedulerTypeName));
 
-                                                        check = Activator.CreateInstance(checkType, checkConfig) as
-                                                                IHealthCheckPlugin;
+                                                        var scheduler =
+                                                            Activator.CreateInstance(schedulerType, check, schedulerConfig) as
+                                                            IHealthCheckSchedulerPlugin;
+
+                                                        bindings.Add(new Binding
+                                                        {
+                                                            Check = check,
+                                                            Scheduler = scheduler
+                                                        });
                                                     }
-
-
-                                                    // Load scheduler.............
-                                                    var schedulerConfig = Container.Resolve(bc.ScheduleConfigurationName);
-
-                                                    var inferredSchedulerTypeName = schedulerConfig.GetType().Name.Replace("Config", string.Empty);
-
-                                                    Type schedulerType;
-                                                    if (!GetType<IHealthCheckSchedulerPlugin>(inferredSchedulerTypeName, out schedulerType))
-                                                        throw new InvalidOperationException(
-                                                            string.Format(
-                                                                "Searching for type name '{0}'; found no matches. Check the ScheduleConfigurationName property of your BindingConfigurations are valid",
-                                                                inferredSchedulerTypeName));
-
-                                                    var scheduler =
-                                                        Activator.CreateInstance(schedulerType, check, schedulerConfig) as
-                                                        IHealthCheckSchedulerPlugin;
-
-                                                    bindings.Add(new Binding
-                                                                     {
-                                                                         Check = check,
-                                                                         Scheduler = scheduler
-                                                                     });
+                                                    catch (Exception ex)
+                                                    {                                                        
+                                                        throw new InvalidOperationException(string.Format("Failed processing binding[{0},{1}]",
+                                                            bc.HealthCheckConfigurationName, bc.ScheduleConfigurationName), ex);
+                                                    }
+                                                    
                                                 });
 
             // Finally load any programmatic bindings.............
