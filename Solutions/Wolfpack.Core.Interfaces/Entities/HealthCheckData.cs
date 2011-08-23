@@ -119,5 +119,11 @@ namespace Wolfpack.Core.Interfaces.Entities
             Tags += tag;
             return this;
         }
+
+        public HealthCheckData ResultCountIs(double? count)
+        {
+            ResultCount = count;
+            return this;
+        }
     }
 }
