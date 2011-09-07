@@ -20,6 +20,7 @@ namespace Wolfpack.Agent
             public const string Username = "Username";
             public const string Password = "Password";
             public const string Update = "Update";
+            public const string Feed = "Feed";
         }
 
         protected static CmdLineArgs myArgs;
@@ -31,6 +32,7 @@ namespace Wolfpack.Agent
             // setup our supported list of cmdline switches
             mySupportedSwitches = CmdLineSwitches.Init(
                                        CustomSwitch.Build(SwitchNames.Update),
+                                       CustomSwitch.Build(SwitchNames.Feed),
                                        CustomSwitch.Build(SwitchNames.Profile),
                                        CustomSwitch.Build(SwitchNames.Username),
                                        CustomSwitch.Build(SwitchNames.Password),
@@ -65,7 +67,11 @@ namespace Wolfpack.Agent
             if (values.Count() == 0)
                 return false;
 
-            value = values.First().Replace(switchName + ":", string.Empty);
+            var matchingArg = values.First();
+
+            value = matchingArg.Contains(":") 
+                ? values.First().Replace(switchName + ":", string.Empty) 
+                : string.Empty;
             return true;
         }
 

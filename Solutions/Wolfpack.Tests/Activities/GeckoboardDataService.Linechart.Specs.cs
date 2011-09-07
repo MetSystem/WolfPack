@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using Wolfpack.Core.Geckoboard;
 using Wolfpack.Core.Geckoboard.DataProvider;
-using Wolfpack.Tests.Bdd;
 using NUnit.Framework;
 using StoryQ;
+using Wolfpack.Core.Testing.Bdd;
 
 namespace Wolfpack.Tests.Activities
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using Sidewinder;
+using Sidewinder.Core;
 using Wolfpack.Agent.Profiles;
 using Wolfpack.Core;
 using Wolfpack.Core.Interfaces;
@@ -18,12 +18,37 @@ namespace Wolfpack.Agent
                 // select a profile from the cmdline args /profile:[profile] switch
                 CmdLine.Init(args);
 
-                if (CmdLine.Value(CmdLine.SwitchNames.Update) &&
-                    UpdaterFactory.Setup(cfg => cfg.Update("Wolfpack", "net40", "http://www.myget.org/F/wolfpack/"))
-                        .Execute())
+                string package;
+
+                if (CmdLine.Value(CmdLine.SwitchNames.Update, out package))
                 {
-                    Logger.Debug("*** UPDATE AVAILABLE!! SHUTTING DOWN ***");
-                    return;
+                    string feed;
+                    CmdLine.Value(CmdLine.SwitchNames.Feed, out feed);
+
+                    if (string.IsNullOrWhiteSpace(package))
+                    {
+                        // /update switch applied
+                        // general update everything installed
+                        if (AppUpdateFactory.Setup(cfg => cfg.Update("Wolfpack", 
+                            cfg.CurrentAppVersion(), 
+                            feed)).Execute())
+                        {
+                            Logger.Debug("*** UPDATE AVAILABLE!! SHUTTING DOWN ***");
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        // /update:package switch applied
+                        // update this specific package only
+                        if (AppUpdateFactory.Setup(cfg => cfg.Update(package, feed)
+                            .JustThesePackages())
+                            .Execute())
+                        {
+                            Logger.Debug("*** PACKAGE IS AVAILABLE!! SHUTTING DOWN TO INSTALL IT ***");
+                            return;
+                        }                        
+                    }
                 }
 
                 var profile = LoadProfile();

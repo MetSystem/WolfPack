@@ -37,8 +37,9 @@
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
-    <Reference Include="Magnum">
-      <HintPath>..\packages\Magnum.1.1.1.0\lib\NET40\Magnum.dll</HintPath>
+    <Reference Include="Magnum, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Magnum.2.0.0.1\lib\NET40\Magnum.dll</HintPath>
     </Reference>
     <Reference Include="Sharp2City">
       <HintPath>..\References\Sharp2City\Sharp2City.dll</HintPath>

@@ -1,7 +1,7 @@
 using System;
 using Wolfpack.Core.Bridge.FileSystem;
 using Wolfpack.Core.Interfaces.Entities;
-using Wolfpack.Tests.Bdd;
+using Wolfpack.Core.Testing.Domains;
 
 namespace Wolfpack.Tests.Bridges
 {

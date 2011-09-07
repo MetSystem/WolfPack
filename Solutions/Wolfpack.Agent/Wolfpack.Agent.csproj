@@ -42,23 +42,26 @@
       <HintPath>..\References\Castle\Castle.Windsor.dll</HintPath>
     </Reference>
     <Reference Include="Fluent.IO, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Sidewinder.1.0.0.0\lib\Net40\Fluent.IO.dll</HintPath>
+      <HintPath>..\packages\FluentPath.1.0.0\lib\Net4\Fluent.IO.dll</HintPath>
     </Reference>
-    <Reference Include="Ionic.Zip, Version=1.9.1.8, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Sidewinder.1.0.0.0\lib\Net40\Ionic.Zip.dll</HintPath>
+    <Reference Include="Ionic.Zip, Version=1.9.1.8, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\DotNetZip.1.9.1.8\lib\net20\Ionic.Zip.dll</HintPath>
     </Reference>
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Magnum">
-      <HintPath>..\packages\Magnum.1.1.1.0\lib\NET40\Magnum.dll</HintPath>
-    </Reference>
-    <Reference Include="NuGet.Core, Version=1.4.20609.9012, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Sidewinder.1.0.0.0\lib\Net40\NuGet.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Sidewinder, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Magnum, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Sidewinder.1.0.0.0\lib\Net40\Sidewinder.exe</HintPath>
+      <HintPath>..\packages\Magnum.2.0.0.1\lib\NET40\Magnum.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.Core, Version=1.5.20818.9011, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NuGet.Core.1.5.20818.9011\lib\net40-Client\NuGet.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Sidewinder.Core, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Sidewinder.Core.1.2.0.0\lib\Net40\Sidewinder.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

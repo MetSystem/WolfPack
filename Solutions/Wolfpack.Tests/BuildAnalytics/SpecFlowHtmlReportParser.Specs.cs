@@ -1,6 +1,6 @@
 using NUnit.Framework;
 using StoryQ;
-using Wolfpack.Tests.Bdd;
+using Wolfpack.Core.Testing.Bdd;
 
 namespace Wolfpack.Tests.BuildAnalytics
 {
