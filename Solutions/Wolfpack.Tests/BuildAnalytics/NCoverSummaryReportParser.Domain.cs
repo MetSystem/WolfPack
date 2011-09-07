@@ -1,7 +1,7 @@
 
 using Wolfpack.Contrib.BuildAnalytics.Parsers;
 using Wolfpack.Core.Interfaces.Entities;
-using Wolfpack.Tests.Bdd;
+using Wolfpack.Core.Testing.Domains;
 
 namespace Wolfpack.Tests.BuildAnalytics
 {

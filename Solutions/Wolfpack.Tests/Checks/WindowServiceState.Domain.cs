@@ -1,5 +1,5 @@
 using Wolfpack.Core.Checks;
-using Wolfpack.Tests.Bdd;
+using Wolfpack.Core.Testing.Domains;
 
 namespace Wolfpack.Tests.Checks
 {   

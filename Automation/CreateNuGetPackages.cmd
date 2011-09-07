@@ -19,6 +19,14 @@ copy Wolfpack.Contrib.BuildAnalytics\bin\debug\Wolfpack.Contrib.BuildAnalytics.p
 copy Wolfpack.Contrib.BuildAnalytics\bin\debug\Sharp2City.dll NuGet\Templates\Wolfpack.Contrib.BuildAnalytics\lib\net40
 copy Wolfpack.Contrib.BuildAnalytics\bin\debug\Sharp2City.pdb NuGet\Templates\Wolfpack.Contrib.BuildAnalytics\lib\net40
 
+rem Core.Testing
+del NuGet\Templates\Wolfpack.Core.Testing\lib\net40\delete.me
+copy Wolfpack.Core.Testing\bin\debug\*.dll NuGet\Templates\Wolfpack.Core.Testing\lib\net40
+copy Wolfpack.Core.Testing\bin\debug\*.pdb NuGet\Templates\Wolfpack.Core.Testing\lib\net40
+del NuGet\Templates\Wolfpack.Core.Testing\lib\net40\FluentAssertions.*
+del NuGet\Templates\Wolfpack.Core.Testing\lib\net40\Magnum.*
+del NuGet\Templates\Wolfpack.Core.Testing\lib\net40\StoryQ*.*
+
 rem Wolfpack (+Sidewinder)
 del NuGet\Templates\Wolfpack\lib\net40\delete.me
 del NuGet\Templates\Wolfpack\content\config\delete.me
@@ -33,5 +41,6 @@ Automation\NuGet\NuGet.exe pack Releases\v%1\source\NuGet\Templates\Wolfpack.Pub
 Automation\NuGet\NuGet.exe pack Releases\v%1\source\NuGet\Templates\Wolfpack.HealthCheck\Wolfpack.HealthCheck.nuspec -version %1 -OutputDirectory Releases\v%1 
 Automation\NuGet\NuGet.exe pack Releases\v%1\source\NuGet\Templates\Wolfpack.Contrib.BuildAnalytics\Wolfpack.Contrib.BuildAnalytics.nuspec -version %1 -OutputDirectory Releases\v%1 
 Automation\NuGet\NuGet.exe pack Releases\v%1\source\NuGet\Templates\Wolfpack\Wolfpack.nuspec -version %1 -OutputDirectory Releases\v%1 
+Automation\NuGet\NuGet.exe pack Releases\v%1\source\NuGet\Templates\Wolfpack.Core.Testing\Wolfpack.Core.Testing.nuspec -version %1 -OutputDirectory Releases\v%1 
 popd
 

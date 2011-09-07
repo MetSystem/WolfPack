@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using StoryQ;
 using Wolfpack.Core.Interfaces.Entities;
-using Wolfpack.Tests.Bdd;
+using Wolfpack.Core.Testing.Bdd;
+using Wolfpack.Core.Testing.Domains;
 
 namespace Wolfpack.Tests.System
 {
