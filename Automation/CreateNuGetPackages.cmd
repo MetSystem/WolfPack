@@ -21,8 +21,8 @@ copy Wolfpack.Contrib.BuildAnalytics\bin\debug\Sharp2City.pdb NuGet\Templates\Wo
 
 rem Core.Testing
 del NuGet\Templates\Wolfpack.Core.Testing\lib\net40\delete.me
-copy Wolfpack.Core.Testing\bin\debug\*.dll NuGet\Templates\Wolfpack.Core.Testing\lib\net40
-copy Wolfpack.Core.Testing\bin\debug\*.pdb NuGet\Templates\Wolfpack.Core.Testing\lib\net40
+copy Wolfpack.Core.Testing\bin\debug\*.* NuGet\Templates\Wolfpack.Core.Testing\lib\net40
+del NuGet\Templates\Wolfpack.Core.Testing\lib\net40\wolfpack.agent.exe.config
 del NuGet\Templates\Wolfpack.Core.Testing\lib\net40\FluentAssertions.*
 del NuGet\Templates\Wolfpack.Core.Testing\lib\net40\Magnum.*
 del NuGet\Templates\Wolfpack.Core.Testing\lib\net40\StoryQ*.*
@@ -32,8 +32,10 @@ del NuGet\Templates\Wolfpack\lib\net40\delete.me
 del NuGet\Templates\Wolfpack\content\config\delete.me
 del NuGet\Templates\Wolfpack\content\growl\delete.me
 copy Wolfpack.Agent\bin\debug\*.* NuGet\Templates\Wolfpack\lib\net40
+move NuGet\Templates\Wolfpack\lib\net40\wolfpack.agent.exe.config NuGet\Templates\Wolfpack\content
 xcopy Wolfpack.Agent\bin\debug\config\*.* NuGet\Templates\Wolfpack\content\config /Y /R /I /E
 xcopy Wolfpack.Agent\bin\debug\growl\*.* NuGet\Templates\Wolfpack\content\growl /Y /R /I /E
+
 
 popd
 pushd ..\
