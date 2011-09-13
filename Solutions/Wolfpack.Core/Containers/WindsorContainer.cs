@@ -1,13 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using Castle.Core;
-using Castle.Core.Resource;
 using Castle.MicroKernel.Registration;
-using Castle.Windsor.Configuration.Interpreters;
 using NServiceBus;
 
 namespace Wolfpack.Core.Containers
@@ -64,14 +60,14 @@ namespace Wolfpack.Core.Containers
             return this;
         }
 
-        public IContainer RegisterAllWithInterception<T, I>()
+        public IContainer RegisterAllWithInterception<T, TI>()
         {
             Type[] components;
 
             if (!TypeDiscovery.Discover<T>(out components))
                 return this;
 
-            var interceptorTypes = (from iType in ResolveAll<I>()
+            var interceptorTypes = (from iType in ResolveAll<TI>()
                                     select iType.GetType()).ToArray();
 
             components.ForEach(c =>
@@ -134,49 +130,6 @@ namespace Wolfpack.Core.Containers
             // register NSB with our Windsor container so that
             // any IBus dependencies are automatically resolved
             return Configure.With(listOfAssemblies).CastleWindsorBuilder(myInstance);
-        }
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <remarks>http://stackoverflow.com/questions/317981/can-castle-windsor-locate-files-in-a-subdirectory</remarks>
-    public class ZeroAppConfigXmlInterpreter : XmlInterpreter
-    {
-        public override void ProcessResource(IResource source, Castle.MicroKernel.SubSystems.Configuration.IConfigurationStore store)
-        {
-            // default stuff...
-            base.ProcessResource(source, store);
-
-            // custom stuff..auto register all config\*.castle.config files
-            var configFilesLocation = SmartLocation.GetLocation("config");
-
-            if (!Directory.Exists(configFilesLocation))
-                return;
-
-            ProcessFolder(store, configFilesLocation);
-        }
-
-        protected void ProcessFolder(Castle.MicroKernel.SubSystems.Configuration.IConfigurationStore store, string path)
-        {
-            foreach (var extraConfig in Directory.GetFiles(path, "*.castle.config"))
-            {
-                try
-                {
-                    var interpreter = new XmlInterpreter(extraConfig) { Kernel = Kernel };
-                    interpreter.ProcessResource(interpreter.Source, store);
-                }
-                catch (ConfigurationErrorsException)
-                {
-                    throw;
-                }
-                catch (Exception ex)
-                {
-                    throw new InvalidOperationException("Failed to load configuration: " + extraConfig, ex);
-                }
-            }
-            
-            Directory.GetDirectories(path).ForEach(folder => ProcessFolder(store, folder));
         }
     }
 }

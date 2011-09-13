@@ -144,6 +144,7 @@
     <Compile Include="Containers\IContainer.cs" />
     <Compile Include="Containers\InterceptorBase.cs" />
     <Compile Include="Containers\WindsorContainer.cs" />
+    <Compile Include="Containers\ZeroAppConfigXmlInterpreter.cs" />
     <Compile Include="Database\AdhocCommandBase.cs" />
     <Compile Include="Database\Oracle\OracleAdhocCommand.cs" />
     <Compile Include="Database\Oracle\OracleStatement.cs" />
@@ -198,6 +199,7 @@
     <Compile Include="Hosts\PluginHostBase.cs" />
     <Compile Include="InterceptorSelector.cs" />
     <Compile Include="Loaders\ContainerLoaders.cs" />
+    <Compile Include="Loaders\DefaultBindingConfigurationLoader.cs" />
     <Compile Include="Loaders\HealthCheckBindingLoader.cs" />
     <Compile Include="Loaders\HealthCheckLoader.cs" />
     <Compile Include="Loaders\PluginExtensions.cs" />

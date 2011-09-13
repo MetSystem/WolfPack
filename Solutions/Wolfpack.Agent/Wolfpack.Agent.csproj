@@ -109,6 +109,9 @@
     <None Include="Config\Checks\cpu.castle.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Config\Checks\EveryMinute\notepad-running.castle.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Config\Checks\hostping.castle.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
