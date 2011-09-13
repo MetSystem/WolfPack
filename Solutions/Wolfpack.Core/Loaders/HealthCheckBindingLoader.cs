@@ -14,6 +14,13 @@ namespace Wolfpack.Core.Loaders
     /// </summary>
     public class HealthCheckBindingLoader : ILoader<Binding>
     {
+        private readonly ILoader<BindingConfiguration> myBindingConfigLoader;
+
+        public HealthCheckBindingLoader(ILoader<BindingConfiguration> bindingConfigLoader)
+        {
+            myBindingConfigLoader = bindingConfigLoader;
+        }
+
         public bool Load(out Binding[] components)
         {
             // 1. Load all BindingConfiguration components from IoC
@@ -31,7 +38,7 @@ namespace Wolfpack.Core.Loaders
             components = new Binding[0];
             BindingConfiguration[] bindingConfigs;
 
-            if (!ContainerLoader<BindingConfiguration>.Resolve(out bindingConfigs))
+            if (!myBindingConfigLoader.Load(out bindingConfigs))
                 return false;
 
             var bindings = new List<Binding>();
@@ -40,6 +47,9 @@ namespace Wolfpack.Core.Loaders
                                                 {
                                                     try
                                                     {
+                                                        Logger.Debug("\tResolving binding [{0}->{1}]",
+                                                            bc.HealthCheckConfigurationName, bc.ScheduleConfigurationName);
+
                                                         IHealthCheckPlugin check;
 
                                                         // new style health check load - direct from container
@@ -70,8 +80,7 @@ namespace Wolfpack.Core.Loaders
                                                                 checkConfig.GetType().Name.TrimEnd("config");
 
                                                             Type checkType;
-                                                            if (
-                                                                !GetType<IHealthCheckPlugin>(inferredCheckTypeName,
+                                                            if (!GetType<IHealthCheckPlugin>(inferredCheckTypeName,
                                                                                              out checkType))
                                                                 throw new InvalidOperationException(
                                                                     string.Format(
@@ -107,7 +116,7 @@ namespace Wolfpack.Core.Loaders
                                                     }
                                                     catch (Exception ex)
                                                     {                                                        
-                                                        throw new InvalidOperationException(string.Format("Failed processing binding[{0},{1}]",
+                                                        throw new InvalidOperationException(string.Format("Failed processing binding[{0}->{1}]",
                                                             bc.HealthCheckConfigurationName, bc.ScheduleConfigurationName), ex);
                                                     }
                                                     

@@ -9,12 +9,19 @@ namespace Wolfpack.Core.Loaders
 {
     public class HealthCheckLoader : ILoader<IHealthCheckSchedulerPlugin>
     {
+        private readonly ILoader<BindingConfiguration> myBindingConfigLoader;
+
+        public HealthCheckLoader(ILoader<BindingConfiguration> bindingConfigLoader)
+        {
+            myBindingConfigLoader = bindingConfigLoader;
+        }
+
         public bool Load(out IHealthCheckSchedulerPlugin[] components)
         {
             components = new IHealthCheckSchedulerPlugin[0];
 
             Binding[] bindings;
-            var bindingLoader = new HealthCheckBindingLoader();   
+            var bindingLoader = new HealthCheckBindingLoader(myBindingConfigLoader);
          
             if (!bindingLoader.Load(out bindings))
                 return false;
