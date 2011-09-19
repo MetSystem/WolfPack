@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Sidewinder.Core;
+using Sidewinder.Core.Interfaces.Entities;
 using Wolfpack.Agent.Profiles;
 using Wolfpack.Core;
 using Wolfpack.Core.Interfaces;
@@ -41,7 +42,12 @@ namespace Wolfpack.Agent
                     {
                         // /update:package switch applied
                         // update this specific package only
-                        if (AppUpdateFactory.Setup(cfg => cfg.Update(package, feed)
+                        if (AppUpdateFactory.Setup(cfg => cfg.Update(new TargetPackage
+                                                                         {
+                                                                             Name = package,
+                                                                             NuGetFeedUrl = feed,
+                                                                             UpdateDependencies = true
+                                                                         })
                             .JustThesePackages())
                             .Execute())
                         {
