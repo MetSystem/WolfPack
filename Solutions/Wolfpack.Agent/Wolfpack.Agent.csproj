@@ -103,43 +103,43 @@
     <None Include="Config\binding.castle.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Config\Checks\diskspace.castle.config">
+    <None Include="Config\Checks\EveryHour\diskspace.castle.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Config\Checks\cpu.castle.config">
+    <None Include="Config\Checks\EveryMinute\cpu.castle.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Config\Checks\EveryMinute\notepad-running.castle.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Config\Checks\hostping.castle.config">
+    <None Include="Config\Checks\EveryMinute\hostping.castle.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Config\Checks\urlping.castle.config">
+    <None Include="Config\Checks\EveryHour\urlping.castle.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Config\Checks\windowsservicestartup.castle.config">
+    <None Include="Config\Checks\EveryMinute\windowsservicestartup.castle.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Config\Checks\windowsservicestate.castle.config">
+    <None Include="Config\Checks\EveryMinute\windowsservicestate.castle.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Config\Checks\sqlscalar.castle.config">
+    <None Include="Config\Checks\EveryMinute\sqlscalar.castle.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Config\Checks\processrunning.castle.config">
+    <None Include="Config\Checks\EveryMinute\processrunning.castle.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Config\Checks\msmqemptyinfo.castle.config">
+    <None Include="Config\Checks\EveryMinute\msmqemptyinfo.castle.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Config\Checks\msmqinfo.castle.config">
+    <None Include="Config\Checks\EveryMinute\msmqinfo.castle.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Config\Checks\folderinfo.castle.config">
+    <None Include="Config\Checks\EveryMinute\folderinfo.castle.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Config\Checks\fileinfo.castle.config">
+    <None Include="Config\Checks\EveryMinute\fileinfo.castle.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Config\Checks\helloworld.castle.config">
