@@ -114,6 +114,7 @@
     </None>
     <None Include="Config\Checks\EveryMinute\hostping.castle.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </None>
     <None Include="Config\Checks\EveryHour\urlping.castle.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
