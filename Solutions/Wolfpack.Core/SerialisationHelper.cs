@@ -24,6 +24,38 @@ namespace Wolfpack.Core
         }
 
         /// <summary>
+        /// Serialize the object using the DataContractSerializer to the file specified. If the file
+        /// exists it will be overwritten and it requires an exclusive write lock on the file.
+        /// </summary>
+        /// <param name="path">The filename to write the serialization string to</param>
+        /// <param name="encoding">The encoding to use when serializing.</param>
+        /// <param name="entity">The entity to serialize.</param>
+        /// <returns></returns>
+        public static void DataContractSerialize(string path, Encoding encoding, T entity)
+        {
+            var serializer = new DataContractSerializer(typeof(T));
+            var filename = SmartLocation.GetLocation(path);
+
+            using (var writer = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.None))
+            {
+                serializer.WriteObject(writer, entity);
+            }
+        }
+
+        /// <summary>
+        /// Serialize the object using the DataContractSerializer to the file specified with UTF8
+        /// encoding. If the file exists it will be overwritten and it requires an exclusive write
+        /// lock on the file.
+        /// </summary>
+        /// <param name="path">The filename to write the serialization string to</param>
+        /// <param name="entity">The entity to serialize.</param>
+        /// <returns></returns>
+        public static void DataContractSerialize(string path, T entity)
+        {
+            DataContractSerialize(path, Encoding.UTF8, entity);
+        }
+
+        /// <summary>
         /// Serialize the object using the DataContractSerializer, defaults to using UTF8 encoding
         /// </summary>
         /// <param name="entity">The entity to serialize.</param>
@@ -57,6 +89,35 @@ namespace Wolfpack.Core
         public static T DataContractDeserialize(string entity)
         {
             return DataContractDeserialize(Encoding.UTF8, entity);
-        }        
+        }
+
+        /// <summary>
+        /// Deserialize the object using the DataContractSerializer from the file specified. If the file
+        /// does not exist then an exception will be thrown
+        /// </summary>
+        /// <param name="path">The fully qualified path to the file</param>
+        /// <returns></returns>
+        public static T DataContractDeserializeFromFile(string path)
+        {
+            return DataContractDeserializeFromFile(path, Encoding.UTF8);
+        }
+
+        /// <summary>
+        /// Deserialize the object using the DataContractSerializer from the file specified. If the file
+        /// does not exist then an exception will be thrown
+        /// </summary>
+        /// <param name="path">The fully qualified path to the file</param>
+        /// <param name="encoding">The encoding to use when deserializing.</param>
+        /// <returns></returns>
+        public static T DataContractDeserializeFromFile(string path, Encoding encoding)
+        {
+            var serializer = new DataContractSerializer(typeof(T));
+            var filename = SmartLocation.GetLocation(path);
+
+            using (var reader = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                return (T)serializer.ReadObject(reader);
+            }
+        }
     }
 }

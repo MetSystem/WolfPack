@@ -31,11 +31,21 @@ namespace Wolfpack.Core.Checks
         public bool PublishOnlyIfFailure { get; set; }
 
         /// <summary>
+        /// Set this to insure that you get the correct version of the URL Data that you want.
+        /// in some cases you want the Moble version or maybe the version for the ipad. Some sites
+        /// and network firewalls/proxies will not allow a requet through if the User agent is not 
+        /// a know type.
+        /// <summary>
+        public string UserAgentString { get; set; }
+
+
+        /// <summary>
         /// default ctor
         /// </summary>
         public UrlPingCheckConfig()
         {
             PublishOnlyIfFailure = true;
+            UserAgentString = "Wolfpack.Agent";
         }
     }
 
@@ -87,14 +97,15 @@ namespace Wolfpack.Core.Checks
                                                    {
                                                        try
                                                        {
+                                                           wc.Headers.Add("User-Agent", myConfig.UserAgentString);
                                                            var publish = !myConfig.PublishOnlyIfFailure;
                                                            var outcome = true;
                                                            var msg = string.Format("Successfully pinged url '{0}'", url);
-
+                                                           Logger.Debug("Starting request Timer for {0}",url);
                                                            var timer = Stopwatch.StartNew();
                                                            wc.DownloadString(url);
                                                            timer.Stop();
-
+                                                           Logger.Debug("Stopped request Timer({1}) for {0}", url,timer.ElapsedMilliseconds);
                                                            // perform threshold check...
                                                            if (myConfig.FailIfResponseMillisecondsOver.HasValue &&
                                                                (myConfig.FailIfResponseMillisecondsOver.Value > 0) &&
