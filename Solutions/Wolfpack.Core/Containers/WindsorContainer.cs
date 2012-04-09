@@ -10,7 +10,7 @@ namespace Wolfpack.Core.Containers
 {
     public class WindsorContainer : IContainer
     {        
-        protected static Castle.Windsor.WindsorContainer myInstance =
+        protected Castle.Windsor.WindsorContainer myInstance =
             new Castle.Windsor.WindsorContainer(new ZeroAppConfigXmlInterpreter());
 
         public IContainer RegisterAsTransient(Type implType)

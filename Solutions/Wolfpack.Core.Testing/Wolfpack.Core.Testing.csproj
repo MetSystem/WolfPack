@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Fluent.IO, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentPath.1.0.0\lib\Net4\Fluent.IO.dll</HintPath>
+    </Reference>
     <Reference Include="FluentAssertions">
       <HintPath>..\packages\FluentAssertions.1.5.0.0\Lib\.NetFramework 4.0\FluentAssertions.dll</HintPath>
     </Reference>
@@ -70,6 +73,7 @@
     <Compile Include="Bdd\BddFeature.cs" />
     <Compile Include="Bdd\BddTestDomain.cs" />
     <Compile Include="Domains\CommunicationActivityDomainBase.cs" />
+    <Compile Include="Domains\ContainerDomain.cs" />
     <Compile Include="Domains\GeckoboardDataServiceDomain.cs" />
     <Compile Include="Domains\HealthCheckDomain.cs" />
     <Compile Include="Domains\MessengerEnabledDomain.cs" />

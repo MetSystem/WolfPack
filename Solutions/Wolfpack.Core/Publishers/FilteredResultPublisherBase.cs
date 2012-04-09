@@ -34,7 +34,11 @@ namespace Wolfpack.Core.Publishers
         public void Consume(HealthCheckResult message)
         {
             if (!myFilter(message))
+            {
+
                 return;
+            }
+
             Publish(message);
         }
 

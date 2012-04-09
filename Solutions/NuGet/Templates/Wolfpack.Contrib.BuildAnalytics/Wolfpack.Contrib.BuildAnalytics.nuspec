@@ -10,8 +10,8 @@
     <projectUrl>http://wolfpack.codeplex.com/</projectUrl>
     <iconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=Wolfpack&amp;DownloadId=140622&amp;Build=17672</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Wolfpack is an extensible .Net windows service based framework for running jobs to monitor your software and system. The data collected can be sent directly to Growl clients, WCF, SQL, SQLite, NServiceBus and it exposes a native Geckoboard REST/JSON data feed so you create instant dashboards for your system. It comes preloaded with some tasks but it's simple to implement your own!</description>
-    <summary>Wolfpack.Contrib.BuildAnalytics adds the necessary classes to create your own custom build checks (notifiers) and parsers.</summary>
+    <description>Wolfpack.Contrib.BuildAnalytics adds the necessary classes to create your own custom build checks (notifiers) and parsers to allow you to turn your build results into a Wolfpack data stream.</description>
+    <summary>Wolfpack.Contrib.BuildAnalytics adds the necessary classes to create your own custom build checks (notifiers) and parsers to allow you to turn your build results into a Wolfpack data stream</summary>
     <language>en-GB</language>
     <tags>Wolfpack Monitoring Build</tags>
     <dependencies>
