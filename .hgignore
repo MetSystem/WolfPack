@@ -35,3 +35,5 @@ _ReSharper*/
 *.bin
 Automation/PushNuGetPackages.cmd
 Automation/PushNuGetToMyGet.cmd
+*.ncrunchsolution
+*.ncrunchproject
