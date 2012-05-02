@@ -22,10 +22,24 @@ namespace Wolfpack.Core.Database.SqlServer
         {
             try
             {
+                Logger.Debug("\tCreating {0} schema...", myConfig.SchemaName);
+                using (var cmd = SqlServerAdhocCommand.UsingSmartConnection(myConfig.ConnectionString)
+                    .WithSql(SqlServerStatement.Create("IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = N'{0}') SELECT CAST(1 as bit) ELSE Select CAST(0 as bit)", myConfig.SchemaName)))
+                {
+                    bool exists = (bool)cmd.ExecuteScalar();
+                    if (exists)
+                        using (var createCmd = SqlServerAdhocCommand.UsingSmartConnection(myConfig.ConnectionString)
+                            .WithSql(SqlServerStatement.Create("CREATE SCHEMA {0}", myConfig.SchemaName)))
+                        {
+                            createCmd.ExecuteNonQuery();
+                            Logger.Debug("\tDone");
+                        }
+                }
+
                 Logger.Debug("\tCreating AgentData table...");
                 using (var cmd = SqlServerAdhocCommand.UsingSmartConnection(myConfig.ConnectionString)
-                    .WithSql(SqlServerStatement.Create("IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[AgentData]') AND type in (N'U')) BEGIN")
-                    .Append("CREATE TABLE [dbo].[AgentData](")
+                    .WithSql(SqlServerStatement.Create("IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[{0}].[AgentData]') AND type in (N'U')) BEGIN", myConfig.SchemaName)
+                    .Append("CREATE TABLE [{0}].[AgentData](", myConfig.SchemaName)
                     .Append("[TypeId] [uniqueidentifier] NOT NULL,")
                     .Append("[EventType] [varchar](20) COLLATE Latin1_General_CI_AS NOT NULL,")
                     .Append("[SiteId] [varchar](50) COLLATE Latin1_General_CI_AS NOT NULL,")
@@ -44,10 +58,10 @@ namespace Wolfpack.Core.Database.SqlServer
                 Logger.Debug("\tApplying schema updates (ResultCount) to AgentData table...");
                 using (var cmd = SqlServerAdhocCommand.UsingSmartConnection(myConfig.ConnectionString)
                     .WithSql(SqlServerStatement.Create("IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'AgentData' AND COLUMN_NAME = 'ResultCount') BEGIN")
-                    .Append("ALTER TABLE [dbo].[AgentData] ADD ResultCount DECIMAL(20,4) NULL")
+                    .Append("ALTER TABLE {0}.AgentData ADD ResultCount DECIMAL(20,4) NULL", myConfig.SchemaName)
                     .Append("END ELSE BEGIN")
                     .Append("IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'AgentData' AND COLUMN_NAME = 'ResultCount' AND DATA_TYPE = 'bigint') BEGIN")
-                    .Append("ALTER TABLE dbo.AgentData ALTER COLUMN ResultCount DECIMAL(20,4)")
+                    .Append("ALTER TABLE {0}.AgentData ALTER COLUMN ResultCount DECIMAL(20,4)", myConfig.SchemaName)
                     .Append("END")
                     .Append("END")))
                 {
@@ -108,10 +122,11 @@ namespace Wolfpack.Core.Database.SqlServer
                 return false;
 
             using (var cmd = SqlServerAdhocCommand.UsingSmartConnection(myConfig.ConnectionString)
-                .WithSql(SqlServerStatement.Create("ALTER TABLE [dbo].[AgentData] ADD {0} {1} {2} NULL",
+                .WithSql(SqlServerStatement.Create("ALTER TABLE [{3}].[AgentData] ADD {0} {1} {2} NULL",
                     column,
                     datatype,
-                    nullable ? string.Empty : "NOT")))
+                    nullable ? string.Empty : "NOT",
+                    myConfig.SchemaName)))
             {
                 cmd.ExecuteNonQuery();
                 Logger.Debug("\tAdded column {0} [{1}]", column, datatype);
@@ -132,7 +147,7 @@ namespace Wolfpack.Core.Database.SqlServer
             var data = SerialisationHelper<HealthCheckAgentStart>.DataContractSerialize(message);
 
             using (var cmd = SqlServerAdhocCommand.UsingSmartConnection(myConfig.ConnectionString)
-                .WithSql(SqlServerStatement.Create("INSERT INTO dbo.AgentData (")
+                .WithSql(SqlServerStatement.Create("INSERT INTO {0}.AgentData (", myConfig.SchemaName)
                 .Append("TypeId,EventType,SiteId,AgentId,GeneratedOnUtc,ReceivedOnUtc,Data,Version")
                 .Append(") VALUES (")
                 .InsertParameter("@pTypeId", message.Id).Append(",")
@@ -166,7 +181,7 @@ namespace Wolfpack.Core.Database.SqlServer
         {
             var data = SerialisationHelper<HealthCheckResult>.DataContractSerialize(message);
 
-            var statement = SqlServerStatement.Create("INSERT INTO dbo.AgentData (")
+            var statement = SqlServerStatement.Create("INSERT INTO {0}.AgentData (", myConfig.SchemaName)
                 .Append("TypeId,EventType,SiteId,AgentId,CheckId,")
                 .AppendIf(() => message.Check.Result.HasValue, "Result,")
                 .AppendIf(() => message.Check.ResultCount.HasValue, "ResultCount,")
