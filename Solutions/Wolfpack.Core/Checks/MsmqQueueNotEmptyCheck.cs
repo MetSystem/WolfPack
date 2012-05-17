@@ -28,7 +28,7 @@ namespace Wolfpack.Core.Checks
             myIdentity = new PluginDescriptor
             {
                 Description = string.Format("Checking queue '{0}' is empty", config.QueueName),
-                TypeId = new Guid("7C6F11A6-7265-4aee-AB23-BA549EACB592"),
+                TypeId = new Guid("51D9BEE6-F12A-447F-B255-28D00CDFBECB"),
                 Name = myConfig.FriendlyId
             };
         }
