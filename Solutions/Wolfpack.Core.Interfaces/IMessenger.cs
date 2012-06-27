@@ -8,6 +8,7 @@ namespace Wolfpack.Core.Interfaces
         IMessenger Publish(HealthCheckAgentStart message);
         IMessenger Publish(HealthCheckResult message);
         IMessenger Publish(HealthCheckData message);
+
         /// <summary>
         /// 
         /// </summary>

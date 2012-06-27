@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using Magnum.Pipeline;
 using Wolfpack.Core;
 using Wolfpack.Core.Hosts;
 using Wolfpack.Core.Interfaces;
@@ -9,13 +8,14 @@ using Wolfpack.Core.Interfaces.Magnum;
 
 namespace Wolfpack.Agent.Roles
 {
-    public class Agent : PluginHostBase, IRolePlugin, IConsumer<HealthCheckData>
+    public class Agent : PluginHostBase, IRolePlugin
     {
         protected readonly ILoader<IHealthCheckSessionPublisher> mySessionPublisherLoader;
         protected readonly ILoader<IHealthCheckResultPublisher> myResultPublisherLoader;
         protected readonly ILoader<IHealthCheckSchedulerPlugin> myChecksLoader;
         protected readonly ILoader<IActivityPlugin> myActivitiesLoader;
-        protected readonly IGeoLocator myGeoLocator;
+        
+        protected readonly INotificationHub myHub;
         protected PluginDescriptor myIdentity;
 
         protected AgentInfo myAgentInfo;
@@ -25,14 +25,14 @@ namespace Wolfpack.Agent.Roles
             ILoader<IHealthCheckResultPublisher> resultPublisherLoader,
             ILoader<IHealthCheckSchedulerPlugin> checksLoader,
             ILoader<IActivityPlugin> activitiesLoader,
-            IGeoLocator geoLocator)
+            INotificationHub hub)
         {
+            myHub = hub;
             mySessionPublisherLoader = sessionPublisherLoader;
             myResultPublisherLoader = resultPublisherLoader;
             myChecksLoader = checksLoader;
             myActivitiesLoader = activitiesLoader;
-            myAgentInfo = BuildAgentInfo(config);
-            myGeoLocator = geoLocator;
+            myAgentInfo = BuildAgentInfo(config);            
 
             myIdentity = new PluginDescriptor
                              {
@@ -46,8 +46,8 @@ namespace Wolfpack.Agent.Roles
         {
             return new AgentInfo
                        {
-                           SiteId = config.SiteId,
-                           AgentId = Environment.MachineName
+                           SiteId = Environment.MachineName,
+                           AgentId = config.SiteId
                        };
         }
 
@@ -64,7 +64,6 @@ namespace Wolfpack.Agent.Roles
                 DiscoveryStarted = DateTime.UtcNow,
                 Agent = myAgentInfo
             };
-
 
             // load publishers
             IHealthCheckSessionPublisher[] sessionPublishers;
@@ -143,31 +142,11 @@ namespace Wolfpack.Agent.Roles
 
             Messenger.Publish(sessionInfo);
 
-            // listen for result messages being published
-            // by the checks & activities - route to the
-            // publisher-hub so it can decide how to handle them
-            Messenger.Subscribe(this);
+            // this will ensure we are listening for health check result messages
+            myHub.Initialise(myAgentInfo);
+
             // finally start the checks & activities
             base.Start();
-        }
-
-        public void Consume(HealthCheckData message)
-        {
-            // wrap the data with the agent information
-            // to produce a "result"
-            var result = new HealthCheckResult
-            {
-                Agent = myAgentInfo,
-                Check = message
-            };
-
-            // if the geo data has not already been set by the health check
-            if ((result.Check != null) && (result.Check.Geo == null))
-            {
-                result.Check.Geo = myGeoLocator.Locate();
-            }
-
-            Messenger.Publish(result);
         }
     }
 }

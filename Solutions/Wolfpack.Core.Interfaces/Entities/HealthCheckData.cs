@@ -14,6 +14,12 @@ namespace Wolfpack.Core.Interfaces.Entities
         }
 
         /// <summary>
+        /// This is used by a HealthCheck to inform the Wolfpack infrastructure how
+        /// to shape the stream of alerts emitted
+        /// </summary>
+        public string NotificationMode { get; set; }
+
+        /// <summary>
         /// The result of the check if it has a true/false outcome
         /// </summary>
         public bool? Result { get; set; }

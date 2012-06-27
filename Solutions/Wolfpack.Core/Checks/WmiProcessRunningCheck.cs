@@ -6,7 +6,7 @@ using Wolfpack.Core.Interfaces.Entities;
 
 namespace Wolfpack.Core.Checks
 {
-    public class WmiProcessRunningCheckConfig : PluginConfigBase
+    public class WmiProcessRunningCheckConfig : HealthCheckPluginConfigBase
     {
         public string RemoteUser { get; set; }
         public string RemotePwd { get; set; } 
@@ -74,6 +74,7 @@ namespace Wolfpack.Core.Checks
 
             var msg = new HealthCheckData
                           {
+                              NotificationMode = myConfig.NotificationMode,
                               Identity = Identity,
                               Info = string.Format("There are {0} instances of process '{1}' on {2}",
                                                    matches.Count(),
