@@ -1,7 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using Wolfpack.Core.Interfaces.Entities;
+using Castle.Core;
+using System.Linq;
 
 namespace Wolfpack.Core.Checks
 {
@@ -12,6 +15,14 @@ namespace Wolfpack.Core.Checks
 
     public class CpuCheck : StreamThresholdCheckBase<CpuCheckConfig>
     {
+        private class ProcessCounterSample
+        {
+            public Process Process { get; set; }
+            public PerformanceCounter Counter { get; set; }
+            public CounterSample Sample1 { get; set; }
+            public double Value { get; set; }
+        }
+
         protected PerformanceCounter myCounter;
 
         /// <summary>
@@ -44,6 +55,54 @@ namespace Wolfpack.Core.Checks
                             ResultCount = value
                         });
 
+        }
+
+        protected override void AdjustMessageForBreach(HealthCheckData message)
+        {
+            base.AdjustMessageForBreach(message);
+
+            var counters = new List<ProcessCounterSample>();
+            var ps = Process.GetProcesses();
+
+            ps.ForEach(process =>
+                           {
+                               try
+                               {
+                                   var counter = (string.IsNullOrEmpty(myConfig.MachineName)
+                                                      ? new PerformanceCounter("Process", "% Processor Time", process.ProcessName)
+                                                      : new PerformanceCounter("Process", "% Processor Time", process.ProcessName, myConfig.MachineName));
+                                   counter.ReadOnly = true;
+
+                                   counters.Add(new ProcessCounterSample
+                                                    {
+                                                        Counter = counter,
+                                                        Process = process,
+                                                        Sample1 = counter.NextSample()
+                                                    });
+                               }
+                               catch
+                               {
+                                   Logger.Debug("*** Process '{0}' has no Performance Counter ***", process.ProcessName);
+                               }
+                           });
+
+            Logger.Info("Getting CPU% for {0} processes...", counters.Count);
+            Thread.Sleep(1000);
+
+            counters.ForEach(pcs =>
+                                 {
+                                     var sample2 = pcs.Counter.NextSample();
+                                     pcs.Value = Math.Round(CounterSampleCalculator.ComputeCounterValue(pcs.Sample1, sample2));
+                                 });
+
+            counters.Where(pcs => pcs.Value > 0)
+                .OrderByDescending(pcs => pcs.Value)
+                .Take(5)
+                .ForEach(pcs =>
+                             {
+                                 var name = string.Format("{0}[{1}]", pcs.Process.ProcessName, pcs.Process.Id);
+                                 message.AddProperty(name, Convert.ToString(pcs.Value));
+                             });
         }
 
         protected override PluginDescriptor BuildIdentity()
