@@ -9,7 +9,7 @@ namespace Wolfpack.Core
     /// This implementation uses the Magnum Event Aggregator/Bus for
     /// decoupled intercomponent communication
     /// </summary>
-    public class Messenger
+    public static class Messenger
     {
         private static IMessenger myInstance;
 

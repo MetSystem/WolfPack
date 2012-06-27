@@ -28,6 +28,7 @@ namespace Wolfpack.Agent.Profiles
         {            
             Container.RegisterAllWithInterception<IGrowlNotificationFinaliser, IGrowlNotificationFinaliserInterceptor>()
                 .RegisterAll<IHealthCheckSessionPublisher>()
+                .RegisterAll<INotificationModeFilter>()
                 .RegisterAllWithInterception<IHealthCheckResultPublisher, IPublisherFilter>()
                 .RegisterAll<IActivityPlugin>()
                 .RegisterAsSingleton<ILoader<BindingConfiguration>>(typeof(DefaultBindingConfigurationLoader))

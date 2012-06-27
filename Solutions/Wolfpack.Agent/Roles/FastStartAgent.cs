@@ -22,8 +22,8 @@ namespace Wolfpack.Agent.Roles
             ILoader<IHealthCheckResultPublisher> resultPublisherLoader,
             ILoader<IHealthCheckSchedulerPlugin> checksLoader,
             ILoader<IActivityPlugin> activitiesLoader,
-            IGeoLocator geoLocator)
-            : base(config, sessionPublisherLoader, resultPublisherLoader, checksLoader, activitiesLoader, geoLocator)
+            INotificationHub hub)
+            : base(config, sessionPublisherLoader, resultPublisherLoader, checksLoader, activitiesLoader, hub)
         {
             myIdentity = new PluginDescriptor
                              {

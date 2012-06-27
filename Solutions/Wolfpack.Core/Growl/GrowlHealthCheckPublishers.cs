@@ -26,7 +26,7 @@ namespace Wolfpack.Core.Growl
         public void Publish(HealthCheckAgentStart message)
         {
             var isSticky = false;
-            var textBuilder = new StringBuilder(string.Format("Agent on {0} started\n", message.Agent.AgentId));
+            var textBuilder = new StringBuilder(string.Format("Agent {0} on {1} started\n", message.Agent.AgentId, message.Agent.SiteId));
 
             if ((message.Activities != null) && (message.Activities.Count > 0))
             {

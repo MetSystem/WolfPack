@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using Wolfpack.Core.Geo;
 using Wolfpack.Core.Interfaces;
 using Wolfpack.Core.Interfaces.Entities;
 using Wolfpack.Core.Interfaces.Magnum;
@@ -13,6 +14,7 @@ namespace Wolfpack.Core.Testing.Drivers
     public class AutomationProfile : IRoleProfile
     {
         protected IRolePlugin myRole;
+        protected INotificationHub myNotificationHub;
         protected IGeoLocator myGeoLocator;
         protected AutomationLoader<IStartupPlugin> myStartupLoader;
         protected AutomationLoader<IHealthCheckSessionPublisher> mySessionPublisherLoader;
@@ -40,6 +42,12 @@ namespace Wolfpack.Core.Testing.Drivers
             myCheckLoader = new AutomationLoader<IHealthCheckSchedulerPlugin>();
             myResultPublisherLoader = new AutomationLoader<IHealthCheckResultPublisher>();
             mySessionPublisherLoader = new AutomationLoader<IHealthCheckSessionPublisher>();
+            myNotificationHub = new NotificationHub(new StaticGeoLocator(new AgentConfiguration
+                                                                             {
+                                                                                 Latitude = "12.34", 
+                                                                                 Longitude = "56.78",
+                                                                                 SiteId = "AutomationProfile"
+                                                                             }));
         }
 
         public static AutomationProfile Configure()
@@ -77,9 +85,9 @@ namespace Wolfpack.Core.Testing.Drivers
             return this;
         }
 
-        public AutomationProfile Run(IGeoLocator plugin)
+        public AutomationProfile Run(INotificationHub plugin)
         {
-            myGeoLocator = plugin;
+            myNotificationHub = plugin;
             return this;
         }
 
@@ -97,7 +105,7 @@ namespace Wolfpack.Core.Testing.Drivers
                                            myResultPublisherLoader,
                                            myCheckLoader,
                                            myActivityLoader,
-                                           myGeoLocator);
+                                           myNotificationHub);
             myRole.Start();
             return this;
         }

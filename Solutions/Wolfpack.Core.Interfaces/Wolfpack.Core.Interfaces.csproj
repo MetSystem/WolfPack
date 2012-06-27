@@ -51,6 +51,7 @@
     <Compile Include="Entities\Binding.cs" />
     <Compile Include="Entities\BindingConfiguration.cs" />
     <Compile Include="Entities\ConfigBase.cs" />
+    <Compile Include="Entities\HealthCheckPluginConfigBase.cs" />
     <Compile Include="Entities\GeoData.cs" />
     <Compile Include="Entities\StreamThresholdCheckConfigBase.cs" />
     <Compile Include="Entities\CriticalFailureDetails.cs" />
@@ -70,6 +71,8 @@
     <Compile Include="IHealthCheckSchedulerPlugin.cs" />
     <Compile Include="ILoader.cs" />
     <Compile Include="IMessenger.cs" />
+    <Compile Include="INotificationModeFilter.cs" />
+    <Compile Include="INotificationHub.cs" />
     <Compile Include="INow.cs" />
     <Compile Include="IPlugin.cs" />
     <Compile Include="IProfileLoader.cs" />
