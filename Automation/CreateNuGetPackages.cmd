@@ -28,6 +28,7 @@ del NuGet\Templates\Wolfpack.Core.Testing\lib\net40\Magnum.*
 del NuGet\Templates\Wolfpack.Core.Testing\lib\net40\StoryQ*.*
 
 rem Wolfpack (+Sidewinder)
+del NuGet\Templates\Wolfpack\tools\delete.me
 del NuGet\Templates\Wolfpack\lib\net40\delete.me
 del NuGet\Templates\Wolfpack\content\config\delete.me
 del NuGet\Templates\Wolfpack\content\growl\delete.me
