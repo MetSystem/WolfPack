@@ -20,7 +20,7 @@ namespace Wolfpack.Contrib.LogParser
         public string BinaryFormat { get; set; }
     }
 
-    public class REGLogParserCheck : ScalarLogParserCheckBase
+    public class REGLogParserCheck : LogParserCheckBase
     {
         protected readonly REGLogParserCheckConfig myConfig;
 
@@ -28,7 +28,7 @@ namespace Wolfpack.Contrib.LogParser
             : base(config)
         {
             myConfig = config;
-            myIdentity = new PluginDescriptor
+            _identity = new PluginDescriptor
                              {
                                  Description = string.Format("Registry LogParser Check"),
                                  Name = config.FriendlyId,

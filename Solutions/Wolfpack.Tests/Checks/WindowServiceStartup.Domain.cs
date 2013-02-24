@@ -1,14 +1,22 @@
 using Wolfpack.Core.Checks;
+using Wolfpack.Core.Interfaces;
 using Wolfpack.Core.Testing.Domains;
 
 namespace Wolfpack.Tests.Checks
 {
     public class WindowServiceStartupDomain : HealthCheckDomain
     {
-        public void TheCheckComponent(WindowsServiceStartupCheckConfig config)
+        private readonly WindowsServiceStartupCheckConfig _config;
+
+        public WindowServiceStartupDomain(WindowsServiceStartupCheckConfig config, params INotificationRequestFilter[] filters)
+            : base(filters)
         {
-            HealthCheck = new WindowsServiceStartupCheck(config);
-            HealthCheck.Initialise();
+            _config = config;
+        }
+
+        protected override IHealthCheckPlugin HealthCheck
+        {
+            get { return new WindowsServiceStartupCheck(_config); }
         }
     }
 }

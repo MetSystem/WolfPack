@@ -44,7 +44,7 @@ namespace Wolfpack.Core.Loaders
         public bool Load(out IHealthCheckSchedulerPlugin[] components, Action<IHealthCheckSchedulerPlugin> action)
         {
             var result = Load(out components);
-            components.ForEach(action);
+            components.ToList().ForEach(action);
             return result;
         }
     }

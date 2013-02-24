@@ -9,11 +9,11 @@ using Wolfpack.Core.Publishers;
 
 namespace Wolfpack.Core.Database.SQLite
 {
-    public class SQLitePublisherBase : PublisherBase
+    public abstract class SQLitePublisherBase : PublisherBase
     {
         protected readonly SQLiteConfiguration myConfig;
 
-        public SQLitePublisherBase(SQLiteConfiguration config)
+        protected SQLitePublisherBase(SQLiteConfiguration config)
         {
             myConfig = config;
 
@@ -128,91 +128,50 @@ namespace Wolfpack.Core.Database.SQLite
         }
     }
 
-    public class SQLiteHealthCheckSessionPublisher : SQLitePublisherBase, IHealthCheckSessionPublisher
+    public class SQLitePublisher : SQLitePublisherBase, INotificationEventPublisher
     {
-        public SQLiteHealthCheckSessionPublisher(SQLiteConfiguration config)
+        public SQLitePublisher(SQLiteConfiguration config)
             : base(config)
         {
         }
 
-        public void Publish(HealthCheckAgentStart message)
+        public void Consume(NotificationEvent message)
         {
-            var data = SerialisationHelper<HealthCheckAgentStart>.DataContractSerialize(message);
+            throw new NotImplementedException();
+            //var statement = SQLiteStatement.Create("INSERT INTO AgentData (")
+            //    .Append(
+            //        "TypeId,EventType,SiteId,AgentId,CheckId,Result,ResultCount,GeneratedOnUtc,ReceivedOnUtc,Data,Tags,Version,MinuteBucket,HourBucket,DayBucket")
+            //    .AppendIf(() => (message.Check.Geo != null), ",Longitude,Latitude")
+            //    .Append(") VALUES (")
+            //    .InsertParameter("@pTypeId", message.TypeId).Append(",")
+            //    .InsertParameter("@pEventType", message.EventType).Append(",")
+            //    .InsertParameter("@pSiteId", message.SiteId).Append(",")
+            //    .InsertParameter("@pAgentId", message.AgentId).Append(",")
+            //    .InsertParameter("@pCheckId", message.CheckId).Append(",")
+            //    .InsertParameter("@pResult", message.Result).Append(",")
+            //    .InsertParameter("@pResultCount", message.ResultCount).Append(",")
+            //    .InsertParameter("@pGeneratedOnUtc", message.GeneratedOnUtc).Append(",")
+            //    .InsertParameter("@pReceivedOnUtc", message.ReceivedOnUtc).Append(",")
+            //    .InsertParameter("@pData", message.Data).Append(",")
+            //    .InsertParameter("@pTags", message.Tags).Append(",")
+            //    .InsertParameter("@pVersion", message.Id).Append(",")
+            //    .InsertParameter("@pMinuteBucket", message.MinuteBucket).Append(",")
+            //    .InsertParameter("@pHourBucket", message.HourBucket).Append(",")
+            //    .InsertParameter("@pDayBucket", message.DayBucket);
 
-            using (var cmd = SQLiteAdhocCommand.UsingSmartConnection(myConfig.ConnectionString)
-                .WithSql(SQLiteStatement.Create("INSERT INTO AgentData (")
-                .Append("TypeId,EventType,SiteId,AgentId,GeneratedOnUtc,ReceivedOnUtc,Data,Version")
-                .Append(") VALUES (")
-                .InsertParameter("@pTypeId", message.Id).Append(",")
-                .InsertParameter("@pEventType", "SessionStart").Append(",")
-                .InsertParameter("@pSiteId", message.Agent.SiteId).Append(",")
-                .InsertParameter("@pAgentId", message.Agent.AgentId).Append(",")
-                .InsertParameter("@pGeneratedOnUtc", message.DiscoveryStarted).Append(",")
-                .InsertParameter("@pReceivedOnUtc", DateTime.UtcNow).Append(",")
-                .InsertParameter("@pData", data).Append(",")
-                .InsertParameter("@pVersion", message.Id)
-                .Append(")")))
-            {
-                cmd.ExecuteNonQuery();
-            }
-        }
+            //if (message.Check.Geo != null)
+            //{
+            //    statement.Append(",")
+            //        .InsertParameter("@pLongitude", message.Check.Geo.Longitude).Append(",")
+            //        .InsertParameter("@pLatitude", message.Check.Geo.Latitude);
+            //}
+            //statement.Append(")");
 
-        public void Consume(HealthCheckAgentStart message)
-        {
-            Publish(message);
-        }
-    }
-
-    public class SQLiteHealthCheckResultPublisher : SQLitePublisherBase, IHealthCheckResultPublisher
-    {
-        public SQLiteHealthCheckResultPublisher(SQLiteConfiguration config)
-            : base(config)
-        {
-        }
-
-        public void Publish(HealthCheckResult message)
-        {
-            var data = SerialisationHelper<HealthCheckResult>.DataContractSerialize(message);
-
-            var statement = SQLiteStatement.Create("INSERT INTO AgentData (")
-                .Append(
-                    "TypeId,EventType,SiteId,AgentId,CheckId,Result,ResultCount,GeneratedOnUtc,ReceivedOnUtc,Data,Tags,Version,MinuteBucket,HourBucket,DayBucket")
-                .AppendIf(() => (message.Check.Geo != null), ",Longitude,Latitude")
-                .Append(") VALUES (")
-                .InsertParameter("@pTypeId", message.Check.Identity.TypeId).Append(",")
-                .InsertParameter("@pEventType", message.EventType).Append(",")
-                .InsertParameter("@pSiteId", message.Agent.SiteId).Append(",")
-                .InsertParameter("@pAgentId", message.Agent.AgentId).Append(",")
-                .InsertParameter("@pCheckId", message.Check.Identity.Name).Append(",")
-                .InsertParameter("@pResult", message.Check.Result).Append(",")
-                .InsertParameter("@pResultCount", message.Check.ResultCount).Append(",")
-                .InsertParameter("@pGeneratedOnUtc", message.Check.GeneratedOnUtc).Append(",")
-                .InsertParameter("@pReceivedOnUtc", DateTime.UtcNow).Append(",")
-                .InsertParameter("@pData", data).Append(",")
-                .InsertParameter("@pTags", message.Check.Tags).Append(",")
-                .InsertParameter("@pVersion", message.Id).Append(",")
-                .InsertParameter("@pMinuteBucket", message.MinuteBucket).Append(",")
-                .InsertParameter("@pHourBucket", message.HourBucket).Append(",")
-                .InsertParameter("@pDayBucket", message.DayBucket);
-
-            if (message.Check.Geo != null)
-            {
-                statement.Append(",")
-                    .InsertParameter("@pLongitude", message.Check.Geo.Longitude).Append(",")
-                    .InsertParameter("@pLatitude", message.Check.Geo.Latitude);
-            }
-            statement.Append(")");
-
-            using (var cmd = SQLiteAdhocCommand.UsingSmartConnection(myConfig.ConnectionString)
-                .WithSql(statement))
-            {
-                cmd.ExecuteNonQuery();
-            }
-        }
-
-        public void Consume(HealthCheckResult message)
-        {
-            Publish(message);
+            //using (var cmd = SQLiteAdhocCommand.UsingSmartConnection(myConfig.ConnectionString)
+            //    .WithSql(statement))
+            //{
+            //    cmd.ExecuteNonQuery();
+            //}
         }
     }
 }

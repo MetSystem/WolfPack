@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
-using Wolfpack.Core.Geo;
 using Wolfpack.Core.Interfaces;
 using Wolfpack.Core.Interfaces.Entities;
 using Wolfpack.Core.Interfaces.Magnum;
+using Wolfpack.Core.Notification;
 
 namespace Wolfpack.Core.Testing.Drivers
 {
@@ -11,43 +12,35 @@ namespace Wolfpack.Core.Testing.Drivers
     /// This role profile allows you to programmatically add implementations to the IoC
     /// container which are later used by the role component
     /// </summary>
-    public class AutomationProfile : IRoleProfile
+    public class AutomationProfile
     {
-        protected IRolePlugin myRole;
-        protected INotificationHub myNotificationHub;
-        protected IGeoLocator myGeoLocator;
-        protected AutomationLoader<IStartupPlugin> myStartupLoader;
-        protected AutomationLoader<IHealthCheckSessionPublisher> mySessionPublisherLoader;
-        protected AutomationLoader<IHealthCheckResultPublisher> myResultPublisherLoader;
-        protected AutomationLoader<IHealthCheckSchedulerPlugin> myCheckLoader;
-        protected AutomationLoader<IActivityPlugin> myActivityLoader;
+        private IRolePlugin _role;
+
+        private readonly List<INotificationRequestFilter> _notificationFilters; 
+        private INotificationHub _notificationHub;
+
+        private readonly AutomationLoader<IStartupPlugin> _startupLoader;
+        private readonly AutomationLoader<INotificationEventPublisher> _publisherLoader;
+        private readonly AutomationLoader<IHealthCheckSchedulerPlugin> _checkLoader;
+        private readonly AutomationLoader<IActivityPlugin> _activityLoader;
+        private readonly List<Action<AutomationProfile>> _customPluginActions;
+        private readonly ManualResetEventSlim _waitGate;
+
+        public IList<NotificationEvent> NotificationEvents { get; private set; }
+        public IList<NotificationRequest> NotificationRequests { get; private set; }       
         
-        protected ManualResetEventSlim myWaitGate;
-
-        public string Name
-        {
-            get { return GetType().Name; }
-        }
-
-        public IRolePlugin Role
-        {
-            get { return myRole; }
-        }
-
         private AutomationProfile()
         {
-            myWaitGate = new ManualResetEventSlim(false);
-            myStartupLoader = new AutomationLoader<IStartupPlugin>();
-            myActivityLoader = new AutomationLoader<IActivityPlugin>();
-            myCheckLoader = new AutomationLoader<IHealthCheckSchedulerPlugin>();
-            myResultPublisherLoader = new AutomationLoader<IHealthCheckResultPublisher>();
-            mySessionPublisherLoader = new AutomationLoader<IHealthCheckSessionPublisher>();
-            myNotificationHub = new NotificationHub(new StaticGeoLocator(new AgentConfiguration
-                                                                             {
-                                                                                 Latitude = "12.34", 
-                                                                                 Longitude = "56.78",
-                                                                                 SiteId = "AutomationProfile"
-                                                                             }));
+            _waitGate = new ManualResetEventSlim(false);
+            _startupLoader = new AutomationLoader<IStartupPlugin>();
+            _activityLoader = new AutomationLoader<IActivityPlugin>();
+            _checkLoader = new AutomationLoader<IHealthCheckSchedulerPlugin>();
+            _publisherLoader = new AutomationLoader<INotificationEventPublisher>();
+            _notificationFilters = new List<INotificationRequestFilter>();
+            _customPluginActions = new List<Action<AutomationProfile>>();
+
+            NotificationRequests = new List<NotificationRequest>();
+            NotificationEvents = new List<NotificationEvent>();
         }
 
         public static AutomationProfile Configure()
@@ -55,74 +48,83 @@ namespace Wolfpack.Core.Testing.Drivers
            return new AutomationProfile(); 
         }
 
+        public AutomationProfile Run(Action<AutomationProfile> action)
+        {
+            _customPluginActions.Add(action);
+            return this;
+        }
+
         public AutomationProfile Run(IStartupPlugin plugin)
         {
-            myStartupLoader.Add(plugin);
+            _startupLoader.Add(plugin);
             return this;
         }
 
         public AutomationProfile Run(IHealthCheckSchedulerPlugin plugin)
         {
-            myCheckLoader.Add(plugin);
+            _checkLoader.Add(plugin);
             return this;
         }
 
         public AutomationProfile Run(IActivityPlugin plugin)
         {
-            myActivityLoader.Add(plugin);
+            _activityLoader.Add(plugin);
             return this;
         }
 
-        public AutomationProfile Run(IHealthCheckSessionPublisher plugin)
+        public AutomationProfile Run(INotificationEventPublisher plugin)
         {
-            mySessionPublisherLoader.Add(plugin);
+            _publisherLoader.Add(plugin);
             return this;
         }
 
-        public AutomationProfile Run(IHealthCheckResultPublisher plugin)
+        public AutomationProfile Run(params INotificationRequestFilter[] plugin)
         {
-            myResultPublisherLoader.Add(plugin);
+            _notificationFilters.AddRange(plugin);
             return this;
         }
 
-        public AutomationProfile Run(INotificationHub plugin)
+        public IRolePlugin Start()
         {
-            myNotificationHub = plugin;
-            return this;
-        }
+            Container.Initialise();
+            Messenger.Initialise(new MagnumMessenger());
+            Messenger.InterceptBefore<NotificationEvent>(msg => NotificationEvents.Add(msg));
+            Messenger.InterceptBefore<NotificationRequest>(msg => NotificationRequests.Add(msg));
 
-        public AutomationProfile Start()
-        {
+            _notificationHub = new NotificationHub(_notificationFilters);
+
             RunStartupPlugins();
 
-            Messenger.Initialise(new MagnumMessenger());
+            _customPluginActions.ForEach(a => a(this));
 
-            myRole = new Agent.Roles.Agent(new AgentConfiguration
+            _role = new Agent.Roles.Agent(new AgentConfiguration
                                                {
                                                    SiteId = "Test"
                                                },
-                                           mySessionPublisherLoader,
-                                           myResultPublisherLoader,
-                                           myCheckLoader,
-                                           myActivityLoader,
-                                           myNotificationHub);
-            myRole.Start();
-            return this;
+                                           _publisherLoader,
+                                           _checkLoader,
+                                           _activityLoader,
+                                           _notificationHub);
+            _role.Start();
+            return _role;
+        }
+
+        public void Stop()
+        {
+            _role.Stop();
         }
 
         protected virtual void RunStartupPlugins()
         {
             IStartupPlugin[] plugins;
-
-            if (!myStartupLoader.Load(out plugins, p => p.InitialiseIfEnabled()))
-                return;
+            _startupLoader.Load(out plugins);
         }
 
         public void WaitUntil(string description, int seconds, Func<bool> check)
         {
             for (var i = 0; i < seconds; i++)
             {
-                myWaitGate.Wait(1000);
+                _waitGate.Wait(1000);
                 if (check())
                     return;
             }

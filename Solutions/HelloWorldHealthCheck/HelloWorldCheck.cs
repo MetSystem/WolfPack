@@ -1,7 +1,8 @@
 ﻿using System;
 using Wolfpack.Core;
-using Wolfpack.Core.Interfaces;
+using Wolfpack.Core.Checks;
 using Wolfpack.Core.Interfaces.Entities;
+using Wolfpack.Core.Notification;
 
 namespace HelloWorldHealthCheck
 {
@@ -10,46 +11,34 @@ namespace HelloWorldHealthCheck
         public string MyCustomSetting { get; set; }
     }
 
-    public class HelloWorldCheck : IHealthCheckPlugin
+    public class HelloWorldCheck : HealthCheckBase<HelloWorldCheckConfig>
     {
-        private readonly HelloWorldCheckConfig myConfig;
-
-        public HelloWorldCheck(HelloWorldCheckConfig config)
+        public HelloWorldCheck(HelloWorldCheckConfig config) : base(config)
         {
-            myConfig = config;
         }
 
-        public void Initialise()
+        public override void Execute()
         {
-            // This can be used to do any "one-time" initialisation
-            // of this check - this method is called when the plugin
-            // is loaded (must also be "enabled" in its configuration)
-        }
-
-        public Status Status { get; set; }
-
-        public PluginDescriptor Identity
-        {
-            get { return new PluginDescriptor
-                             {
-                                 Description = "My first custom HealthCheck!",
-                                 Name = myConfig.FriendlyId,
-                                 // The TypeId is important - it needs to be different for
-                                 // each health check as this allows us to positively identify
-                                 // every health check. Use the VS Tools/Create GUID tool to
-                                 // generate a new one.
-                                 TypeId = new Guid("218087BB-3605-4fa5-9157-0C133674F51F")
-                             }; }
-        }
-
-        public void Execute()
-        {
-            Messenger.Publish(new HealthCheckData
+            Messenger.Publish(NotificationRequestBuilder.AlwaysPublish(new HealthCheckData
                         {
                             Identity = Identity,
                             Result = true,
-                            Info = string.Format("MyCustomSetting:={0}", myConfig.MyCustomSetting)
-                        });
+                            Info = string.Format("MyCustomSetting:={0}", _config.MyCustomSetting)
+                        }).Build());
+        }
+
+        protected override PluginDescriptor BuildIdentity()
+        {
+            return new PluginDescriptor
+            {
+                Description = "My first custom HealthCheck!",
+                Name = _config.FriendlyId,
+                // The TypeId is important - it needs to be different for
+                // each health check as this allows us to positively identify
+                // every health check. Use the VS Tools/Create GUID tool to
+                // generate a new one.
+                TypeId = new Guid("218087BB-3605-4fa5-9157-0C133674F51F")
+            };
         }
     }
 }

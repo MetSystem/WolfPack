@@ -6,29 +6,30 @@ using Wolfpack.Core.Interfaces.Entities;
 
 namespace Wolfpack.Contrib.Owl
 {
-    public class OwlEnergyMonitorCheckConfig : PluginConfigBase
+    public class OwlEnergyMonitorCheckConfig : PluginConfigBase, ISupportNotificationMode
     {
         public string ConnectionString { get; set; }
+        public string NotificationMode { get; set; }
     }
 
     public class OwlEnergyMonitorCheck : IHealthCheckPlugin
     {
-        protected readonly OwlEnergyMonitorCheckConfig myConfig;
-        protected PluginDescriptor myIdentity;
-        protected DateTime myLastRun;
+        protected readonly OwlEnergyMonitorCheckConfig _config;
+        protected PluginDescriptor _identity;
+        protected DateTime _lastRun;
 
         public OwlEnergyMonitorCheck(OwlEnergyMonitorCheckConfig config)
         {
-            myConfig = config;
+            _config = config;
 
-            myIdentity = new PluginDescriptor
+            _identity = new PluginDescriptor
             {
                 Description = string.Format("Reports energy information from your Owl Monitor Database"),
                 TypeId = new Guid("55728986-4638-4b9c-8C8A-FF9F4290F564"),
-                Name = myConfig.FriendlyId
+                Name = _config.FriendlyId
             };
 
-            myLastRun = DateTime.Now;
+            _lastRun = DateTime.Now;
         }
 
         public void Initialise()
@@ -40,14 +41,14 @@ namespace Wolfpack.Contrib.Owl
 
         public PluginDescriptor Identity
         {
-            get { return myIdentity; }
+            get { return _identity; }
         }
 
         public void Execute()
         {
-            var lastRun = Convert.ToInt64(myLastRun.ToString("yyyMMddHHmm"));
+            var lastRun = Convert.ToInt64(_lastRun.ToString("yyyMMddHHmm"));
 
-            using (var query = SQLiteAdhocCommand.UsingSmartConnection(myConfig.ConnectionString)
+            using (var query = SQLiteAdhocCommand.UsingSmartConnection(_config.ConnectionString)
                 .WithSql(SQLiteStatement.Create("select s.name, datetime(year || '-' || substr('0' || month, -2,2) || '-' || substr('0' || day, -2,2) || ' ' || substr('0' || hour, -2,2) || ':' || substr('0' || min, -2,2)) [recorded], ")
                 .Append("ch1_amps_min, ch1_amps_avg, ch1_amps_max, ch1_kw_min, CAST(ch1_kw_avg AS REAL) [ch1_kw_avg], ch1_kw_max")
                 .Append("from energy_history h join energy_sensor s on h.addr = s.addr")
@@ -59,18 +60,17 @@ namespace Wolfpack.Contrib.Owl
                     while (reader.Read())
                     {
                         // assumes that results are in ascending order
-                        myLastRun = Convert.ToDateTime(reader["recorded"]);
+                        _lastRun = Convert.ToDateTime(reader["recorded"]);
 
                         var sensor = reader["name"].ToString();
-                        var data = HealthCheckData.For(Identity, sensor)
-                            .AddTag(sensor);
+                        var data = HealthCheckData.For(Identity, _config.NotificationMode, sensor)
+                            .AddTag(sensor)
+                            // average watts
+                            .ResultCountIs(Convert.ToDouble(reader["ch1_kw_avg"]))
+                            .SetGeneratedOnUtc(_lastRun.ToUniversalTime());
 
-                        // report average watts
-                        data.ResultCount = Convert.ToDouble(reader["ch1_kw_avg"]);
-                        data.GeneratedOnUtc = myLastRun.ToUniversalTime();
-                        data.Properties = new ResultProperties();
+                        Messenger.Publish(NotificationRequest.AlwaysPublish(data));
 
-                        Messenger.Publish(data);
                         Logger.Debug("[{0}] Sent reading {1}kw taken {2}", 
                             Identity.Name,
                             data.ResultCount,

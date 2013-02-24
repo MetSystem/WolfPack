@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Castle.Core;
+using Castle.Core.Internal;
 using Wolfpack.Core.Interfaces;
 using Wolfpack.Core.Interfaces.Entities;
 
@@ -26,7 +26,7 @@ namespace Wolfpack.Core.Loaders
         public static IEnumerable<IPlugin> ExcludeUnhealthyPlugins(this IEnumerable<IPlugin> plugins)
         {
             return from plugin in plugins
-                   where (plugin.Status == null) || (string.Compare(plugin.Status.State, "Success") == 0)
+                   where (plugin.Status == null) || (string.CompareOrdinal(plugin.Status.State, "Success") == 0)
                    select plugin;
         }
 

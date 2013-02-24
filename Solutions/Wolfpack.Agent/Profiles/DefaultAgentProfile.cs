@@ -1,6 +1,5 @@
 using System;
 using Wolfpack.Core;
-using Wolfpack.Core.Growl;
 using Wolfpack.Core.Interfaces;
 using Wolfpack.Core.Interfaces.Castle;
 using Wolfpack.Core.Interfaces.Entities;
@@ -26,19 +25,15 @@ namespace Wolfpack.Agent.Profiles
 
         public override void CustomiseRole()
         {            
-            Container.RegisterAllWithInterception<IGrowlNotificationFinaliser, IGrowlNotificationFinaliserInterceptor>()
-                .RegisterAll<IHealthCheckSessionPublisher>()
-                .RegisterAll<INotificationModeFilter>()
-                .RegisterAllWithInterception<IHealthCheckResultPublisher, IPublisherFilter>()
-                .RegisterAll<IActivityPlugin>()
+            Container
+                .RegisterAllWithInterception<INotificationEventPublisher, IPublisherFilter>()
+                //.RegisterAll<IActivityPlugin>()
                 .RegisterAsSingleton<ILoader<BindingConfiguration>>(typeof(DefaultBindingConfigurationLoader))
-                .RegisterAsSingleton<ILoader<IHealthCheckSchedulerPlugin>>(typeof(HealthCheckLoader))
+                //.RegisterAsSingleton<ILoader<IHealthCheckSchedulerPlugin>>(typeof(HealthCheckLoader))
+                .RegisterAsSingleton<ILoader<IHealthCheckSchedulerPlugin>>(typeof(ContainerPluginLoader<IHealthCheckSchedulerPlugin>))
                 .RegisterAsSingleton<ILoader<IActivityPlugin>>(typeof(ContainerPluginLoader<IActivityPlugin>))
-                .RegisterAsSingleton<ILoader<IHealthCheckSessionPublisher>>(typeof(ContainerPluginLoader<IHealthCheckSessionPublisher>))
-                .RegisterAsSingleton<ILoader<IHealthCheckResultPublisher>>(typeof(ContainerPluginLoader<IHealthCheckResultPublisher>))
+                .RegisterAsSingleton<ILoader<INotificationEventPublisher>>(typeof(ContainerPluginLoader<INotificationEventPublisher>))
                 .RegisterAsSingleton<IRolePlugin>(DefineRole());
-
-            Messenger.Initialise(new MagnumMessenger());
         }
     }
 }

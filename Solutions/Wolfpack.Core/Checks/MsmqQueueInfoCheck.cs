@@ -1,63 +1,78 @@
 using System;
+using System.Globalization;
 using System.Messaging;
+using Wolfpack.Core.Configuration;
 using Wolfpack.Core.Interfaces;
 using Wolfpack.Core.Interfaces.Entities;
+using Wolfpack.Core.Notification;
+using Wolfpack.Core.Notification.Filters.Request;
 
 namespace Wolfpack.Core.Checks
 {
-    public class MsmqQueueInfoCheckConfig : PluginConfigBase
+    public class MsmqQueueInfoCheckConfig : PluginConfigBase, ISupportNotificationMode, ISupportNotificationThreshold
     {
         public string QueueName { get; set; }
+        public string NotificationMode { get; set; }
+        public double? NotificationThreshold { get; set; }
     }
 
-    public class MsmqQueueInfoCheck : IHealthCheckPlugin
+    public class MsmqQueueInfoConfigurationAdvertiser : HealthCheckDiscoveryBase<MsmqQueueInfoCheckConfig>
     {
-        protected readonly MsmqQueueInfoCheckConfig myConfig;
-        protected PluginDescriptor myIdentity;
-       
+        protected override MsmqQueueInfoCheckConfig GetConfiguration()
+        {
+            return new MsmqQueueInfoCheckConfig
+                       {
+                           Enabled = true,
+                           FriendlyId = "CHANGEME!",
+                           NotificationMode = StateChangeNotificationFilter.FilterName,
+                           NotificationThreshold = 0,
+                           QueueName = "CHANGEME!"
+                       };
+        }
+
+        protected override void Configure(ConfigurationEntry entry)
+        {
+            entry.Name = "MsmqQueueInfoCheck";
+            entry.Description = "This check will monitor a MSMQ Queue for breaches of too many items. If there are more items than the threshold set it will generate failure notifications.";
+            entry.Tags.Add("MSMQ");
+        }
+    }
+
+    public class MsmqQueueInfoCheck : ThresholdCheckBase<MsmqQueueInfoCheckConfig>
+    {       
         /// <summary>
         /// default ctor
         /// </summary>
         /// <param name="config"></param>
-        public MsmqQueueInfoCheck(MsmqQueueInfoCheckConfig config)
+        public MsmqQueueInfoCheck(MsmqQueueInfoCheckConfig config) : base(config)
         {
-            myConfig = config;
-            myIdentity = new PluginDescriptor
+        }
+
+        protected override PluginDescriptor BuildIdentity()
+        {
+            return new PluginDescriptor
             {
-                Description = string.Format("Gathers information about the queue '{0}'", config.QueueName),
+                Description = string.Format("Gathers information about the queue '{0}'", _config.QueueName),
                 TypeId = new Guid("7C6F11A6-7265-4aee-AB23-BA549EACB592"),
-                Name = myConfig.FriendlyId
+                Name = _config.FriendlyId
             };
         }
 
-        public Status Status { get; set; }
-
-        public PluginDescriptor Identity
+        public override void  Execute()
         {
-            get { return myIdentity; }
+            Publish(DoTest());
         }
 
-        public virtual void Execute()
+        protected virtual NotificationRequest DoTest()
         {
-            Messenger.Publish(DoTest());
-        }
-
-        public void Initialise()
-        {
-            
-        }
-
-        protected virtual HealthCheckData DoTest()
-        {
-            // check it even exists!
             var count = 0;
             DateTime? oldestMessageDated = null;
-            var exists = MessageQueue.Exists(myConfig.QueueName);
+            var exists = MessageQueue.Exists(_config.QueueName);
             string info;
 
             if (exists)
             {
-                var queue = new MessageQueue(myConfig.QueueName)
+                var queue = new MessageQueue(_config.QueueName)
                 {
                     MessageReadPropertyFilter = new MessagePropertyFilter
                     {
@@ -72,6 +87,9 @@ namespace Wolfpack.Core.Checks
                 {
                     var msg = me.Current;
 
+                    if (msg == null)
+                        continue;
+
                     if (!oldestMessageDated.HasValue)
                         oldestMessageDated = msg.ArrivedTime;
                     else if (msg.ArrivedTime < oldestMessageDated)
@@ -80,23 +98,23 @@ namespace Wolfpack.Core.Checks
                     count++;
                 }
 
-                info = string.Format("Queue {0} has {1} messages", myConfig.QueueName, count);
+                info = string.Format("Queue {0} has {1} messages", _config.QueueName, count);
             }
             else
             {
-                info = string.Format("Queue {0} does not exist!", myConfig.QueueName);
+                info = string.Format("Queue {0} does not exist!", _config.QueueName);
             }
 
-            var props = new ResultProperties
+            var props = new Properties
                             {
-                                {"Queue", myConfig.QueueName},
-                                {"Count", count.ToString()}
+                                {"Queue", _config.QueueName},
+                                {"Count", count.ToString(CultureInfo.InvariantCulture)}
                             };
 
             if (oldestMessageDated.HasValue)
-                props.Add("Oldest", oldestMessageDated.ToString());
+                props.Add("Oldest", oldestMessageDated.Value.ToString(CultureInfo.InvariantCulture));
 
-            var result = new HealthCheckData
+            var data = new HealthCheckData
             {
                 Identity = Identity,
                 Info = info,
@@ -105,9 +123,9 @@ namespace Wolfpack.Core.Checks
             };
 
             if (exists)
-                result.ResultCount = count;
+                data.ResultCount = count;
 
-            return result;
+            return NotificationRequestBuilder.For(_config.NotificationMode, data).Build();
         }
     }
 }

@@ -1,62 +1,95 @@
 using System;
 using System.Collections.Generic;
 using Wolfpack.Core.Containers;
-using NServiceBus;
+using System.Linq;
 
 namespace Wolfpack.Core
 {
     public class Container
     {
-        protected static IContainer myContainer = new WindsorContainer();
+        private static IContainer _container;
+
+        public static IContainer Initialise()
+        {
+            _container = new WindsorContainer();
+            return _container;
+        }
 
         public static IContainer RegisterAsTransient(Type implType)
         {
-            return myContainer.RegisterAsTransient(implType);
+            return _container.RegisterAsTransient(implType);
         }
 
         public static IContainer RegisterAsTransient<T>(Type implType)
+            where T : class
         {
-            return myContainer.RegisterAsTransient<T>(implType);
+            return _container.RegisterAsTransient<T>(implType);
         }
 
         public static IContainer RegisterAsSingleton(Type implType)
         {
-            return myContainer.RegisterAsSingleton(implType);
+            return _container.RegisterAsSingleton(implType);
         }
 
         public static IContainer RegisterAsSingleton<T>(Type implType)
+            where T : class
         {
-            return myContainer.RegisterAsSingleton<T>(implType);
+            return _container.RegisterAsSingleton<T>(implType);
+        }
+
+        public static IContainer RegisterInstance<T>(T instance, string name) 
+            where T : class
+        {
+            return _container.RegisterInstance(instance, name);
         }
 
         public static IContainer RegisterInstance<T>(T instance)
+            where T : class
         {
-            return myContainer.RegisterInstance(instance);
+            return _container.RegisterInstance(instance);
+        }
+
+        public static IContainer RegisterInstance<T>(T instance, Func<bool> shouldRegister)
+            where T : class
+        {
+            return shouldRegister() 
+                ? _container.RegisterInstance(instance) 
+                : _container;
         }
 
         public static IContainer RegisterAll<T>()
+            where T : class
         {
-            return myContainer.RegisterAll<T>();
+            return _container.RegisterAll<T>();
         }
 
-        public static IContainer RegisterAllWithInterception<T, I>()
+        public static IContainer RegisterAllWithInterception<T, TI>()
         {
-            return myContainer.RegisterAllWithInterception<T, I>();
+            return _container.RegisterAllWithInterception<T, TI>();
         }
 
         public static object Resolve(string componentName)
         {
-            return myContainer.Resolve(componentName);
+            return _container.Resolve(componentName);
         }
 
         public static T Resolve<T>()
         {
-            return myContainer.Resolve<T>();
+            return _container.Resolve<T>();
+        }
+
+        public static TI Resolve<TI, TC>()
+            where TC : TI
+        {
+            var targetType = typeof(TC).Name;
+
+            return Find<TI>(implementations => implementations
+                .Single(impl => string.Equals(impl.GetType().Name, targetType, StringComparison.OrdinalIgnoreCase)));
         }
 
         public static T[] ResolveAll<T>()
         {
-            return myContainer.ResolveAll<T>();
+            return _container.ResolveAll<T>();
         }
 
         /// <summary>
@@ -69,27 +102,22 @@ namespace Wolfpack.Core
         /// <returns></returns>
         public static T Find<T>(Func<IEnumerable<T>, T> filter)
         {
-            return myContainer.Find(filter);
+            return _container.Find(filter);
         }
 
         public static void ResolveAll<T>(Action<T> action)
         {
-            myContainer.ResolveAll(action);
+            _container.ResolveAll(action);
         }
 
         public static bool IsRegistered<T>()
         {
-            return myContainer.IsRegistered<T>();
+            return _container.IsRegistered<T>();
         }
 
-        public static Configure Bus()
+        public static bool IsRegistered(Type type)
         {
-            return myContainer.Bus();
-        }
-
-        public static Configure Bus(params string[] assemblyNames)
-        {
-            return myContainer.Bus(assemblyNames);
+            return _container.IsRegistered(type);
         }
     }
 }

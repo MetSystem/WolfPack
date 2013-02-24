@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Castle.Core;
+using Castle.Core.Internal;
 
 namespace Wolfpack.Agent
 {
@@ -23,14 +23,14 @@ namespace Wolfpack.Agent
             public const string Feed = "Feed";
         }
 
-        protected static CmdLineArgs myArgs;
-        protected static CmdLineArgs myExpandedArgs;
-        protected static CmdLineSwitches mySupportedSwitches;
+        protected static CmdLineArgs _args;
+        protected static CmdLineArgs _expandedArgs;
+        protected static CmdLineSwitches _supportedSwitches;
         
         static CmdLine()
         {
             // setup our supported list of cmdline switches
-            mySupportedSwitches = CmdLineSwitches.Init(
+            _supportedSwitches = CmdLineSwitches.Init(
                                        CustomSwitch.Build(SwitchNames.Update),
                                        CustomSwitch.Build(SwitchNames.Feed),
                                        CustomSwitch.Build(SwitchNames.Profile),
@@ -42,10 +42,10 @@ namespace Wolfpack.Agent
 
         public static void Init(IEnumerable<string> args)
         {
-            myArgs = CmdLineArgs.Init(args);
-            myExpandedArgs = CmdLineArgs.Init();
+            _args = CmdLineArgs.Init(args);
+            _expandedArgs = CmdLineArgs.Init();
             // expand custom args into topshelf args
-            myArgs.IfSupplied(mySupportedSwitches, s => s.Expand(myExpandedArgs));
+            _args.IfSupplied(_supportedSwitches, s => s.Expand(_expandedArgs));
         }
 
         /// <summary>
@@ -60,11 +60,11 @@ namespace Wolfpack.Agent
             var switchName = "/" + name.ToLower().TrimStart('/');
             value = string.Empty;
 
-            var values = from arg in myArgs
+            var values = (from arg in _args
                          where arg.ToLower().StartsWith(switchName)
-                         select arg;
+                         select arg).ToList();
 
-            if (values.Count() == 0)
+            if (!values.Any())
                 return false;
 
             var matchingArg = values.First();
@@ -78,7 +78,7 @@ namespace Wolfpack.Agent
         public static bool Value(string name)
         {
             var switchName = "/" + name.ToLower().TrimStart('/');
-            return myArgs.Any(arg => string.Compare(arg.ToLower(), switchName) == 0);
+            return _args.Any(arg => string.CompareOrdinal(arg.ToLower(), switchName) == 0);
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace Wolfpack.Agent
         /// </summary>
         public static IEnumerable<string> All
         {
-            get { return myArgs.Concat(myExpandedArgs); }
+            get { return _args.Concat(_expandedArgs); }
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace Wolfpack.Agent
         /// </summary>
         public static IEnumerable<string> Supplied
         {
-            get { return myArgs; }
+            get { return _args; }
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace Wolfpack.Agent
         /// </summary>
         public static IEnumerable<string> Expanded
         {
-            get { return myExpandedArgs; }
+            get { return _expandedArgs; }
         }
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace Wolfpack.Agent
         /// </summary>
         public static CmdLineSwitches Switches
         {
-            get { return mySupportedSwitches; }
+            get { return _supportedSwitches; }
         }
     }
 
@@ -174,7 +174,7 @@ namespace Wolfpack.Agent
         public string Name { get; set; }
         public string Switch { get { return "/" + Name; } }
 
-        protected Action<List<string>> myExpander { get; set; }
+        protected Action<List<string>> Expander { get; set; }
 
         /// <summary>
         /// 
@@ -208,7 +208,7 @@ namespace Wolfpack.Agent
             return new CustomSwitch
             {
                 Name = name,
-                myExpander = expand
+                Expander = expand
             };
         }
 
@@ -220,10 +220,10 @@ namespace Wolfpack.Agent
         /// <returns></returns>
         public CustomSwitch Expand(List<string> args)
         {
-            if (myExpander == null)
+            if (Expander == null)
                 return this;
 
-            myExpander.Invoke(args);
+            Expander.Invoke(args);
             return this;
         }
 

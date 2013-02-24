@@ -18,7 +18,7 @@ namespace Wolfpack.Contrib.LogParser
         public string FieldNames { get; set; }
     }
 
-    public class XMLLogParserCheck : ScalarLogParserCheckBase
+    public class XMLLogParserCheck : LogParserCheckBase
     {
         protected readonly XMLLogParserCheckConfig myConfig;
 
@@ -26,7 +26,7 @@ namespace Wolfpack.Contrib.LogParser
             : base(config)
         {
             myConfig = config;
-            myIdentity = new PluginDescriptor
+            _identity = new PluginDescriptor
                              {
                                  Description = string.Format("XML LogParser Check"),
                                  Name = config.FriendlyId,

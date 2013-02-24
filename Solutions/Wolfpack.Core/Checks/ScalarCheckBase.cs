@@ -1,12 +1,14 @@
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using Wolfpack.Core.Interfaces;
 using Wolfpack.Core.Interfaces.Entities;
 using Wolfpack.Core.Database.SqlServer;
+using Wolfpack.Core.Notification;
 
 namespace Wolfpack.Core.Checks
 {
-    public class ScalarCheckConfigBase : PluginConfigBase
+    public class ScalarCheckConfigBase : PluginConfigBase, ISupportNotificationMode
     {
         /// <summary>
         /// The portion of the query that starts at the FROM statement. This will 
@@ -23,41 +25,25 @@ namespace Wolfpack.Core.Checks
         /// </summary>
         public bool InterpretZeroRowsAsAFailure { get; set; }
 
-        /// <summary>
-        /// Depending upon how the rowcount is interpreted via
-        /// <see cref="InterpretZeroRowsAsAFailure"/> the check will only
-        /// publish a result if its a failure
-        /// </summary>
-        public bool PublishOnlyIfFailure { get; set; }
+        public string NotificationMode { get; set; }
     }
-    public abstract class ScalarCheckBase : IHealthCheckPlugin
+    public abstract class ScalarCheckBase<T> : HealthCheckBase<T>
+        where T : ScalarCheckConfigBase
     {
-        protected readonly ScalarCheckConfigBase myBaseConfig;
-        protected PluginDescriptor  myIdentity;
+        protected readonly ScalarCheckConfigBase _baseConfig;
+        protected PluginDescriptor  _identity;
 
         /// <summary>
         /// default ctor
         /// </summary>
-        protected ScalarCheckBase(ScalarCheckConfigBase config)
+        protected ScalarCheckBase(T config) : base(config)
         {
-            myBaseConfig = config;
+            _baseConfig = config;
         }
 
-        public PluginDescriptor Identity
+        public override void Execute()
         {
-            get { return myIdentity; }
-        }
-
-        public Status Status { get; set; }
-
-        public void Initialise()
-        {
-            // do nothing
-        }
-
-        public void Execute()
-        {
-            if (!myBaseConfig.FromQuery.StartsWith("FROM ", StringComparison.InvariantCultureIgnoreCase))
+            if (!_baseConfig.FromQuery.StartsWith("FROM ", StringComparison.InvariantCultureIgnoreCase))
                 throw new FormatException("The FromQuery config property is badly formed; it must start with 'FROM'");
             ValidateConfig();
 
@@ -66,7 +52,7 @@ namespace Wolfpack.Core.Checks
 
             // Create the query
             var query = SqlServerStatement.Create("SELECT COUNT(*) ")
-                .Append(myBaseConfig.FromQuery).ToString();
+                .Append(_baseConfig.FromQuery).ToString();
 
             // Execute the query
             var rowcount = RunQuery(query);
@@ -74,13 +60,9 @@ namespace Wolfpack.Core.Checks
             stopwatch.Stop();
 
             // is this a good or bad result?
-            var result = DecideResult(myBaseConfig, rowcount);
-            // bail if success and only interested in failures
-            if (result && myBaseConfig.PublishOnlyIfFailure)
-                // result = success, but only interested in failures
-                return;
+            var result = DecideResult(_baseConfig, rowcount);
 
-            OnPublish(result, rowcount, stopwatch.Elapsed);
+            Publish(result, rowcount, stopwatch.Elapsed);
         }
 
         /// <summary>
@@ -107,7 +89,7 @@ namespace Wolfpack.Core.Checks
         {
             bool result;
 
-            if (myBaseConfig.InterpretZeroRowsAsAFailure)
+            if (_baseConfig.InterpretZeroRowsAsAFailure)
             {
                 result = (rowcount > 0);
             }
@@ -125,21 +107,16 @@ namespace Wolfpack.Core.Checks
         /// <param name="result"></param>
         /// <param name="rowcount"></param>
         /// <param name="duration"></param>
-        protected virtual void OnPublish(bool result, int rowcount, TimeSpan duration)
+        protected virtual void Publish(bool result, int rowcount, TimeSpan duration)
         {
-            Messenger.Publish(new HealthCheckData
-            {
-                Identity = Identity,
-                Result = result,
-                ResultCount = rowcount,
-                Info = string.Format("{0} rows returned", rowcount),
-                Properties = new ResultProperties
-                                 {
-                                     { "Rowcount", rowcount.ToString() },
-                                     { "Duration(ms)", duration.TotalMilliseconds.ToString() },
-                                     { "Criteria", myBaseConfig.FromQuery }
-                                 }
-            });
+            var data = HealthCheckData.For(Identity, "{0} rows returned", rowcount)
+                .ResultIs(result)
+                .ResultCountIs(rowcount)
+                .SetDuration(duration)
+                .AddProperty("Rowcount", rowcount.ToString(CultureInfo.InvariantCulture))
+                .AddProperty("Criteria", _baseConfig.FromQuery);
+
+            Messenger.Publish(NotificationRequestBuilder.For(_config.NotificationMode, data).Build());
         }
     }
 }

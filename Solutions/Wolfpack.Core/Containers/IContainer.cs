@@ -1,17 +1,17 @@
 using System;
 using System.Collections.Generic;
-using NServiceBus;
 
 namespace Wolfpack.Core.Containers
 {
     public interface IContainer
     {
         IContainer RegisterAsTransient(Type implType);
-        IContainer RegisterAsTransient<T>(Type implType);
+        IContainer RegisterAsTransient<T>(Type implType) where T : class;
         IContainer RegisterAsSingleton(Type implType);
-        IContainer RegisterAsSingleton<T>(Type implType);
-        IContainer RegisterInstance<T>(T instance);
-        IContainer RegisterAll<T>();
+        IContainer RegisterAsSingleton<T>(Type implType) where T : class;
+        IContainer RegisterInstance<T>(T instance) where T : class;
+        IContainer RegisterInstance<T>(T instance, string name) where T : class;
+        IContainer RegisterAll<T>() where T : class;
         IContainer RegisterAllWithInterception<T, I>();
         object Resolve(string componentName);
         T Resolve<T>();        
@@ -19,8 +19,6 @@ namespace Wolfpack.Core.Containers
         T Find<T>(Func<IEnumerable<T>, T> filter);
         void ResolveAll<T>(Action<T> action);
         bool IsRegistered<T>();
-
-        Configure Bus();
-        Configure Bus(params string[] assemblyNames);
+        bool IsRegistered(Type type);
     }
 }

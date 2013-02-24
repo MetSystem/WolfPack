@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using Sharp2City;
 using Wolfpack.Core;
 using Wolfpack.Core.Checks;
@@ -35,11 +36,11 @@ namespace Wolfpack.Contrib.BuildAnalytics.Checks
 
         public override void Execute()
         {
-            Logger.Debug("TeamCityBuildNotificationCheck inspecting {0}/{1}", myConfig.ProjectName, myConfig.ConfigurationName);
-            var tc = new TeamCityClient(myConfig.BuildServerUrl,
-                                        myConfig.UserId, myConfig.Password,
-                                        myConfig.UseSsl, myConfig.TrustDuffSslCertificate);
-            var build = tc.GetLastBuild(tc.FindBuildConfiguration(myConfig.ProjectName, myConfig.ConfigurationName));
+            Logger.Debug("TeamCityBuildNotificationCheck inspecting {0}/{1}", _config.ProjectName, _config.ConfigurationName);
+            var tc = new TeamCityClient(_config.BuildServerUrl,
+                                        _config.UserId, _config.Password,
+                                        _config.UseSsl, _config.TrustDuffSslCertificate);
+            var build = tc.GetLastBuild(tc.FindBuildConfiguration(_config.ProjectName, _config.ConfigurationName));
 
             if (build.BuildId == myLastBuildId)
                 return;
@@ -50,22 +51,27 @@ namespace Wolfpack.Contrib.BuildAnalytics.Checks
 
             Logger.Debug("\tBuild {0} for '{1}/{2}' has been detected (Success:={3})", 
                 myLastBuildId, 
-                myConfig.ProjectName, myConfig.ConfigurationName,
+                _config.ProjectName, _config.ConfigurationName,
                 buildResult);
             
             var duration = build.FinishDate.Subtract(build.StartDate);
 
-            Publish(new HealthCheckData
-                        {
-                            Identity = Identity,
-                            Duration = duration,
-                            Result = buildResult,
-                            GeneratedOnUtc = build.FinishDate,
-                            ResultCount = duration.TotalSeconds,
-                            Info = string.Format("Status of build '{0}' for project '{1}: {2}",
-                                                 myConfig.ConfigurationName, myConfig.ProjectName, build.StatusText),
-                            Tags = build.BuildId.ToString()
-                        });
+            var data = HealthCheckData.For(Identity,
+                                           "Status of build '{0}' for project '{1}: {2}",
+                                           _config.ConfigurationName, _config.ProjectName,
+                                           build.StatusText)
+                .ResultIs(buildResult)
+                .ResultCountIs(duration.TotalSeconds)
+                .SetDuration(duration)
+                .SetGeneratedOnUtc(build.FinishDate)
+                .AddTag(build.BuildId.ToString(CultureInfo.InvariantCulture));
+
+            Publish(NotificationRequest.AlwaysPublish(data, cfg => cfg.DataKeyGenerator = MakeUniqueNotificationKey));
+        }
+
+        private string MakeUniqueNotificationKey(HealthCheckData dataToPublish)
+        {
+            throw new NotImplementedException();
         }
 
         protected override PluginDescriptor BuildIdentity()
@@ -74,7 +80,7 @@ namespace Wolfpack.Contrib.BuildAnalytics.Checks
                        {
                            Description = "Detects new TeamCity builds and reports on their state",
                            TypeId = new Guid("040CF1F2-7000-4902-86EA-7E348E2EEC2C"),
-                           Name = myConfig.FriendlyId
+                           Name = _config.FriendlyId
                        };
         }
     }

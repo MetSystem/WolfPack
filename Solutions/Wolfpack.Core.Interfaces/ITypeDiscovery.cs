@@ -7,18 +7,18 @@ namespace Wolfpack.Core.Interfaces
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="interfaceTypes"></param>
+        /// <param name="interfaceType"></param>
         /// <param name="matchingTypes"></param>
         /// <returns></returns>
-        bool Locate(string[] interfaceTypes, out Type[] matchingTypes);
+        bool Locate(Type interfaceType, out Type[] matchingTypes);
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="interfaceTypes"></param>
+        /// <param name="interfaceType"></param>
         /// <param name="matchingTypes"></param>
         /// <param name="filter"></param>
         /// <returns></returns>
-        bool Locate(string[] interfaceTypes, out Type[] matchingTypes, Predicate<Type> filter);
+        bool Locate(Type interfaceType, Predicate<Type> filter, out Type[] matchingTypes);
     }
 }

@@ -17,6 +17,9 @@ namespace Wolfpack.Agent.Profiles
         {
             get
             {
+                // this needs to happen first...
+                Messenger.Initialise(new MagnumMessenger());
+
                 // load and execute all startup plugins
                 // ...not using .SafeInitialise() method as
                 // we want this to blow up loading the agent

@@ -1,72 +1,85 @@
 using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
+using Wolfpack.Core.Configuration;
 using Wolfpack.Core.Interfaces;
 using Wolfpack.Core.Interfaces.Entities;
+using Wolfpack.Core.Notification;
+using Wolfpack.Core.Notification.Filters.Request;
 
 namespace Wolfpack.Core.Checks
 {
-    public class FileInfoCheckConfig : PluginConfigBase
+    public class FileInfoCheckConfig : PluginConfigBase, ISupportNotificationMode
     {
         public string FileLocation { get; set; }
+        public string NotificationMode { get; set; }
     }
 
-    public class FileInfoCheck : IHealthCheckPlugin
+    public class FileInfoConfigurationAdvertiser : HealthCheckDiscoveryBase<FileInfoCheckConfig>
     {
-        protected readonly FileInfoCheckConfig myConfig;
-        protected readonly SmartLocation myFileLocation;
-        protected PluginDescriptor  myIdentity;
+        protected override FileInfoCheckConfig GetConfiguration()
+        {
+            return new FileInfoCheckConfig
+                       {
+                           Enabled = true,
+                           FriendlyId = "CHANGEME!",
+                           NotificationMode = StateChangeNotificationFilter.FilterName,
+                           FileLocation = "Fully qualified filename"
+                       };
+        }
+
+        protected override void Configure(ConfigurationEntry entry)
+        {
+            entry.Name = "FileInfoCheck";
+            entry.Description = "This check monitors a specific filename.";
+            entry.Tags.AddIfMissing("HealthCheck", "FileSystem");
+        }
+    }
+
+    public class FileInfoCheck : HealthCheckBase<FileInfoCheckConfig>
+    {
+        protected readonly SmartLocation _fileLocation;
 
         /// <summary>
         /// default ctor
         /// </summary>
-        public FileInfoCheck(FileInfoCheckConfig config)
+        public FileInfoCheck(FileInfoCheckConfig config) : base(config)
         {
-            myConfig = config;
-            myFileLocation = new SmartLocation(config.FileLocation);
-            myIdentity = new PluginDescriptor
+            _fileLocation = new SmartLocation(config.FileLocation);
+        }
+
+        public override void Execute()
+        {
+            var fi = new FileInfo(_fileLocation.Location);
+            var data = HealthCheckData.For(Identity, 
+                "Information about file '{0}'...", _fileLocation.Location)
+                .ResultIs(fi.Exists);
+
+            if (data.Result.GetValueOrDefault(false))
             {
-                Description = string.Format("Reports information about file {0}", myFileLocation.Location),
-                TypeId = new Guid("E0DDCF22-25B6-4d05-B2C4-D1EBFBEBB681"),
-                Name = myConfig.FriendlyId
-            };
-        }
-
-        public Status Status { get; set; }
-
-        public PluginDescriptor Identity
-        {
-            get { return myIdentity; }
-        }
-       
-        public void Initialise()
-        {
-            // do nothing
-        }
-
-        public void Execute()
-        {
-            var fi = new FileInfo(myFileLocation.Location);
-            var result = new HealthCheckData
-                             {
-                                 Identity = Identity,
-                                 Info = string.Format("Information about file '{0}'...", myFileLocation.Location),
-                                 Result = fi.Exists
-                             };
-
-            if (result.Result.GetValueOrDefault(false))
-            {
-                result.ResultCount = fi.Length;
-                result.Properties = new ResultProperties
-                                        {
-                                            {"CreationTimeUtc", fi.CreationTimeUtc.ToString()},
-                                            {"LastAccessTimeUtc", fi.LastAccessTimeUtc.ToString()},
-                                            {"LastWriteTimeUtc", fi.LastWriteTimeUtc.ToString()},
-                                            {"Length", fi.Length.ToString()},
+                data.ResultCount = fi.Length;
+                data.Properties = new Properties
+                                      {
+                                            {"CreationTimeUtc", fi.CreationTimeUtc.ToString(CultureInfo.InvariantCulture)},
+                                            {"LastAccessTimeUtc", fi.LastAccessTimeUtc.ToString(CultureInfo.InvariantCulture)},
+                                            {"LastWriteTimeUtc", fi.LastWriteTimeUtc.ToString(CultureInfo.InvariantCulture)},
+                                            {"Length", fi.Length.ToString(CultureInfo.InvariantCulture)},
                                             {"Attributes", fi.Attributes.ToString()}
                                         };
             }
 
-            Messenger.Publish(result);
+            Messenger.Publish(NotificationRequestBuilder.For(_config.NotificationMode, data).Build());
+        }
+
+        protected override PluginDescriptor BuildIdentity()
+        {
+            return new PluginDescriptor
+            {
+                Description = string.Format("Reports information about file {0}", _fileLocation.Location),
+                TypeId = new Guid("E0DDCF22-25B6-4d05-B2C4-D1EBFBEBB681"),
+                Name = _config.FriendlyId
+            };
         }
     }
 }

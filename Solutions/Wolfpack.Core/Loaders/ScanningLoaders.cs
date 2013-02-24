@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using Wolfpack.Core.Interfaces;
-using Castle.Core;
 
 namespace Wolfpack.Core.Loaders
 {
@@ -25,6 +24,7 @@ namespace Wolfpack.Core.Loaders
         /// Helper to directly use this components
         /// </summary>
         /// <param name="components"></param>
+        /// <param name="action"></param>
         /// <returns></returns>
         public static bool Resolve(out TI[] components, Action<TI> action)
         {
@@ -49,7 +49,7 @@ namespace Wolfpack.Core.Loaders
         public bool Load(out TI[] components, Action<TI> action)
         {
             var result = Load(out components);
-            components.ForEach(action);
+            components.ToList().ForEach(action);
             return result;
         }
     }
@@ -104,7 +104,7 @@ namespace Wolfpack.Core.Loaders
         public bool Load(out TI[] components, Action<TI> action)
         {
             var result = Load(out components);
-            components.ForEach(action);
+            components.ToList().ForEach(action);
             return result;
         }
     }

@@ -2,18 +2,45 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
+using Castle.Core.Internal;
+using Wolfpack.Core.Configuration;
+using Wolfpack.Core.Interfaces;
 using Wolfpack.Core.Interfaces.Entities;
-using Castle.Core;
 using System.Linq;
+using Wolfpack.Core.Notification;
+using Wolfpack.Core.Notification.Filters.Request;
 
 namespace Wolfpack.Core.Checks
 {
-    public class CpuCheckConfig : StreamThresholdCheckConfigBase
+    public class CpuCheckConfig : PluginConfigBase, ISupportNotificationMode, ISupportNotificationThreshold
     {
         public string MachineName { get; set; }
+        public string NotificationMode { get; set; }
+        public double? NotificationThreshold { get; set; }
     }
 
-    public class CpuCheck : StreamThresholdCheckBase<CpuCheckConfig>
+    public class CpuCheckConfigurationAdvertiser : HealthCheckDiscoveryBase<CpuCheckConfig>
+    {
+        protected override CpuCheckConfig GetConfiguration()
+        {
+            return new CpuCheckConfig
+                       {
+                           Enabled = true,
+                           FriendlyId = "CHANGEME!",
+                           NotificationMode = StateChangeNotificationFilter.FilterName,
+                           NotificationThreshold = 80
+                       };
+        }
+
+        protected override void Configure(ConfigurationEntry entry)
+        {
+            entry.Name = "CpuCheck";
+            entry.Description = "This check monitors the CPU % utilisation level. Typically this check is configured to start producing notifications once a threshold % is breached.";
+            entry.Tags.AddIfMissing("CPU", "Threshold");
+        }
+    }
+
+    public class CpuCheck : ThresholdCheckBase<CpuCheckConfig>
     {
         private class ProcessCounterSample
         {
@@ -23,7 +50,7 @@ namespace Wolfpack.Core.Checks
             public double Value { get; set; }
         }
 
-        protected PerformanceCounter myCounter;
+        protected PerformanceCounter _counter;
 
         /// <summary>
         /// default ctor
@@ -35,29 +62,32 @@ namespace Wolfpack.Core.Checks
 
         public override void  Initialise()
         {
-            myCounter = string.IsNullOrEmpty(myConfig.MachineName) 
+            _counter = string.IsNullOrEmpty(_config.MachineName) 
                 ? new PerformanceCounter("Processor", "% Processor Time", "_Total") 
-                : new PerformanceCounter("Processor", "% Processor Time", "_Total", myConfig.MachineName);
+                : new PerformanceCounter("Processor", "% Processor Time", "_Total", _config.MachineName);
         }
 
         public override void Execute()
         {
-            var sample = myCounter.NextSample();
+            var sample = _counter.NextSample();
             Thread.Sleep(1000);
-            var sample2 = myCounter.NextSample();
+            var sample2 = _counter.NextSample();
             var value = Math.Round(CounterSampleCalculator.ComputeCounterValue(sample, sample2));
 
-            Publish(new HealthCheckData
-                        {
-                            Identity = Identity,
-                            Info = string.Format("Cpu utilisation is {0}%", value),
-                            Result = true,
-                            ResultCount = value
-                        });
-
+            Publish(NotificationRequestBuilder.For(_config.NotificationMode, HealthCheckData.For(Identity, 
+                "Cpu utilisation is {0}%", value)
+                .Succeeded()
+                .ResultCountIs(value)
+                .DisplayUnitIs("%"))
+                .Build());
         }
 
-        protected override void AdjustMessageForBreach(HealthCheckData message)
+        /// <summary>
+        /// When a breach of the threshold is detected we want to send a list 
+        /// the top 5 cpu hogging processes in the alert
+        /// </summary>
+        /// <param name="message"></param>
+        protected override void AdjustMessageForBreach(INotificationEventCore message)
         {
             base.AdjustMessageForBreach(message);
 
@@ -68,9 +98,9 @@ namespace Wolfpack.Core.Checks
                            {
                                try
                                {
-                                   var counter = (string.IsNullOrEmpty(myConfig.MachineName)
+                                   var counter = (string.IsNullOrEmpty(_config.MachineName)
                                                       ? new PerformanceCounter("Process", "% Processor Time", process.ProcessName)
-                                                      : new PerformanceCounter("Process", "% Processor Time", process.ProcessName, myConfig.MachineName));
+                                                      : new PerformanceCounter("Process", "% Processor Time", process.ProcessName, _config.MachineName));
                                    counter.ReadOnly = true;
 
                                    counters.Add(new ProcessCounterSample
@@ -101,7 +131,8 @@ namespace Wolfpack.Core.Checks
                 .ForEach(pcs =>
                              {
                                  var name = string.Format("{0}[{1}]", pcs.Process.ProcessName, pcs.Process.Id);
-                                 message.AddProperty(name, Convert.ToString(pcs.Value));
+                                 // TODO: add property to core notification properties?
+                                 //message.AddProperty(name, Convert.ToString(pcs.Value));
                              });
         }
 
@@ -111,7 +142,7 @@ namespace Wolfpack.Core.Checks
             {
                 Description = "Reports the CPU load as a %",
                 TypeId = new Guid("E6C9C3DB-E234-407B-9949-2BE94C185D72"),
-                Name = myConfig.FriendlyId
+                Name = _config.FriendlyId
             };
         }
     }

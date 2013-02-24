@@ -4,25 +4,27 @@ namespace Wolfpack.Core.Containers
 {
     public abstract class InterceptorBase : IInterceptor
     {
-        protected string myMethodToIntercept;
+        protected string _methodToIntercept;
 
         protected InterceptorBase(string methodToIntercept)
         {
-            myMethodToIntercept = methodToIntercept;
+            _methodToIntercept = methodToIntercept;
         }
 
         protected virtual bool InterceptThisMethod(IInvocation invocation)
         {
-            return (string.CompareOrdinal(invocation.Method.Name, myMethodToIntercept) == 0);
+            return (string.CompareOrdinal(invocation.Method.Name, _methodToIntercept) == 0);
         }
 
         public void Intercept(IInvocation invocation)
         {
-            if (!InterceptThisMethod(invocation))
-                invocation.Proceed();
-            else
+            if (InterceptThisMethod(invocation))
             {
                 HandleIntercept(invocation);
+            }
+            else
+            {
+                invocation.Proceed();
             }
         }
 

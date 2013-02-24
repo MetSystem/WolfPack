@@ -4,12 +4,12 @@ using Wolfpack.Core.Interfaces.Magnum;
 
 namespace Wolfpack.Core.Publishers
 {
-    public abstract class FilteredResultPublisherBase<T> : PublisherBase, IHealthCheckResultPublisher
+    public abstract class FilteredResultPublisherBase<T> : PublisherBase, INotificationEventPublisher
         where T: PluginConfigBase
     {
-        private readonly string myMatchFriendlyName;
-        private readonly Func<HealthCheckResult, bool> myFilter;
-        protected abstract void Publish(HealthCheckResult buildResult);
+        private readonly string _matchFriendlyName;
+        private readonly Func<NotificationEvent, bool> _filter;
+        protected abstract void Publish(NotificationEvent message);
 
         protected T Config { get; private set; }
 
@@ -20,20 +20,19 @@ namespace Wolfpack.Core.Publishers
             Enabled = config.Enabled;
             FriendlyId = config.FriendlyId;
 
-            myMatchFriendlyName = friendlyName;
-            myFilter = MatchOnFriendlyName;
+            _matchFriendlyName = friendlyName;
+            _filter = MatchOnFriendlyName;
         }
 
-        protected FilteredResultPublisherBase(T config,
-            Func<HealthCheckResult, bool> filter)
+        protected FilteredResultPublisherBase(T config, Func<NotificationEvent, bool> filter)
         {
             Config = config;
-            myFilter = filter;
+            _filter = filter;
         }
 
-        public void Consume(HealthCheckResult message)
+        public void Consume(NotificationEvent message)
         {
-            if (!myFilter(message))
+            if (!_filter(message))
             {
 
                 return;
@@ -42,10 +41,9 @@ namespace Wolfpack.Core.Publishers
             Publish(message);
         }
 
-        protected virtual bool MatchOnFriendlyName(HealthCheckResult message)
+        protected virtual bool MatchOnFriendlyName(NotificationEvent message)
         {
-            return (string.Compare(message.Check.Identity.Name, myMatchFriendlyName,
-                               StringComparison.InvariantCultureIgnoreCase) == 0);
+            return string.Equals(message.CheckId, _matchFriendlyName, StringComparison.OrdinalIgnoreCase);
         }
     }
 }

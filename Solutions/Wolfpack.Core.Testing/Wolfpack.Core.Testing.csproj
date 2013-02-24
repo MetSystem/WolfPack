@@ -34,17 +34,23 @@
     <Reference Include="Fluent.IO, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\FluentPath.1.0.0\lib\Net4\Fluent.IO.dll</HintPath>
     </Reference>
-    <Reference Include="FluentAssertions">
-      <HintPath>..\packages\FluentAssertions.1.5.0.0\Lib\.NetFramework 4.0\FluentAssertions.dll</HintPath>
+    <Reference Include="FluentAssertions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\FluentAssertions.2.0.0.1\lib\net40\FluentAssertions.dll</HintPath>
     </Reference>
-    <Reference Include="Magnum">
-      <HintPath>..\packages\Magnum.2.0.0.1\lib\NET40\Magnum.dll</HintPath>
+    <Reference Include="Magnum, Version=2.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Magnum.2.0.1.0\lib\NET40\Magnum.dll</HintPath>
     </Reference>
     <Reference Include="NServiceBus, Version=2.5.0.0, Culture=neutral, PublicKeyToken=349438b4be075135, processorArchitecture=MSIL">
       <HintPath>..\References\NServiceBus\v2.5\NServiceBus.dll</HintPath>
     </Reference>
     <Reference Include="NServiceBus.Core, Version=2.5.0.0, Culture=neutral, PublicKeyToken=349438b4be075135, processorArchitecture=MSIL">
       <HintPath>..\References\NServiceBus\v2.5\NServiceBus.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Text, Version=3.9.33.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\ServiceStack.Text.3.9.33\lib\net35\ServiceStack.Text.dll</HintPath>
     </Reference>
     <Reference Include="StoryQ">
       <HintPath>..\packages\StoryQ.2.0.5\lib\StoryQ.dll</HintPath>
@@ -72,21 +78,15 @@
     </Compile>
     <Compile Include="Bdd\BddFeature.cs" />
     <Compile Include="Bdd\BddTestDomain.cs" />
-    <Compile Include="Domains\CommunicationActivityDomainBase.cs" />
-    <Compile Include="Domains\ContainerDomain.cs" />
-    <Compile Include="Domains\GeckoboardDataServiceDomain.cs" />
+    <Compile Include="Domains\SystemDomainBase.cs" />
     <Compile Include="Domains\HealthCheckDomain.cs" />
-    <Compile Include="Domains\MessengerEnabledDomain.cs" />
-    <Compile Include="Domains\NsbActivityDomain.cs" />
-    <Compile Include="Domains\StreamingHealthCheckDomain.cs" />
-    <Compile Include="Domains\WcfActivityDomain.cs" />
+    <Compile Include="Domains\ThresholdCheckDomain.cs" />
+    <Compile Include="Drivers\AutomationConfigurationManager.cs" />
     <Compile Include="Drivers\AutomationStreamingHealthCheck.cs" />
     <Compile Include="Drivers\AutomationLoader.cs" />
     <Compile Include="Drivers\AutomationProfile.cs" />
-    <Compile Include="Drivers\AutomationResultPublisher.cs" />
     <Compile Include="Drivers\AutomationScheduler.cs" />
-    <Compile Include="Drivers\AutomationSessionPublisher.cs" />
-    <Compile Include="Mocks\MockMessenger.cs" />
+    <Compile Include="NotificationEventBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -5,36 +5,34 @@ using Wolfpack.Core.Hosts;
 using Wolfpack.Core.Interfaces;
 using Wolfpack.Core.Interfaces.Entities;
 using Wolfpack.Core.Interfaces.Magnum;
+using Wolfpack.Core.Notification;
 
 namespace Wolfpack.Agent.Roles
 {
     public class Agent : PluginHostBase, IRolePlugin
     {
-        protected readonly ILoader<IHealthCheckSessionPublisher> mySessionPublisherLoader;
-        protected readonly ILoader<IHealthCheckResultPublisher> myResultPublisherLoader;
-        protected readonly ILoader<IHealthCheckSchedulerPlugin> myChecksLoader;
-        protected readonly ILoader<IActivityPlugin> myActivitiesLoader;
+        protected readonly ILoader<INotificationEventPublisher> _publisherLoader;
+        protected readonly ILoader<IHealthCheckSchedulerPlugin> _checksLoader;
+        protected readonly ILoader<IActivityPlugin> _activitiesLoader;
         
-        protected readonly INotificationHub myHub;
-        protected PluginDescriptor myIdentity;
+        protected readonly INotificationHub _hub;
+        protected PluginDescriptor _identity;
 
-        protected AgentInfo myAgentInfo;
+        protected AgentInfo _agentInfo;
 
         public Agent(AgentConfiguration config,
-            ILoader<IHealthCheckSessionPublisher> sessionPublisherLoader,
-            ILoader<IHealthCheckResultPublisher> resultPublisherLoader,
+            ILoader<INotificationEventPublisher> publisherLoader,
             ILoader<IHealthCheckSchedulerPlugin> checksLoader,
             ILoader<IActivityPlugin> activitiesLoader,
             INotificationHub hub)
         {
-            myHub = hub;
-            mySessionPublisherLoader = sessionPublisherLoader;
-            myResultPublisherLoader = resultPublisherLoader;
-            myChecksLoader = checksLoader;
-            myActivitiesLoader = activitiesLoader;
-            myAgentInfo = BuildAgentInfo(config);            
+            _hub = hub;
+            _publisherLoader = publisherLoader;
+            _checksLoader = checksLoader;
+            _activitiesLoader = activitiesLoader;
+            _agentInfo = config.BuildInfo();            
 
-            myIdentity = new PluginDescriptor
+            _identity = new PluginDescriptor
                              {
                                  Description = "Agent description [TODO]",
                                  Name = "Agent",
@@ -42,88 +40,70 @@ namespace Wolfpack.Agent.Roles
                              };
         }
 
-        private static AgentInfo BuildAgentInfo(AgentConfiguration config)
-        {
-            return new AgentInfo
-                       {
-                           SiteId = Environment.MachineName,
-                           AgentId = config.SiteId
-                       };
-        }
-
         public override PluginDescriptor Identity
         {
-            get { return myIdentity; }
+            get { return _identity; }
         }
 
         public override void Start()
         {
             // start the load process....
-            var sessionInfo = new HealthCheckAgentStart
+            var sessionInfo = new NotificationEventAgentStart
             {
                 DiscoveryStarted = DateTime.UtcNow,
-                Agent = myAgentInfo
+                AgentId = _agentInfo.AgentId,
+                SiteId =  _agentInfo.SiteId
             };
 
-            // load publishers
-            IHealthCheckSessionPublisher[] sessionPublishers;
-            mySessionPublisherLoader.Load(out sessionPublishers, p =>
-                                                                     {
-                                                                         if (!p.Status.IsHealthy())
-                                                                         {
-                                                                             Logger.Debug("*** Session Publisher '{0}' reporting 'unhealthy', disabling it ***", 
-                                                                                 p.FriendlyId);
-                                                                             return;
-                                                                         }
+            INotificationEventPublisher[] publishers;
+            _publisherLoader.Load(out publishers,
+                                        p =>
+                                            {
+                                                if (!p.Status.IsHealthy())
+                                                {
+                                                    Logger.Debug(
+                                                        "*** Notification Publisher '{0}' reporting 'unhealthy', disabling it ***",
+                                                        p.FriendlyId);
+                                                    return;
+                                                }
 
-                                                                         Messenger.Subscribe(p);
-                                                                         Logger.Debug("Loaded Session Publisher '{0}'",
-                                                                                      p.GetType().Name);
-                                                                     });
-            IHealthCheckResultPublisher[] resultPublishers;
-            myResultPublisherLoader.Load(out resultPublishers, p =>
-                                                                   {
-                                                                       if (!p.Status.IsHealthy())
-                                                                       {
-                                                                           Logger.Debug("*** Result Publisher '{0}' reporting 'unhealthy', disabling it ***",
-                                                                               p.FriendlyId);
-                                                                           return;
-                                                                       }
-
-                                                                       Messenger.Subscribe(p);
-                                                                       Logger.Debug("Loaded Result Publisher '{0}'",
-                                                                                    p.GetType().Name);
-                                                                   });
+                                                Messenger.Subscribe(p);
+                                                Logger.Debug("Loaded Notification Publisher '{0}'",
+                                                             p.GetType().Name);
+                                            });
             
             // load activities...
             IActivityPlugin[] activities;
-            if (myActivitiesLoader.Load(out activities))
-                activities.ToList().ForEach(a =>
-                {
-                    if (!a.Status.IsHealthy())
-                    {
-                        Logger.Debug("*** Activity '{0}' reporting 'unhealthy', skipping it ***", a.Identity.Name);
-                        return;
-                    }
+            if (_activitiesLoader.Load(out activities))
+                activities.ToList().ForEach(
+                    a =>
+                        {
+                            if (!a.Status.IsHealthy())
+                            {
+                                Logger.Debug("*** Activity '{0}' reporting 'unhealthy', skipping it ***",
+                                             a.Identity.Name);
+                                return;
+                            }
 
-                    myPlugins.Add(a);
-                    Logger.Debug("Loaded Activity '{0}'", a.GetType().Name);
-                });
+                            _plugins.Add(a);
+                            Logger.Debug("Loaded Activity '{0}'", a.GetType().Name);
+                        });
 
             // load health checks...
             IHealthCheckSchedulerPlugin[] healthChecks;
-            myChecksLoader.Load(out healthChecks);
-            healthChecks.ToList().ForEach(h =>
-                                              {
-                                                  if (!h.Status.IsHealthy())
-                                                  {
-                                                      Logger.Debug("*** HealthCheck '{0}' reporting 'unhealthy', skipping it ***", h.Identity.Name);
-                                                      return;
-                                                  }
+            _checksLoader.Load(out healthChecks);
+            healthChecks.ToList().ForEach(
+                h =>
+                    {
+                        if (!h.Status.IsHealthy())
+                        {
+                            Logger.Debug("*** HealthCheck '{0}' reporting 'unhealthy', skipping it ***", h.Identity.Name);
+                            return;
+                        }
 
-                                                  myPlugins.Add(h);
-                                                  Logger.Debug("Loaded HealthCheck '{0}'", h.Identity.Name);
-                                              });
+                        _plugins.Add(h);
+                        Logger.Debug("Loaded HealthCheck '{0}'", h.Identity.Name);
+                    });
 
             // extract check info, attach and publish it to a session message
             sessionInfo.DiscoveryCompleted = DateTime.UtcNow;
@@ -140,10 +120,10 @@ namespace Wolfpack.Agent.Roles
                                       where !activity.Status.IsHealthy()
                                       select activity.Identity).ToList();
 
-            Messenger.Publish(sessionInfo);
+            // ensure we are listening for anything to be published
+            _hub.Initialise(_agentInfo);
 
-            // this will ensure we are listening for health check result messages
-            myHub.Initialise(myAgentInfo);
+            Messenger.Publish(NotificationRequestBuilder.AlwaysPublish(sessionInfo).Build());
 
             // finally start the checks & activities
             base.Start();

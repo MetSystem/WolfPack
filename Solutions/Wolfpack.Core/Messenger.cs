@@ -1,4 +1,5 @@
-﻿using Magnum.Pipeline;
+﻿using System;
+using Magnum.Pipeline;
 using Magnum.Pipeline.Segments;
 using Wolfpack.Core.Interfaces;
 using Wolfpack.Core.Interfaces.Entities;
@@ -11,36 +12,36 @@ namespace Wolfpack.Core
     /// </summary>
     public static class Messenger
     {
-        private static IMessenger myInstance;
+        private static IMessenger _instance;
 
         public static void Initialise(IMessenger instance)
         {
-            myInstance = instance; 
+            _instance = instance; 
         }
 
-        public static IMessenger Publish<T>(T message) where T : class
+        //public static IMessenger Publish<T>(T message) where T : class
+        //{
+        //    return _instance.Publish(message);
+        //}
+
+        public static IMessenger Publish(NotificationRequest request)
         {
-            return myInstance.Publish(message);
+            return _instance.Publish(request);
         }
 
-        public static IMessenger Publish(HealthCheckAgentStart message)
+        public static IMessenger Publish(NotificationEvent message)
         {
-            return myInstance.Publish(message);           
-        }
-
-        public static IMessenger Publish(HealthCheckResult message)
-        {
-            return myInstance.Publish(message);
-        }
-
-        public static IMessenger Publish(HealthCheckData message)
-        {
-            return myInstance.Publish(message);
+            return _instance.Publish(message);           
         }
 
         public static IMessenger Subscribe<T>(T consumer) where T: class
         {
-            return myInstance.Subscribe(consumer);
+            return _instance.Subscribe(consumer);
+        }
+
+        public static IMessenger InterceptBefore<T>(Action<T> action) where T : class
+        {
+            return _instance.InterceptBefore(action);
         }
     }
 
@@ -50,42 +51,49 @@ namespace Wolfpack.Core
     /// </summary>
     public class MagnumMessenger : IMessenger
     {
-        private static readonly InputSegment myMessageBus;
-        private static readonly ISubscriptionScope mySubscriptionScope;
+        private readonly InputSegment _messageBus;
+        private readonly ISubscriptionScope _subscriptionScope;
 
-        static MagnumMessenger()
+        public MagnumMessenger()
         {
-            myMessageBus = PipeSegment.Input(PipeSegment.End());
-            mySubscriptionScope = myMessageBus.NewSubscriptionScope();
+            _messageBus = PipeSegment.Input(PipeSegment.End());
+            _subscriptionScope = _messageBus.NewSubscriptionScope();
         }
 
         public IMessenger Publish<T>(T message) where T : class
         {
-            myMessageBus.Send(message);
+            _messageBus.Send(message);
             return this;
         }
 
-        IMessenger IMessenger.Publish(HealthCheckAgentStart message)
+        IMessenger IMessenger.Publish(NotificationRequest message)
         {
-            myMessageBus.Send(message);
+            _messageBus.Send(message);
             return this;
         }
 
-        IMessenger IMessenger.Publish(HealthCheckResult message)
+        IMessenger IMessenger.Publish(NotificationEvent message)
         {
-            myMessageBus.Send(message);
-            return this;
-        }
-
-        IMessenger IMessenger.Publish(HealthCheckData message)
-        {
-            myMessageBus.Send(message);
+            _messageBus.Send(message);
             return this;
         }
 
         public IMessenger Subscribe<T>(T consumer) where T : class
         {
-            mySubscriptionScope.Subscribe(consumer);
+            _subscriptionScope.Subscribe(consumer);
+            return this;
+        }
+
+        public IMessenger InterceptBefore<T>(Action<T> action) where T : class
+        {
+            _subscriptionScope.Intercept<object>(
+                config => config.BeforeEachMessage(
+                    message =>
+                    {
+                        if (message.GetType() != typeof(T))
+                            return;
+                        action((T)message);
+                    }));
             return this;
         }
     }

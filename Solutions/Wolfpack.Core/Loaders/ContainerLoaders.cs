@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using Wolfpack.Core.Interfaces;
-using Castle.Core;
 
 namespace Wolfpack.Core.Loaders
 {    
@@ -24,6 +23,7 @@ namespace Wolfpack.Core.Loaders
         /// Helper to directly use this components
         /// </summary>
         /// <param name="components"></param>
+        /// <param name="action"></param>
         /// <returns></returns>
         public static bool Resolve(out TI[] components, Action<TI> action)
         {
@@ -42,7 +42,7 @@ namespace Wolfpack.Core.Loaders
         public bool Load(out TI[] components, Action<TI> action)
         {
             var result = Load(out components);
-            components.ForEach(action);
+            components.ToList().ForEach(action);
             return result;
         }
     }
@@ -51,7 +51,7 @@ namespace Wolfpack.Core.Loaders
     /// 
     /// </summary>
     public class ContainerPluginLoader<TI> : ILoader<TI>
-        where TI : IPlugin, ICanBeSwitchedOff
+        where TI : IPlugin
     {
         /// <summary>
         /// Helper to directly use this components
@@ -76,11 +76,12 @@ namespace Wolfpack.Core.Loaders
 
         public bool Load(out TI[] components)
         {
-            var candidates = (from plugin in Container.ResolveAll<TI>()
-                              where plugin.Enabled
-                              select plugin).ToList();
+            var candidates = Container.ResolveAll<TI>().ToList();
+            var optionalPlugins = candidates.OfType<ICanBeSwitchedOff>().ToList();
+            var mustLoadPlugins = candidates.Except(optionalPlugins.Cast<TI>());
 
-            var plugins = candidates.Cast<IPlugin>().InitialisePlugins();
+            var plugins = mustLoadPlugins.Union(optionalPlugins.Where(p => p.Enabled).Cast<TI>()).ToList();
+            plugins.Cast<IPlugin>().InitialisePlugins();            
             components = plugins.Cast<TI>().ToArray();
             return (components.Length > 0);
         }
@@ -88,7 +89,7 @@ namespace Wolfpack.Core.Loaders
         public bool Load(out TI[] components, Action<TI> action)
         {
             var result = Load(out components);
-            components.ForEach(action);
+            components.ToList().ForEach(action);
             return result;
         }
     }

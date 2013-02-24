@@ -1,86 +1,32 @@
 using System;
+using System.Collections.Generic;
 
 namespace Wolfpack.Core.Interfaces.Entities
 {
     public class HealthCheckData
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
-        /// </summary>
+        public bool? Result { get; set; }
+        public double? ResultCount { get; set; }
+        public string DisplayUnit { get; set; }
+        public bool CriticalFailure { get; set; }
+        public CriticalFailureDetails CriticalFailureDetails { get; set; }
+        public PluginDescriptor Identity { get; set; }
+        public DateTime GeneratedOnUtc { get; set; }
+        public GeoData Geo { get; set; }
+        public TimeSpan Duration { get; set; }
+        public DateTime? NextCheckExpected { get; set; }
+        public string Info { get; set; }
+        public List<string> Tags { get; set; }
+        public Properties Properties { get; set; }
+
         public HealthCheckData()
         {
             GeneratedOnUtc = DateTime.UtcNow;
             CriticalFailure = false;
+
+            Tags = new List<string>();
+            Properties = new Properties();
         }
-
-        /// <summary>
-        /// This is used by a HealthCheck to inform the Wolfpack infrastructure how
-        /// to shape the stream of alerts emitted
-        /// </summary>
-        public string NotificationMode { get; set; }
-
-        /// <summary>
-        /// The result of the check if it has a true/false outcome
-        /// </summary>
-        public bool? Result { get; set; }
-
-        /// <summary>
-        /// The count result of the check
-        /// </summary>
-        public double? ResultCount { get; set; }
-
-        /// <summary>
-        /// Indicates a critical failure in the check. The details
-        /// about the failure are stored in the <see cref="CriticalFailureDetails"/>
-        /// property
-        /// </summary>
-        public bool CriticalFailure { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public CriticalFailureDetails CriticalFailureDetails { get; set; }
-
-        /// <summary>
-        /// Identifies the health check
-        /// </summary>
-        public PluginDescriptor Identity { get; set; }
-
-        /// <summary>
-        /// Indicates when the check took place
-        /// </summary>
-        public DateTime GeneratedOnUtc { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public GeoData Geo { get; set; }
-        
-        /// <summary>
-        /// How long the check took to execute
-        /// </summary>
-        public TimeSpan Duration { get; set; }
-
-        /// <summary>
-        /// The scheduled this is expected to run again
-        /// </summary>
-        public DateTime? NextCheckExpected { get; set; }
-
-        /// <summary>
-        /// General text field to help describe the result
-        /// </summary>
-        public string Info { get; set; }
-
-        /// <summary>
-        /// General text field to help categorise the result
-        /// </summary>
-        public string Tags { get; set; }
-
-        /// <summary>
-        /// Property bag to contain name/value pairs of result data
-        /// </summary>
-        public ResultProperties Properties { get; set; }
-
 
         public static HealthCheckData For(PluginDescriptor identity,
             string info, params object[] args)
@@ -107,7 +53,7 @@ namespace Wolfpack.Core.Interfaces.Entities
         public HealthCheckData AddProperty(string name, string value)
         {
             if (Properties == null)
-                Properties = new ResultProperties();
+                Properties = new Properties();
 
             Properties.Add(name, value);
             return this;
@@ -115,20 +61,45 @@ namespace Wolfpack.Core.Interfaces.Entities
 
         public HealthCheckData AddTag(string tag)
         {
-            return AddTag(tag, ",");
-        }
-
-        public HealthCheckData AddTag(string tag, string delimiter)
-        {
-            if (!string.IsNullOrEmpty(Tags))
-                Tags += delimiter;
-            Tags += tag;
+            if (Tags == null)
+                Tags = new List<string>();
+            Tags.Add(tag);
             return this;
         }
 
         public HealthCheckData ResultCountIs(double? count)
         {
             ResultCount = count;
+            return this;
+        }
+
+        public HealthCheckData DisplayUnitIs(string unit)
+        {
+            DisplayUnit = unit;
+            return this;
+        }
+
+        public HealthCheckData InfoIs(string format, params object[] args)
+        {
+            Info = string.Format(format, args);
+            return this;
+        }
+
+        public HealthCheckData ResultIs(bool result)
+        {
+            Result = result;
+            return this;
+        }
+
+        public HealthCheckData SetGeneratedOnUtc(DateTime observationDate)
+        {
+            GeneratedOnUtc = observationDate;
+            return this;
+        }
+
+        public HealthCheckData SetDuration(TimeSpan duration)
+        {
+            Duration = duration;
             return this;
         }
     }

@@ -25,7 +25,7 @@ namespace Wolfpack.Core.Schedulers
                                   IntervalInSeconds = config.IntervalInSeconds
                               })
         {
-            myIdentity = new PluginDescriptor
+            _identity = new PluginDescriptor
                              {
                                  TypeId = check.Identity.TypeId,
                                  Description = check.Identity.Description,

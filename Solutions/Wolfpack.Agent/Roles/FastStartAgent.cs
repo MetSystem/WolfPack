@@ -15,24 +15,23 @@ namespace Wolfpack.Agent.Roles
     /// </summary>
     public class FastStartAgent : Agent
     {
-        protected ManualResetEvent myStartingGate;
+        protected ManualResetEvent _startingGate;
 
         public FastStartAgent(AgentConfiguration config,
-            ILoader<IHealthCheckSessionPublisher> sessionPublisherLoader,
-            ILoader<IHealthCheckResultPublisher> resultPublisherLoader,
+            ILoader<INotificationEventPublisher> publisherLoader,
             ILoader<IHealthCheckSchedulerPlugin> checksLoader,
             ILoader<IActivityPlugin> activitiesLoader,
             INotificationHub hub)
-            : base(config, sessionPublisherLoader, resultPublisherLoader, checksLoader, activitiesLoader, hub)
+            : base(config, publisherLoader, checksLoader, activitiesLoader, hub)
         {
-            myIdentity = new PluginDescriptor
+            _identity = new PluginDescriptor
                              {
                                  Description = "Fast Startup Agent",
                                  Name = "FastStartAgent",
                                  TypeId = new Guid("F90773BA-C659-4964-B22D-A998719CB1FD")
                              };
 
-            myStartingGate = new ManualResetEvent(false);
+            _startingGate = new ManualResetEvent(false);
         }
 
         public override void Start()
@@ -47,15 +46,15 @@ namespace Wolfpack.Agent.Roles
         {
             // cannot stop until async start has completed
             Logger.Debug("Waiting for any startup activity to complete so Agent can stop...");
-            myStartingGate.WaitOne();
+            _startingGate.WaitOne();
             base.Stop();
         }
 
         protected void AsyncStart()
         {
-            myStartingGate.Reset();
+            _startingGate.Reset();
             base.Start();
-            myStartingGate.Set();
+            _startingGate.Set();
 
             Logger.Debug("Startup complete!");
         }
