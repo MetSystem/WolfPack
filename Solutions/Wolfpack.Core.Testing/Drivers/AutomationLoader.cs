@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Wolfpack.Core.Interfaces;
+using Wolfpack.Core.Loaders;
 
 namespace Wolfpack.Core.Testing.Drivers
 {
@@ -27,6 +28,16 @@ namespace Wolfpack.Core.Testing.Drivers
 
         public bool Load(out T[] components)
         {
+            myItems.OfType<IPlugin>().ToList().ForEach(p =>
+                                                           {
+                                                               Logger.Event error;
+                                                               if (p.SafeInitialise(out error))
+                                                                   return;
+
+                                                                Logger.Error(error);
+                                                                throw error.Exception;
+                                                           });
+
             components = myItems.ToArray();
             return (components.Length > 0);
         }

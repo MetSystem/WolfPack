@@ -8,11 +8,11 @@ namespace Wolfpack.Core.Filters
         public bool PublishSuccess { get; set; }
         public bool PublishFailure { get; set; }
 
-        protected override bool ShouldPublish(IHealthCheckResultPublisher publisher, HealthCheckResult message)
+        protected override bool ShouldPublish(INotificationEventPublisher publisher, NotificationEvent message)
         {
-            if (PublishFailure && !message.Check.Result.GetValueOrDefault(false))
+            if (PublishFailure && !message.Result.GetValueOrDefault(false))
                 return true;
-            if (PublishSuccess && message.Check.Result.GetValueOrDefault(false))
+            if (PublishSuccess && message.Result.GetValueOrDefault(false))
                 return true;
             return false;
         }

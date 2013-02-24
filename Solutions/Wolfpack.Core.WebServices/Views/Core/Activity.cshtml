@@ -1,0 +1,80 @@
+@inherits ViewPage<Wolfpack.Core.WebServices.Interfaces.Messages.ActivityResponse>
+
+<!-- ko foreach: notifications -->
+<div id="activityList">
+	<div class="big-message anthracite-gradient glow" style="margin-bottom: 20px; padding-top: 15px; min-height: 96px; height: 96px; height: auto !important; ">
+		@*<span class="show-on-parent-hover">Close</span>*@
+		<img data-bind="attr: { src: ResultImage }" class="float-left margin-right"/>
+		<div class="float-right thin" style="font-size:70px; line-height: normal" data-bind="visible: ResultValue != null, text: ResultValue"></div>
+		<span class="thin large-margin-bottom" style="display: block; font-size:20px;" data-bind="text: When"></span>
+		<strong data-bind="text: Alert.CheckId">CheckId</strong><br/>
+		<br/><span data-bind="text: Alert.Message">Message</span>
+	</div>
+</div>
+<!-- /ko -->
+
+@section Header {
+	<h1>Recent Activity (Last 20)</h1>
+	<p style="font-style: italic">Powered by <a href="http://signalr.net/">SignalR</a></p>
+}
+
+@section PageScript {
+	<script type="text/javascript" src="/content/js/libs/knockout/knockout-2.2.1.js"></script>
+	<script  type="text/javascript" src="/content/js/libs/moment-min.js"></script>
+	<script  type="text/javascript" src="/content/js/developr.message.js"></script>
+	<script  type="text/javascript" src="/content/js/libs/signalr/jquery.signalR-1.0.0-rc2.js"></script>
+	<script type="text/javascript" language="javascript">
+		jQuery.support.cors = true;
+		
+		function Notification(alert) {
+			var self = this;
+			self.Alert = alert;
+			self.When = moment().format('MMMM Do YYYY, h:mm:ss a');
+			
+			self.ResultImage = ko.computed(function () {
+				var image = 'agent.png';
+				if (self.Alert.Result === true)
+					image = 'resulttrue.png';
+				else if (self.Alert.Result === false)
+					image = 'resultfalse.png';
+				return '/content/img/' + image;
+			}, this);
+
+			self.ResultValue = ko.computed(function () {
+				if (self.Alert.DisplayUnit == null)
+					return null;
+
+				return self.Alert.ResultCount.toString() + self.Alert.DisplayUnit;
+			}, this);
+		};
+		
+		function ViewModel(url) {
+			var self = this;
+			self.notifications = ko.observableArray();
+			self.connection = $.connection(url);
+
+			self.startMonitoring = function () {
+				self.connection.start(function () {
+					console.log("connection started!");
+
+					self.connection.received(function (data) {
+						console.log(data);
+
+						self.notifications.unshift(new Notification(data));
+
+						if (self.notifications().length > 20) {
+							self.notifications.pop();
+						}
+					});
+				});
+			};
+		};
+
+		$(document).ready(function () {
+			$('#shortcutActivity').addClass('current');
+			var model = new ViewModel('http://localhost:803/notifications');
+			ko.applyBindings(model);
+			model.startMonitoring();
+		});
+	</script>
+}

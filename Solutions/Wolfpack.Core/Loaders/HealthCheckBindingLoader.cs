@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Wolfpack.Core.Interfaces;
 using Wolfpack.Core.Interfaces.Entities;
-using Castle.Core;
 
 namespace Wolfpack.Core.Loaders
 {
@@ -14,11 +13,11 @@ namespace Wolfpack.Core.Loaders
     /// </summary>
     public class HealthCheckBindingLoader : ILoader<Binding>
     {
-        private readonly ILoader<BindingConfiguration> myBindingConfigLoader;
+        private readonly ILoader<BindingConfiguration> _bindingConfigLoader;
 
         public HealthCheckBindingLoader(ILoader<BindingConfiguration> bindingConfigLoader)
         {
-            myBindingConfigLoader = bindingConfigLoader;
+            _bindingConfigLoader = bindingConfigLoader;
         }
 
         public bool Load(out Binding[] components)
@@ -38,7 +37,7 @@ namespace Wolfpack.Core.Loaders
             components = new Binding[0];
             BindingConfiguration[] bindingConfigs;
 
-            if (!myBindingConfigLoader.Load(out bindingConfigs))
+            if (!_bindingConfigLoader.Load(out bindingConfigs))
                 return false;
 
             var bindings = new List<Binding>();
@@ -125,16 +124,16 @@ namespace Wolfpack.Core.Loaders
             // Finally load any programmatic bindings.............
             Binding[] codeBindings;
             if (ScanningLoader<Binding>.Resolve(out codeBindings))
-                bindings.Concat(codeBindings);
+                bindings = bindings.Concat(codeBindings).ToList();
 
             components = bindings.ToArray();
-            return (components.Count() > 0);
+            return (components.Any());
         }
 
         public bool Load(out Binding[] components, Action<Binding> action)
         {
             var result = Load(out components);
-            components.ForEach(action);
+            components.ToList().ForEach(action);
             return result;
         }
 
@@ -143,9 +142,8 @@ namespace Wolfpack.Core.Loaders
             targetType = null;
             Type[] matchingTypes;
 
-            if (!TypeDiscovery.Discover<T>(out matchingTypes,
-                t => string.Compare(t.Name, targetTypeName,
-                    StringComparison.InvariantCultureIgnoreCase) == 0))
+            if (!TypeDiscovery.Discover<T>(t => t.Name.Equals(targetTypeName,
+                    StringComparison.OrdinalIgnoreCase), out matchingTypes))
                 return false;
 
             if (matchingTypes.Count() != 1)

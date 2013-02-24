@@ -135,102 +135,103 @@ namespace Wolfpack.Core.Database.SqlServer
         }
     }
 
-    public class SqlHealthCheckSessionPublisher : SqlServerPublisherBase, IHealthCheckSessionPublisher
+    //public class SqlHealthCheckSessionPublisher : SqlServerPublisherBase, IHealthCheckSessionPublisher
+    //{
+    //    public SqlHealthCheckSessionPublisher(SqlServerConfiguration config)
+    //        : base(config)
+    //    {
+    //    }
+
+    //    public void Publish(NotificationEventAgentStart message)
+    //    {
+    //        var data = Serialiser<NotificationEventAgentStart>.ToXml(message);
+
+    //        using (var cmd = SqlServerAdhocCommand.UsingSmartConnection(myConfig.ConnectionString)
+    //            .WithSql(SqlServerStatement.Create("INSERT INTO {0}.AgentData (", myConfig.SchemaName)
+    //            .Append("TypeId,EventType,SiteId,AgentId,GeneratedOnUtc,ReceivedOnUtc,Data,Version")
+    //            .Append(") VALUES (")
+    //            .InsertParameter("@pTypeId", message.Id).Append(",")
+    //            .InsertParameter("@pEventType", "SessionStart").Append(",")
+    //            .InsertParameter("@pSiteId", message.Agent.SiteId).Append(",")
+    //            .InsertParameter("@pAgentId", message.Agent.AgentId).Append(",")
+    //            .InsertParameter("@pGeneratedOnUtc", message.GeneratedOnUtc).Append(",")
+    //            .InsertParameter("@pReceivedOnUtc", DateTime.UtcNow).Append(",")
+    //            .InsertParameter("@pData", data).Append(",")
+    //            .InsertParameter("@pVersion", message.Id)
+    //            .Append(")")))
+    //        {
+    //            cmd.ExecuteNonQuery();
+    //        }
+    //    }
+
+    //    public void Consume(NotificationEventAgentStart message)
+    //    {
+    //        Publish(message);
+    //    }
+    //}
+
+    public class SqlNotificationEventPublisher : SqlServerPublisherBase, INotificationEventPublisher
     {
-        public SqlHealthCheckSessionPublisher(SqlServerConfiguration config)
+        public SqlNotificationEventPublisher(SqlServerConfiguration config)
             : base(config)
         {
         }
 
-        public void Publish(HealthCheckAgentStart message)
+        public void Publish(NotificationEvent message)
         {
-            var data = SerialisationHelper<HealthCheckAgentStart>.DataContractSerialize(message);
+            throw new NotImplementedException();
+            //var data = Serialiser<NotificationEventHealthCheck>.ToXml(message);
 
-            using (var cmd = SqlServerAdhocCommand.UsingSmartConnection(myConfig.ConnectionString)
-                .WithSql(SqlServerStatement.Create("INSERT INTO {0}.AgentData (", myConfig.SchemaName)
-                .Append("TypeId,EventType,SiteId,AgentId,GeneratedOnUtc,ReceivedOnUtc,Data,Version")
-                .Append(") VALUES (")
-                .InsertParameter("@pTypeId", message.Id).Append(",")
-                .InsertParameter("@pEventType", "SessionStart").Append(",")
-                .InsertParameter("@pSiteId", message.Agent.SiteId).Append(",")
-                .InsertParameter("@pAgentId", message.Agent.AgentId).Append(",")
-                .InsertParameter("@pGeneratedOnUtc", message.DiscoveryStarted).Append(",")
-                .InsertParameter("@pReceivedOnUtc", DateTime.UtcNow).Append(",")
-                .InsertParameter("@pData", data).Append(",")
-                .InsertParameter("@pVersion", message.Id)
-                .Append(")")))
-            {
-                cmd.ExecuteNonQuery();
-            }
+            //var statement = SqlServerStatement.Create("INSERT INTO {0}.AgentData (", myConfig.SchemaName)
+            //    .Append("TypeId,EventType,SiteId,AgentId,CheckId,")
+            //    .AppendIf(() => message.Check.Result.HasValue, "Result,")
+            //    .AppendIf(() => message.Check.ResultCount.HasValue, "ResultCount,")
+            //    .AppendIf(() => !string.IsNullOrEmpty(message.Check.Tags), "Tags,")
+            //    .Append("GeneratedOnUtc,ReceivedOnUtc,Data,")
+            //    .AppendIf(() => message.MinuteBucket.HasValue, "MinuteBucket,")
+            //    .AppendIf(() => message.HourBucket.HasValue, "HourBucket,")
+            //    .AppendIf(() => message.DayBucket.HasValue, "DayBucket,")
+            //    .Append("Version")
+            //    .AppendIf(() => (message.Check.Geo != null), ",Longitude,Latitude")
+            //    .Append(") VALUES (")
+            //    .InsertParameter("@pTypeId", message.Check.Identity.TypeId).Append(",")
+            //    .InsertParameter("@pEventType", message.EventType).Append(",")
+            //    .InsertParameter("@pSiteId", message.Agent.SiteId).Append(",")
+            //    .InsertParameter("@pAgentId", message.Agent.AgentId).Append(",")
+            //    .InsertParameter("@pCheckId", message.Check.Identity.Name).Append(",")
+            //    .InsertParameterIf(() => message.Check.Result.HasValue, "@pResult", message.Check.Result)
+            //    .AppendIf(() => message.Check.Result.HasValue, ",")
+            //    .InsertParameterIf(() => message.Check.ResultCount.HasValue, "@pResultCount", message.Check.ResultCount)
+            //    .AppendIf(() => message.Check.ResultCount.HasValue, ",")
+            //    .InsertParameterIf(() => !string.IsNullOrEmpty(message.Check.Tags), "@pTags", message.Check.Tags)
+            //    .AppendIf(() => !string.IsNullOrEmpty(message.Check.Tags), ",")
+            //    .InsertParameter("@pGeneratedOnUtc", message.Check.GeneratedOnUtc).Append(",")
+            //    .InsertParameter("@pReceivedOnUtc", DateTime.UtcNow).Append(",")
+            //    .InsertParameter("@pData", data).Append(",")
+            //    .InsertParameterIf(() => message.MinuteBucket.HasValue, "@pMinuteBucket", message.MinuteBucket)
+            //    .AppendIf(() => message.MinuteBucket.HasValue, ",")
+            //    .InsertParameterIf(() => message.HourBucket.HasValue, "@pHourBucket", message.HourBucket)
+            //    .AppendIf(() => message.HourBucket.HasValue, ",")
+            //    .InsertParameterIf(() => message.DayBucket.HasValue, "@pDayBucket", message.DayBucket)
+            //    .AppendIf(() => message.DayBucket.HasValue, ",")
+            //    .InsertParameter("@pVersion", message.Id);
+
+            //if (message.Check.Geo != null)
+            //{
+            //    statement.Append(",")
+            //        .InsertParameter("@pLongitude", message.Check.Geo.Longitude).Append(",")
+            //        .InsertParameter("@pLatitude", message.Check.Geo.Latitude);
+            //}
+            //statement.Append(")");
+
+            //using (var cmd = SqlServerAdhocCommand.UsingSmartConnection(myConfig.ConnectionString)
+            //    .WithSql(statement))
+            //{
+            //    cmd.ExecuteNonQuery();
+            //}
         }
 
-        public void Consume(HealthCheckAgentStart message)
-        {
-            Publish(message);
-        }
-    }
-
-    public class SqlHealthCheckResultPublisher : SqlServerPublisherBase, IHealthCheckResultPublisher
-    {
-        public SqlHealthCheckResultPublisher(SqlServerConfiguration config)
-            : base(config)
-        {
-        }
-
-        public void Publish(HealthCheckResult message)
-        {
-            var data = SerialisationHelper<HealthCheckResult>.DataContractSerialize(message);
-
-            var statement = SqlServerStatement.Create("INSERT INTO {0}.AgentData (", myConfig.SchemaName)
-                .Append("TypeId,EventType,SiteId,AgentId,CheckId,")
-                .AppendIf(() => message.Check.Result.HasValue, "Result,")
-                .AppendIf(() => message.Check.ResultCount.HasValue, "ResultCount,")
-                .AppendIf(() => !string.IsNullOrEmpty(message.Check.Tags), "Tags,")
-                .Append("GeneratedOnUtc,ReceivedOnUtc,Data,")
-                .AppendIf(() => message.MinuteBucket.HasValue, "MinuteBucket,")
-                .AppendIf(() => message.HourBucket.HasValue, "HourBucket,")
-                .AppendIf(() => message.DayBucket.HasValue, "DayBucket,")
-                .Append("Version")
-                .AppendIf(() => (message.Check.Geo != null), ",Longitude,Latitude")
-                .Append(") VALUES (")
-                .InsertParameter("@pTypeId", message.Check.Identity.TypeId).Append(",")
-                .InsertParameter("@pEventType", message.EventType).Append(",")
-                .InsertParameter("@pSiteId", message.Agent.SiteId).Append(",")
-                .InsertParameter("@pAgentId", message.Agent.AgentId).Append(",")
-                .InsertParameter("@pCheckId", message.Check.Identity.Name).Append(",")
-                .InsertParameterIf(() => message.Check.Result.HasValue, "@pResult", message.Check.Result)
-                .AppendIf(() => message.Check.Result.HasValue, ",")
-                .InsertParameterIf(() => message.Check.ResultCount.HasValue, "@pResultCount", message.Check.ResultCount)
-                .AppendIf(() => message.Check.ResultCount.HasValue, ",")
-                .InsertParameterIf(() => !string.IsNullOrEmpty(message.Check.Tags), "@pTags", message.Check.Tags)
-                .AppendIf(() => !string.IsNullOrEmpty(message.Check.Tags), ",")
-                .InsertParameter("@pGeneratedOnUtc", message.Check.GeneratedOnUtc).Append(",")
-                .InsertParameter("@pReceivedOnUtc", DateTime.UtcNow).Append(",")
-                .InsertParameter("@pData", data).Append(",")
-                .InsertParameterIf(() => message.MinuteBucket.HasValue, "@pMinuteBucket", message.MinuteBucket)
-                .AppendIf(() => message.MinuteBucket.HasValue, ",")
-                .InsertParameterIf(() => message.HourBucket.HasValue, "@pHourBucket", message.HourBucket)
-                .AppendIf(() => message.HourBucket.HasValue, ",")
-                .InsertParameterIf(() => message.DayBucket.HasValue, "@pDayBucket", message.DayBucket)
-                .AppendIf(() => message.DayBucket.HasValue, ",")
-                .InsertParameter("@pVersion", message.Id);
-
-            if (message.Check.Geo != null)
-            {
-                statement.Append(",")
-                    .InsertParameter("@pLongitude", message.Check.Geo.Longitude).Append(",")
-                    .InsertParameter("@pLatitude", message.Check.Geo.Latitude);
-            }
-            statement.Append(")");
-
-            using (var cmd = SqlServerAdhocCommand.UsingSmartConnection(myConfig.ConnectionString)
-                .WithSql(statement))
-            {
-                cmd.ExecuteNonQuery();
-            }
-        }
-
-        public void Consume(HealthCheckResult message)
+        public void Consume(NotificationEvent message)
         {
             Publish(message);
         }

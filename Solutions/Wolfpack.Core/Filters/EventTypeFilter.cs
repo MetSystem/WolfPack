@@ -9,12 +9,12 @@ namespace Wolfpack.Core.Filters
         public List<string> PublishTheseTypes { get; set; }
         public List<string> IgnoreTheseTypes { get; set; }
 
-        protected override bool ShouldPublish(IHealthCheckResultPublisher publisher, HealthCheckResult message)
+        protected override bool ShouldPublish(INotificationEventPublisher publisher, NotificationEvent message)
         {
             if (IgnoreTheseTypes != null && IgnoreTheseTypes.Count > 0)
             {
                 // don't publish if match
-                if (IgnoreTheseTypes.Exists(ignoreType => string.Compare(ignoreType, message.EventType) == 0))
+                if (IgnoreTheseTypes.Exists(ignoreType => System.String.CompareOrdinal(ignoreType, message.EventType) == 0))
                     return false;
                 // otherwise check the publish list next....
             } 
@@ -22,7 +22,7 @@ namespace Wolfpack.Core.Filters
             if (PublishTheseTypes != null && PublishTheseTypes.Count > 0)
             {
                 // publish only if match
-                return PublishTheseTypes.Exists(publishType => string.Compare(publishType, message.EventType) == 0);
+                return PublishTheseTypes.Exists(publishType => System.String.CompareOrdinal(publishType, message.EventType) == 0);
             }
 
             // publish everything else...

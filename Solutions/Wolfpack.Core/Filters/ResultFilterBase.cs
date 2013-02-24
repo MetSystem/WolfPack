@@ -16,13 +16,13 @@ namespace Wolfpack.Core.Filters
         {
         }
 
-        protected abstract bool ShouldPublish(IHealthCheckResultPublisher publisher, 
-            HealthCheckResult message);
+        protected abstract bool ShouldPublish(INotificationEventPublisher publisher, 
+            NotificationEvent message);
 
         protected override void HandleIntercept(IInvocation invocation)
         {
-            var message = invocation.GetArgumentValue(0) as HealthCheckResult;
-            var publisher = invocation.InvocationTarget as IHealthCheckResultPublisher;
+            var message = invocation.GetArgumentValue(0) as NotificationEvent;
+            var publisher = invocation.InvocationTarget as INotificationEventPublisher;
 
             if (Applies(publisher, message))
             {
@@ -36,15 +36,15 @@ namespace Wolfpack.Core.Filters
             }
         }
 
-        protected bool Applies(IHealthCheckResultPublisher publisher, HealthCheckResult message)
+        protected bool Applies(INotificationEventPublisher publisher, NotificationEvent message)
         {
             if ((message == null) || (publisher == null))
                 return false;
 
-            var publisherMatch = ((string.Compare(publisher.FriendlyId, Publisher, true) == 0) ||
-                                  (string.Compare(Publisher, "*", true) == 0));
-            var checkMatch = ((string.Compare(message.Check.Identity.Name, Check, true) == 0) ||
-                    (string.Compare(Check, "*", true) == 0));
+            var publisherMatch = ((System.String.Compare(publisher.FriendlyId, Publisher, System.StringComparison.OrdinalIgnoreCase) == 0) ||
+                                  (System.String.Compare(Publisher, "*", System.StringComparison.OrdinalIgnoreCase) == 0));
+            var checkMatch = ((System.String.Compare(message.CheckId, Check, System.StringComparison.OrdinalIgnoreCase) == 0) ||
+                    (System.String.Compare(Check, "*", System.StringComparison.OrdinalIgnoreCase) == 0));
             return publisherMatch && checkMatch;
         }        
     }

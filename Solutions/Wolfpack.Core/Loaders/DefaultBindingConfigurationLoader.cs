@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml.Linq;
+using Castle.Core.Internal;
 using Wolfpack.Core.Interfaces;
 using Wolfpack.Core.Interfaces.Entities;
-using Castle.Core;
 using System.Linq;
 
 namespace Wolfpack.Core.Loaders

@@ -57,6 +57,8 @@ namespace Wolfpack.Agent
                     }
                 }
 
+                Container.Initialise();
+
                 var profile = LoadProfile();
                 var role = profile.Role;
 

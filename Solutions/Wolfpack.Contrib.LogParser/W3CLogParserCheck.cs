@@ -13,7 +13,7 @@ namespace Wolfpack.Contrib.LogParser
         public string Separator { get; set; }
     }
 
-    public class W3CLogParserCheck : ScalarLogParserCheckBase
+    public class W3CLogParserCheck : LogParserCheckBase
     {
         protected readonly W3CLogParserCheckConfig myConfig;
 
@@ -21,7 +21,7 @@ namespace Wolfpack.Contrib.LogParser
             : base(config)
         {
             myConfig = config;
-            myIdentity = new PluginDescriptor
+            _identity = new PluginDescriptor
                              {
                                  Description = string.Format("W3C LogParser Check"),
                                  Name = config.FriendlyId,

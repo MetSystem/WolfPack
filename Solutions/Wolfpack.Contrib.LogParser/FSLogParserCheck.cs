@@ -12,7 +12,7 @@ namespace Wolfpack.Contrib.LogParser
         public bool? UseLocalTime { get; set; }
     }
 
-    public class FSLogParserCheck : ScalarLogParserCheckBase
+    public class FSLogParserCheck : LogParserCheckBase
     {
         protected readonly FSLogParserCheckConfig myConfig;
 
@@ -20,7 +20,7 @@ namespace Wolfpack.Contrib.LogParser
             : base(config)
         {
             myConfig = config;
-            myIdentity = new PluginDescriptor
+            _identity = new PluginDescriptor
                              {
                                  Description = string.Format("FileSystem LogParser Check"),
                                  Name = config.FriendlyId,

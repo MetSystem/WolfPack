@@ -1,12 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.ServiceProcess;
+using Wolfpack.Core.Configuration;
 using Wolfpack.Core.Interfaces;
 using Wolfpack.Core.Interfaces.Entities;
+using Wolfpack.Core.Notification;
+using Wolfpack.Core.Notification.Filters.Request;
 
 namespace Wolfpack.Core.Checks
 {
-    public class WindowsServiceStateCheckConfig : PluginConfigBase
+    public class WindowsServiceStateCheckConfig : PluginConfigBase, ISupportNotificationMode
     {
         /// <summary>
         /// List of windows services to check the state of. This can be
@@ -26,6 +29,8 @@ namespace Wolfpack.Core.Checks
         /// </summary>
         public string ExpectedState { get; set; }
 
+        public string NotificationMode { get; set; }
+
         /// <summary>
         /// Helper method to quickly validate the <see cref="ExpectedState"/>
         /// configuration value is valid
@@ -37,86 +42,108 @@ namespace Wolfpack.Core.Checks
         }
     }
 
+    public class WindowsServiceStateConfigurationAdvertiser : HealthCheckDiscoveryBase<WindowsServiceStateCheckConfig>
+    {
+        protected override WindowsServiceStateCheckConfig GetConfiguration()
+        {
+            return new WindowsServiceStateCheckConfig
+                       {
+                           Enabled = true,
+                           ExpectedState = "Running|Stopped",
+                           FriendlyId = "CHANGEME!",
+                           NotificationMode = StateChangeNotificationFilter.FilterName,
+                           Server = "localhost",
+                           Services = new List<string>
+                                          {
+                                              "DHCP Client",
+                                              "DNS Client"
+
+                                          }
+                       };
+        }
+
+        protected override void Configure(ConfigurationEntry entry)
+        {
+            entry.Name = "WindowsServiceStateCheck";
+            entry.Description = "This check monitors the state of a set of Windows Services. Use it to ensure your mission critical services are up and running (it also supports monitoring that service(s) should be stopped.";
+            entry.Tags.AddIfMissing("Services");
+        }
+    }
+
     /// <summary>
     /// This HealthCheck will monitor a list of windows services and checks that
     /// they are in the state (Running or Stopped) specified in the configuration.
     /// It will only publish as HealthCheck result if the service is not in the state
     /// expected. A HealthCheck result is published for EACH service that fails the check.
     /// </summary>
-    public class WindowsServiceStateCheck : IHealthCheckPlugin
+    public class WindowsServiceStateCheck : HealthCheckBase<WindowsServiceStateCheckConfig>
     {
-        protected readonly WindowsServiceStateCheckConfig myConfig;
-        protected readonly PluginDescriptor myIdentity;
-        protected readonly string myServer;
-        protected ServiceControllerStatus myExpectedState;
+        protected readonly string _server;
+        protected ServiceControllerStatus _expectedState;
 
         public WindowsServiceStateCheck(WindowsServiceStateCheckConfig config)
+            : base(config)
         {
-            myConfig = config;
-            myIdentity = new PluginDescriptor
-            {
-                Description = string.Format("Ensures all specified windows services are in the expected state {0}", myConfig.ExpectedState),
-                TypeId = new Guid("BEFDC111-ED9A-4aee-A3B9-4251BF9F833A"),
-                Name = myConfig.FriendlyId
-            };
-
-            myServer = string.IsNullOrEmpty(myConfig.Server) ? "." : myConfig.Server;
+            _server = string.IsNullOrEmpty(_config.Server) ? "." : _config.Server;
         }
 
-        public Status Status { get; set;}
-
-        public void Initialise()
+        public override void Initialise()
         {
             Logger.Debug("Initialising WindowsServiceState check for...");
-            if (!myConfig.StateIsValid())
+            if (!_config.StateIsValid())
                 throw new FormatException(
                     string.Format("Value '{0}' for configuration property 'ExpectedState' is not valid",
-                                  myConfig.ExpectedState));
+                                  _config.ExpectedState));
             // save this for use in the check later
-            myExpectedState = (ServiceControllerStatus) Enum.Parse(typeof (ServiceControllerStatus), myConfig.ExpectedState, true);
+            _expectedState = (ServiceControllerStatus) Enum.Parse(typeof (ServiceControllerStatus), _config.ExpectedState, true);
 
-            Logger.Debug("\tComplete, monitoring services for expected state '{0}' on Server '{1}'", 
-                myConfig.ExpectedState, myServer);
+            Logger.Debug("\tComplete, monitoring services for expected state '{0}' on Server '{1}'",
+                _config.ExpectedState, _server);
         }
 
-        public PluginDescriptor Identity
-        {
-            get { return myIdentity; }
-        }
-
-        public void Execute()
+        public override void Execute()
         {
             Logger.Debug("WindowsServiceStateCheck is checking service states...");
             var failures = new List<string>();
 
-            myConfig.Services.ForEach(serviceName =>
-                                             {
-                                                 try
-                                                 {
-                                                     var sc = new ServiceController(serviceName, myServer);
+            _config.Services.ForEach(
+                serviceName =>
+                    {
+                        try
+                        {
+                            var sc = new ServiceController(serviceName, _server);
 
-                                                     if (sc.Status == myExpectedState)
-                                                         return;
+                            if (sc.Status == _expectedState)
+                                return;
 
-                                                     var result = new HealthCheckData
-                                                     {
-                                                         Identity = Identity,
-                                                         Info = string.Format("{0} should be {1} but is {2}",
-                                                         sc.DisplayName, myConfig.ExpectedState, sc.Status),
-                                                         Result = false
-                                                     };
-                                                     Messenger.Publish(result);
-                                                 }
-                                                 catch (InvalidOperationException)
-                                                 {
-                                                     failures.Add(serviceName);
-                                                 }
-                                             });
+                            var result = HealthCheckData.For(Identity,
+                                string.Format("{0} should be {1} but is {2}",
+                                sc.DisplayName, _config.ExpectedState,sc.Status))
+                                .Failed();
+
+                            Publish(NotificationRequestBuilder.AlwaysPublish(result).Build());
+                        }
+                        catch (InvalidOperationException)
+                        {
+                            failures.Add(serviceName);
+                        }
+                    });
+
             if (failures.Count > 0)
             {
                 throw new InvalidOperationException(string.Format("These services do not exist: {0}",
                     string.Join(",", failures.ToArray())));
             }
+        }
+
+        protected override PluginDescriptor BuildIdentity()
+        {
+            return new PluginDescriptor
+            {
+                Description = string.Format("Ensures all specified windows services are in the expected state {0}", _config.ExpectedState),
+                TypeId = new Guid("BEFDC111-ED9A-4aee-A3B9-4251BF9F833A"),
+                Name = _config.FriendlyId
+            };
         }
     }
 }

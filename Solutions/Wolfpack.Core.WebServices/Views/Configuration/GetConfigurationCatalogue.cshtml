@@ -1,0 +1,85 @@
+﻿@using Wolfpack.Core.WebServices.Interfaces.Entities
+@inherits ViewPage<RestConfigurationCatalogue>
+
+@{
+	var i = 0;
+}
+
+<div id="createInstance" style="display: none;">
+	<div class="block anthracite-gradient glow margin-top">
+		<h3 class="block-title anthracite-gradient glow">Creating a new...</h3>
+
+		<div class="with-padding">
+			<!-- content here -->
+			<div style="display: block; padding-top: 10px;">
+				<div style="display: block; padding-top: 10px;" class="big-text">This plugin sklj lskjf lsj flksj lfjslfj skljf klsjd flskj flkjs dlfj slkfj klsj fd klflksj flksj flksj flksj lf</div>
+				<div style="display: block; padding-top: 10px;">
+					Interface Type: <span style="font-style: italic;">item.Entry.InterfaceType</span>
+				</div>
+				<div style="display: block; padding-top: 10px;">
+					Concrete Type: <span style="font-style: italic;">item.Entry.ConcreteType</span>
+				</div>
+				<div style="display: block; padding-top: 10px;">
+					<a href="#" class="button green-gradient glossy toggler">Save</a>
+					<a href="#" class="button orange-gradient glossy toggler ">Cancel</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="catalogueList">
+	@foreach (var item in Model.Items)
+	{
+		<div class="block anthracite-gradient glow margin-top">
+			<h3 class="block-title anthracite-gradient glow">@item.Entry.Name</h3>
+
+			<div class="with-padding">
+				<!-- content here -->
+				<div style="display: block;">
+					@foreach (var tag in item.Entry.Tags)
+					{
+						var colour = "orange-bg";
+						switch (tag.ToLowerInvariant())
+						{
+							case "running":
+								colour = "green-bg";
+								break;
+						}
+						<span class="tag @colour">@tag</span>
+					}
+				</div>
+
+				<div style="display: block; padding-top: 10px;">
+					<div style="display: block; padding-top: 10px;" class="big-text">@item.Entry.Description</div>
+					<div style="display: block; padding-top: 10px;">
+						Interface Type: <span style="font-style: italic;">@item.Entry.InterfaceType</span>
+					</div>
+					<div style="display: block; padding-top: 10px;">
+						Concrete Type: <span style="font-style: italic;">@item.Entry.ConcreteType</span>
+					</div>
+					<div style="display: block; padding-top: 10px;">
+						<a href="#" class="button green-gradient glossy toggler">Create</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+</div>
+
+
+@section Header {
+	<h1>Configuration Catalogue</h1>
+}
+
+@section PageScript {
+	<script type="text/javascript" language="javascript">
+		$(document).ready(function () {
+			$('#shortcutConfiguration').addClass('current');
+			$('a.toggler').click(function () {
+				$('#createInstance').toggle();
+				$('#catalogueList').toggle();
+			});
+		});
+	</script>
+}

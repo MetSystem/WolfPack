@@ -33,7 +33,7 @@ namespace Wolfpack.Contrib.LogParser
         public string CheckpointFile { get; set; }
     }
 
-    public class IISLogParserCheck : ScalarLogParserCheckBase
+    public class IISLogParserCheck : LogParserCheckBase
     {
         protected readonly IISLogParserCheckConfig myConfig;
 
@@ -42,7 +42,7 @@ namespace Wolfpack.Contrib.LogParser
         {
             myConfig = config;
 
-            myIdentity = new PluginDescriptor
+            _identity = new PluginDescriptor
                              {
                                  Description = string.Format("IIS LogParser Check"),
                                  Name = config.FriendlyId,

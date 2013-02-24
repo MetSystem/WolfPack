@@ -7,25 +7,25 @@ namespace Wolfpack.Core.Growl
     {
         public const string DEFAULT_ICON = @"growl\growl.monitor.png";
 
-        protected readonly GrowlConfiguration myConfig;
-        protected readonly GrowlConnector myConnector;
+        protected readonly GrowlConfiguration _config;
+        protected readonly GrowlConnector _connector;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
         public GrowlConnection(GrowlConfiguration config)
         {
-            myConfig = config;
+            _config = config;
 
             // create the growl connection and register it            
             if (!string.IsNullOrEmpty(config.Password))
             {
-                myConnector = !string.IsNullOrEmpty(config.Hostname)
+                _connector = !string.IsNullOrEmpty(config.Hostname)
                                   ? new GrowlConnector(config.Password, config.Hostname, config.Port)
                                   : new GrowlConnector(config.Password);
             }
             else
-                myConnector = new GrowlConnector();
+                _connector = new GrowlConnector();
 
             var application = new Application(config.AppId);
 
@@ -37,7 +37,7 @@ namespace Wolfpack.Core.Growl
                 application.Icon = icon.Location;
 
             var healthCheck = new NotificationType(config.NotificationId, config.NotificationTitle);
-            myConnector.Register(application,
+            _connector.Register(application,
                                  new[]
                                          {
                                              healthCheck
@@ -47,12 +47,12 @@ namespace Wolfpack.Core.Growl
 
         public GrowlConnector Connection
         {
-            get { return myConnector; }
+            get { return _connector; }
         }
 
         public GrowlConfiguration Config
         {
-            get { return myConfig; }
+            get { return _config; }
         }
     }
 }

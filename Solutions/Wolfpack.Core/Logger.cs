@@ -90,6 +90,25 @@ namespace Wolfpack.Core
             myLogger.InfoFormat(format, args);
         }
 
+        public static void Warning(string format, params object[] args)
+        {
+            if (!myLogger.IsWarnEnabled)
+                return;
+
+            myLogger.WarnFormat(format, args);
+        }
+
+        public static void Warning(Event warning)
+        {
+            if (!myLogger.IsWarnEnabled)
+                return;
+
+            myLogger.WarnFormat("IncidentId:{0}; Message is '{1}' during '{2}'",
+                warning.Context.CorrelationId,
+                warning.Context.Message,
+                warning.Context.Activity);
+        }
+
         public static void Error(string format, params object[] args)
         {
             if (!myLogger.IsErrorEnabled)

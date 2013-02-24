@@ -25,7 +25,7 @@ namespace Wolfpack.Contrib.LogParser
         public string CheckpointFile { get; set; }
     }
 
-    public class CSVLogParserCheck : ScalarLogParserCheckBase
+    public class CSVLogParserCheck : LogParserCheckBase
     {
         protected readonly CSVLogParserCheckConfig myConfig;
 
@@ -33,7 +33,7 @@ namespace Wolfpack.Contrib.LogParser
             : base(config)
         {
             myConfig = config;
-            myIdentity = new PluginDescriptor
+            _identity = new PluginDescriptor
                              {
                                  Description = string.Format("CSV LogParser Check"),
                                  Name = config.FriendlyId,

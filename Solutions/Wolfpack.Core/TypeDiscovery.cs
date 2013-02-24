@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Castle.Core.Internal;
 using Wolfpack.Core.Interfaces;
 using Wolfpack.Core.Interfaces.Entities;
-using Castle.Core;
 
 namespace Wolfpack.Core
 {
@@ -15,23 +15,23 @@ namespace Wolfpack.Core
     /// </summary>
     public class TypeDiscovery : ITypeDiscovery
     {
-        protected static readonly string myBinFolder;
-        protected static readonly TypeDiscoveryConfig myConfig;
-        protected static List<string> myFilesToExclude;
+        private static readonly string _binFolder;
+        private static readonly TypeDiscoveryConfig _config;
+        private static List<string> _filesToExclude;
 
         static TypeDiscovery()
         {
-            myBinFolder = SmartLocation.GetBinFolder();
-            myConfig = Container.Resolve<TypeDiscoveryConfig>();
+            _binFolder = SmartLocation.GetBinFolder();
+            _config = Container.Resolve<TypeDiscoveryConfig>();
 
-            myFilesToExclude = new List<string>();
+            _filesToExclude = new List<string>();
             var exclude = new List<string>();
 
-            if (myConfig.Exclude == null) 
+            if (_config.Exclude == null) 
                 return;
 
-            myConfig.Exclude.ForEach(e => exclude.AddRange(Directory.GetFiles(myBinFolder, e)));
-            myFilesToExclude = exclude.Distinct().ToList();
+            _config.Exclude.ForEach(e => exclude.AddRange(Directory.GetFiles(_binFolder, e)));
+            _filesToExclude = exclude.Distinct().ToList();
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace Wolfpack.Core
         /// <returns></returns>
         public static bool Discover<T>(out Type[] matchingTypes)
         {
-            return Discover<T>(out matchingTypes, t => true);
+            return Discover<T>(t => true, out matchingTypes);
         }
 
         /// <summary>
@@ -57,99 +57,84 @@ namespace Wolfpack.Core
         /// <param name="matchingTypes"></param>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public static bool Discover<T>(out Type[] matchingTypes, Predicate<Type> filter)
+        public static bool Discover<T>(Predicate<Type> filter, out Type[] matchingTypes)
         {
-            return Discover(out matchingTypes, filter, typeof(T).Name);
+            return Discover(typeof(T), filter, out matchingTypes);
         }
 
         /// <summary>
         /// Simple helper to locate matching types in *.dll|exe
         /// </summary>
-        /// <param name="interfaceTypes"></param>
         /// <param name="matchingTypes"></param>
+        /// <param name="interfaceType"> </param>
         /// <returns></returns>
-        public static bool Discover(out Type[] matchingTypes, params string[] interfaceTypes)
+        public static bool Discover(Type interfaceType, out Type[] matchingTypes)
         {
-            return new TypeDiscovery().Locate(interfaceTypes, out matchingTypes);
+            return Discover(interfaceType, x => true, out matchingTypes);
         }
 
-        /// <summary>
-        /// Simple helper to locate matching types in *.dll|exe
-        /// </summary>
-        /// <param name="interfaceTypes"></param>
-        /// <param name="matchingTypes"></param>
-        /// <param name="filter"></param>
-        /// <returns></returns>
-        public static bool Discover(out Type[] matchingTypes, Predicate<Type> filter, params string[] interfaceTypes)
+        public static bool Discover(Type interfaceType, Predicate<Type> filter, out Type[] matchingTypes)
         {
-            return new TypeDiscovery().Locate(interfaceTypes, out matchingTypes, filter);
-        }
-
-        /// <summary>
-        /// Simple helper to locate matching types in *.dll|exe
-        /// </summary>
-        /// <param name="interfaceTypes"></param>
-        /// <param name="matchingTypes"></param>
-        /// <returns></returns>
-        public static bool Discover(out Type[] matchingTypes, params Type[] interfaceTypes)
-        {
-            return Discover(out matchingTypes, x => true, interfaceTypes);
-        }
-
-        public static bool Discover(out Type[] matchingTypes, Predicate<Type> filter, params Type[] interfaceTypes)
-        {
-            var typeNames = from interfaceType in interfaceTypes
-                            select interfaceType.Name;
-
-            return new TypeDiscovery().Locate(typeNames.ToArray(), out matchingTypes, filter);
+            return new TypeDiscovery().Locate(interfaceType, filter, out matchingTypes);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="interfaceTypes"></param>
+        /// <param name="interfaceType"></param>
         /// <param name="matchingTypes"></param>
         /// <returns></returns>
-        public bool Locate(string[] interfaceTypes, out Type[] matchingTypes)
+        public bool Locate(Type interfaceType, out Type[] matchingTypes)
         {
-            return Locate(interfaceTypes, out matchingTypes, x => true);
+            return Locate(interfaceType, x => true, out matchingTypes);
         }
 
-        public bool Locate(string[] interfaceTypes, out Type[] matchingTypes, Predicate<Type> filter)
+        public bool Locate(Type interfaceType, Predicate<Type> filter, out Type[] matchingTypes)
         {
-            Logger.Info("Scanning for Interface Types: {0}", string.Join(",", interfaceTypes));
+            Logger.Info("Scanning for Type: {0}", interfaceType.Name);
 
-            var candidates = Directory.GetFiles(myBinFolder, "*.dll", SearchOption.TopDirectoryOnly).Concat(
-                Directory.GetFiles(myBinFolder, "*.exe", SearchOption.TopDirectoryOnly));
-            var assembliesToScan = candidates.Where(
-                filename => !myFilesToExclude.Contains(filename));
+            var candidates = Directory.GetFiles(_binFolder, "*.*", SearchOption.TopDirectoryOnly)
+                .Where(f => f.EndsWith(".dll", StringComparison.OrdinalIgnoreCase) ||
+                    f.EndsWith(".exe", StringComparison.OrdinalIgnoreCase));
+            var filesToScan = candidates.Except(_filesToExclude);
 
             var implementingTypes = new List<Type>();
 
-            assembliesToScan.ForEach(assemblyName =>
-                                         {
-                                             try
-                                             {
-                                                 Logger.Debug("\tScanning {0}...", Path.GetFileName(assemblyName));
+            filesToScan.ForEach(
+                assemblyFile =>
+                    {
+                        try
+                        {
+                            Logger.Debug("\tScanning {0}...", Path.GetFileName(assemblyFile));
 
-                                                 var assembly = Assembly.LoadFile(assemblyName);
-                                                 implementingTypes.AddRange(from type in assembly.GetExportedTypes()
-                                                         where filter(type) &&
-                                                         !type.IsAbstract &&
-                                                         (Array.Find(interfaceTypes, interfaceToFind =>
-                                                             (type.GetInterface(interfaceToFind, true) != null)) != null)
-                                                         select type);
-                                             }
-                                             catch (Exception ex)
-                                             {
-                                                 Logger.Error(Logger.Event.During("TypeDiscovery")
-                                                     .Description("Scanning {0}", assemblyName)
-                                                     .Encountered(ex));
-                                             }
-                                         });
+                            var assembly = Assembly.LoadFrom(assemblyFile);
+                            var matches = assembly.GetExportedTypes()
+                                .Where(t => filter(t) && !t.IsAbstract &&
+                                            interfaceType.IsAssignableFrom(t)).ToList();
+
+                            if (matches.Any())
+                                implementingTypes.AddRange(matches);
+
+                            //implementingTypes.AddRange(from type in assembly.GetExportedTypes()
+                            //                           where filter(type) &&
+                            //                                 !type.IsAbstract &&
+                            //                                 (Array.Find(interfaceType, interfaceToFind =>
+                            //                                                             (type.GetInterface(
+                            //                                                                 interfaceToFind, true) !=
+                            //                                                              null)) != null)
+                            //                           select type);
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Error(Logger.Event.During("TypeDiscovery")
+                                             .Description("Scanning {0}", assemblyFile)
+                                             .Encountered(ex));
+                        }
+                    });
 
             matchingTypes = implementingTypes.ToArray();
             Logger.Info("Found {0} implementations", matchingTypes.Length);
+            implementingTypes.ForEach(t => Logger.Debug("\t{0}.{1}", t.Namespace, t.Name));
             return (matchingTypes.Length > 0);
         }
     }

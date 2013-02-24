@@ -1,11 +1,10 @@
 using System;
-using Wolfpack.Core.Checks;
 using Wolfpack.Core.Interfaces.Entities;
 using MSUtil;
 
 namespace Wolfpack.Contrib.LogParser
 {
-    public class EVTLogParserCheckConfig : SqlScalarCheckConfig
+    public class EVTLogParserCheckConfig : LogParserConfigBase
     {
         public bool? FullText { get; set; }
         public bool? ResolveSIDs { get; set; }
@@ -18,20 +17,11 @@ namespace Wolfpack.Contrib.LogParser
         public string Direction { get; set; }
     }
 
-    public class EVTLogParserCheck : ScalarLogParserCheckBase
+    public class EVTLogParserCheck : LogParserCheckBase<EVTLogParserCheckConfig>
     {
-        protected readonly EVTLogParserCheckConfig myConfig;
-
         public EVTLogParserCheck(EVTLogParserCheckConfig config)
             : base(config)
         {
-            myConfig = config;
-            myIdentity = new PluginDescriptor
-                             {
-                                 Description = string.Format("EventLog LogParser Check"),
-                                 Name = config.FriendlyId,
-                                 TypeId = new Guid("451EE20A-2938-47cc-B972-050CABB1DBBE")
-                             };
         }
 
         /// <summary>
@@ -46,20 +36,30 @@ namespace Wolfpack.Contrib.LogParser
         {
             var context = new COMEventLogInputContextClass
                               {
-                                  fullText = myConfig.FullText.GetValueOrDefault(true),
-                                  resolveSIDs = myConfig.ResolveSIDs.GetValueOrDefault(false),
-                                  formatMsg = myConfig.FormatMsg.GetValueOrDefault(true),
-                                  fullEventCode = myConfig.FullEventCode.GetValueOrDefault(false),
-                                  msgErrorMode = myConfig.MsgErrorMode ?? "MSG",
-                                  direction = myConfig.Direction ?? "FW",
-                                  stringsSep = myConfig.StringsSep ?? "|",
-                                  binaryFormat = myConfig.BinaryFormat ?? "HEX"
+                                  fullText = _config.FullText.GetValueOrDefault(true),
+                                  resolveSIDs = _config.ResolveSIDs.GetValueOrDefault(false),
+                                  formatMsg = _config.FormatMsg.GetValueOrDefault(true),
+                                  fullEventCode = _config.FullEventCode.GetValueOrDefault(false),
+                                  msgErrorMode = _config.MsgErrorMode ?? "MSG",
+                                  direction = _config.Direction ?? "FW",
+                                  stringsSep = _config.StringsSep ?? "|",
+                                  binaryFormat = _config.BinaryFormat ?? "HEX"
                               };
 
-            if (!string.IsNullOrEmpty(myConfig.CheckpointFile))
-                context.iCheckpoint = myConfig.CheckpointFile;
+            if (!string.IsNullOrEmpty(_config.CheckpointFile))
+                context.iCheckpoint = _config.CheckpointFile;
 
             return context;
+        }
+
+        protected override PluginDescriptor BuildIdentity()
+        {
+            return new PluginDescriptor
+                             {
+                                 Description = string.Format("EventLog LogParser Check"),
+                                 Name = _config.FriendlyId,
+                                 TypeId = new Guid("451EE20A-2938-47cc-B972-050CABB1DBBE")
+                             };
         }
     }
 }

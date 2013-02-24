@@ -1,6 +1,7 @@
 using System;
 using Wolfpack.Core.Interfaces;
 using Wolfpack.Core.Interfaces.Entities;
+using Wolfpack.Core.Notification;
 
 namespace Wolfpack.Core.Schedulers
 {
@@ -11,15 +12,15 @@ namespace Wolfpack.Core.Schedulers
 
     public class HealthCheckIntervalScheduler : IntervalSchedulerBase, IHealthCheckSchedulerPlugin
     {
-        protected IHealthCheckPlugin myHealthCheck;
-        protected PluginDescriptor myIdentity;
+        protected IHealthCheckPlugin _healthCheck;
+        protected PluginDescriptor _identity;
 
         public HealthCheckIntervalScheduler(IHealthCheckPlugin check,
             HealthCheckIntervalSchedulerConfig config) 
             : base(config)
         {
-            myHealthCheck = check;
-            myIdentity = new PluginDescriptor
+            _healthCheck = check;
+            _identity = new PluginDescriptor
                              {
                                  TypeId = check.Identity.TypeId,
                                  Description = check.Identity.Description,
@@ -30,7 +31,7 @@ namespace Wolfpack.Core.Schedulers
 
         public override PluginDescriptor Identity
         {
-            get { return myIdentity; }
+            get { return _identity; }
         }
 
         /// <summary>
@@ -38,7 +39,7 @@ namespace Wolfpack.Core.Schedulers
         /// </summary>
         public override void Initialise()
         {
-            myHealthCheck.Initialise();
+            _healthCheck.Initialise();
         }
 
         /// <summary>
@@ -48,20 +49,20 @@ namespace Wolfpack.Core.Schedulers
         {
             try
             {
-                myHealthCheck.Execute();
+                _healthCheck.Execute();
             }
             catch (Exception ex)
             {
                 var incidentCorrelationId = Guid.NewGuid();
                 var msg = string.Format("Wolfpack Component Failure. IncidentId:={0}; Name:={1}; Details:={2}",
                     incidentCorrelationId,
-                    myHealthCheck.Identity.Name,
+                    _healthCheck.Identity.Name,
                     ex);
 
                 Logger.Error(msg);
 
                 // Broadcast a failure message
-                Messenger.Publish(new HealthCheckData
+                Messenger.Publish(NotificationRequestBuilder.AlwaysPublish(new HealthCheckData
                                           {
                                               CriticalFailure = true,
                                               CriticalFailureDetails = new CriticalFailureDetails
@@ -69,8 +70,8 @@ namespace Wolfpack.Core.Schedulers
                                                                                Id = incidentCorrelationId
                                                                            },
                                               GeneratedOnUtc = DateTime.UtcNow,
-                                              Identity = myHealthCheck.Identity
-                                          });
+                                              Identity = _healthCheck.Identity
+                                          }).Build());
             }            
         }
     }

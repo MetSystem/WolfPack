@@ -146,23 +146,23 @@ namespace Wolfpack.Contrib.BuildAnalytics.Publishers
 
         protected void PublishStat(HealthCheckResult buildResult, string category, double? stat, string tag)
         {
-            Messenger.Publish(new HealthCheckResult
-            {
-                Agent = buildResult.Agent,
-                Check = new HealthCheckData
-                {
-                    Identity = new PluginDescriptor
-                    {
-                        Name =
-                            string.Format("{0}-{1}",
-                                          buildResult.Check.Identity.
-                                              Name, category)
-                    },
-                    ResultCount = stat,
-                    Tags = tag
-                },
+            var name = string.Format("{0}-{1}", buildResult.Check.Identity.Name, category);
 
-            });
+            var result = new HealthCheckResult
+                           {
+                               Agent = buildResult.Agent,
+                               Check = new HealthCheckData
+                                           {
+                                               Identity = new PluginDescriptor
+                                                              {
+                                                                  Name = name
+                                                              },
+                                               ResultCount = stat,
+                                               Tags = tag
+                                           },
+                           };
+
+            Messenger.Publish(result);
         }
     }
 }

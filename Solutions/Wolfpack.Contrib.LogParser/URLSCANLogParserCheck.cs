@@ -10,7 +10,7 @@ namespace Wolfpack.Contrib.LogParser
         public string CheckpointFile { get; set; }
     }
 
-    public class URLSCANLogParserCheck : ScalarLogParserCheckBase
+    public class URLSCANLogParserCheck : LogParserCheckBase
     {
         protected readonly URLSCANLogParserCheckConfig myConfig;
 
@@ -18,7 +18,7 @@ namespace Wolfpack.Contrib.LogParser
             : base(config)
         {
             myConfig = config;
-            myIdentity = new PluginDescriptor
+            _identity = new PluginDescriptor
                              {
                                  Description = string.Format("URLSCAN LogParser Check"),
                                  Name = config.FriendlyId,

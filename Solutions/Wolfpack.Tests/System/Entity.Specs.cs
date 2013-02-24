@@ -1,8 +1,5 @@
-﻿using System;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using StoryQ;
-using Wolfpack.Core;
-using Wolfpack.Core.Interfaces.Entities;
 using Wolfpack.Core.Testing.Bdd;
 
 namespace Wolfpack.Tests.System
@@ -18,6 +15,7 @@ namespace Wolfpack.Tests.System
         }
 
         [TestCase("v2.4.0")]
+        [Ignore]
         public void HealthCheckResultDeserialisePreviousVersion(string version)
         {
             using (var domain = new EntitiesDomain())
@@ -29,36 +27,6 @@ namespace Wolfpack.Tests.System
                         .And(domain.TheResultShouldNotBeNull)
                     .ExecuteWithReport();
             }
-        }
-    }
-
-    public class EntitiesDomain : BddTestDomain
-    {
-        private string _xmlFilePath;
-        private HealthCheckResult _resultEntity;
-
-        public override void Dispose()
-        {            
-        }
-
-        public void TheHealthCheckResultDataFilenameIsBuiltForVersion_(string version)
-        {
-            _xmlFilePath = string.Format(@"TestData\{0}\HealthCheckResult.xml", version);
-        }
-
-        public void TheHealthCheckResultXmlIsDeserialised()
-        {
-            SafeExecute(() => _resultEntity = SerialisationHelper<HealthCheckResult>.DataContractDeserializeFromFile(_xmlFilePath));
-        }
-
-        public void TheResultNotificationModeShouldBeNull()
-        {
-            Assert.That(_resultEntity.Check.NotificationMode, Is.Null);
-        }
-
-        public void TheResultShouldNotBeNull()
-        {
-            Assert.That(_resultEntity, Is.Not.Null);
         }
     }
 }

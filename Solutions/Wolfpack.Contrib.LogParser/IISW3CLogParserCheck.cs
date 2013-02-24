@@ -1,11 +1,10 @@
 using System;
-using Wolfpack.Core.Checks;
 using Wolfpack.Core.Interfaces.Entities;
 using MSUtil;
 
 namespace Wolfpack.Contrib.LogParser
 {
-    public class IISW3CLogParserCheckConfig : SqlScalarCheckConfig
+    public class IISW3CLogParserCheckConfig : LogParserConfigBase
     {
         /// <summary>
         /// 0 is the system codepage; -2 specifies that the codepage is automatically 
@@ -21,9 +20,9 @@ namespace Wolfpack.Contrib.LogParser
         public int? Recurse { get; set; }
 
         /// <summary>
-        /// date/time (in "yyyy-MM-dd hh:mm:ss" format)
+        /// The number of days back to go. This will create the MinModDate from today
         /// </summary>
-        public string MinDateMod { get; set; }
+        public int? Days { get; set; }
 
         /// <summary>
         /// 
@@ -43,21 +42,11 @@ namespace Wolfpack.Contrib.LogParser
         public string CheckpointFile { get; set; }
     }
 
-    public class IISW3CLogParserCheck : ScalarLogParserCheckBase
+    public class IISW3CLogParserCheck : LogParserCheckBase<IISW3CLogParserCheckConfig>
     {
-        protected readonly IISW3CLogParserCheckConfig myConfig;
-
         public IISW3CLogParserCheck(IISW3CLogParserCheckConfig config)
             : base(config)
         {
-            myConfig = config;
-
-            myIdentity = new PluginDescriptor
-                             {
-                                 Description = string.Format("IISW3C LogParser Check"),
-                                 Name = config.FriendlyId,
-                                 TypeId = new Guid("2C98A60B-88B3-4333-965C-08A41789B7A3")
-                             };
         }
 
         /// <summary>
@@ -72,19 +61,32 @@ namespace Wolfpack.Contrib.LogParser
         {
             var context = new COMIISW3CInputContextClass
                               {
-                                  iCodepage = myConfig.Codepage.GetValueOrDefault(-2),
-                                  recurse = myConfig.Recurse.GetValueOrDefault(0),
-                                  consolidateLogs = myConfig.ConsolidateLogs.GetValueOrDefault(false),
-                                  dirTime = myConfig.DirTime.GetValueOrDefault(false),
-                                  dQuotes = myConfig.DoubleQuotes.GetValueOrDefault(false)
+                                  iCodepage = _config.Codepage.GetValueOrDefault(-2),
+                                  recurse = _config.Recurse.GetValueOrDefault(0),
+                                  consolidateLogs = _config.ConsolidateLogs.GetValueOrDefault(false),
+                                  dirTime = _config.DirTime.GetValueOrDefault(false),
+                                  dQuotes = _config.DoubleQuotes.GetValueOrDefault(false)
                               };
 
-            if (!string.IsNullOrEmpty(myConfig.MinDateMod))
-                context.minDateMod = myConfig.MinDateMod;
-            if (!string.IsNullOrEmpty(myConfig.CheckpointFile))
-                context.iCheckpoint = myConfig.CheckpointFile;
+            if (_config.Days.HasValue)
+            {
+                var minDate = DateTime.Today.AddDays(Math.Abs(_config.Days.Value)*-1);
+                context.minDateMod = minDate.ToString("yyyy-MM-dd hh:mm:ss");
+            }
+            if (!string.IsNullOrEmpty(_config.CheckpointFile))
+                context.iCheckpoint = _config.CheckpointFile;
 
             return context;
         }
+
+        protected override PluginDescriptor BuildIdentity()
+        {
+            return new PluginDescriptor
+                       {
+                           Description = string.Format("IISW3C LogParser Check"),
+                           Name = _config.FriendlyId,
+                           TypeId = new Guid("2C98A60B-88B3-4333-965C-08A41789B7A3")
+                       };
+        }
     }
-}
+}   

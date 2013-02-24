@@ -6,7 +6,7 @@ namespace Wolfpack.Core.Testing.Bdd
 {
     public abstract class BddTestDomain : IDisposable
     {
-        protected Exception myExpectedException;
+        protected Exception _expectedException;
 
         public abstract void Dispose();
 
@@ -18,7 +18,7 @@ namespace Wolfpack.Core.Testing.Bdd
             }
             catch (Exception ex)
             {
-                myExpectedException = ex;
+                _expectedException = ex;
             }
         }
 
@@ -35,18 +35,18 @@ namespace Wolfpack.Core.Testing.Bdd
 
         public void ThrewNoException()
         {
-            myExpectedException.Should().BeNull();
+            _expectedException.Should().BeNull();
         }
 
         public void ShouldThrow_Exception(Type expected)
         {
-            myExpectedException.Should().NotBeNull();
-            myExpectedException.Should().Match<Exception>(ee => ee.GetType() == expected);
+            _expectedException.Should().NotBeNull();
+            _expectedException.Should().Match<Exception>(ee => ee.GetType() == expected);
         }
 
         public void _ShouldBeInTheExceptionMesssage(string content)
         {
-            myExpectedException.Message.Should().Contain(content);
+            _expectedException.Message.Should().Contain(content);
         }
     }
 }
