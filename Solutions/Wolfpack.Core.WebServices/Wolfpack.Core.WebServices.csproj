@@ -44,61 +44,61 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\RestSharp.104.1\lib\net4\RestSharp.dll</HintPath>
     </Reference>
-    <Reference Include="ServiceStack, Version=3.9.33.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="ServiceStack, Version=3.9.37.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\ServiceStack.3.9.33\lib\net35\ServiceStack.dll</HintPath>
+      <HintPath>..\packages\ServiceStack.3.9.37\lib\net35\ServiceStack.dll</HintPath>
     </Reference>
-    <Reference Include="ServiceStack.Common, Version=3.9.33.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="ServiceStack.Common, Version=3.9.37.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\ServiceStack.Common.3.9.33\lib\net35\ServiceStack.Common.dll</HintPath>
+      <HintPath>..\packages\ServiceStack.Common.3.9.37\lib\net35\ServiceStack.Common.dll</HintPath>
     </Reference>
-    <Reference Include="ServiceStack.Interfaces, Version=3.9.33.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="ServiceStack.Interfaces, Version=3.9.37.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\ServiceStack.Common.3.9.33\lib\net35\ServiceStack.Interfaces.dll</HintPath>
+      <HintPath>..\packages\ServiceStack.Common.3.9.37\lib\net35\ServiceStack.Interfaces.dll</HintPath>
     </Reference>
-    <Reference Include="ServiceStack.Logging.Log4Net, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="ServiceStack.Logging.Log4Net, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\ServiceStack.Logging.Log4Net.1.0.5.0\lib\net35\ServiceStack.Logging.Log4Net.dll</HintPath>
+      <HintPath>..\packages\ServiceStack.Logging.Log4Net.1.0.6.0\lib\net35\ServiceStack.Logging.Log4Net.dll</HintPath>
     </Reference>
-    <Reference Include="ServiceStack.OrmLite, Version=3.9.33.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="ServiceStack.OrmLite, Version=3.9.37.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\ServiceStack.OrmLite.SqlServer.3.9.33\lib\ServiceStack.OrmLite.dll</HintPath>
+      <HintPath>..\packages\ServiceStack.OrmLite.SqlServer.3.9.37\lib\ServiceStack.OrmLite.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.OrmLite.SqlServer, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ServiceStack.OrmLite.SqlServer.3.9.33\lib\ServiceStack.OrmLite.SqlServer.dll</HintPath>
+      <HintPath>..\packages\ServiceStack.OrmLite.SqlServer.3.9.37\lib\ServiceStack.OrmLite.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="ServiceStack.Razor, Version=3.9.33.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="ServiceStack.Razor, Version=3.9.37.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\ServiceStack.Razor.3.9.33\lib\net40\ServiceStack.Razor.dll</HintPath>
+      <HintPath>..\packages\ServiceStack.Razor.3.9.37\lib\net40\ServiceStack.Razor.dll</HintPath>
     </Reference>
-    <Reference Include="ServiceStack.Redis, Version=3.9.33.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="ServiceStack.Redis, Version=3.9.37.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\ServiceStack.Redis.3.9.33\lib\net35\ServiceStack.Redis.dll</HintPath>
+      <HintPath>..\packages\ServiceStack.Redis.3.9.37\lib\net35\ServiceStack.Redis.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.ServiceInterface, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ServiceStack.3.9.33\lib\net35\ServiceStack.ServiceInterface.dll</HintPath>
+      <HintPath>..\packages\ServiceStack.3.9.37\lib\net35\ServiceStack.ServiceInterface.dll</HintPath>
     </Reference>
-    <Reference Include="ServiceStack.Text, Version=3.9.33.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="ServiceStack.Text, Version=3.9.37.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\ServiceStack.Text.3.9.33\lib\net35\ServiceStack.Text.dll</HintPath>
+      <HintPath>..\packages\ServiceStack.Text.3.9.37\lib\net35\ServiceStack.Text.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web.Razor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
-      <HintPath>..\packages\ServiceStack.Razor.3.9.33\lib\net40\System.Web.Razor.dll</HintPath>
+      <HintPath>..\packages\ServiceStack.Razor.3.9.37\lib\net40\System.Web.Razor.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.WebPages, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
-      <HintPath>..\packages\ServiceStack.Razor.3.9.33\lib\net40\System.Web.WebPages.dll</HintPath>
+      <HintPath>..\packages\ServiceStack.Razor.3.9.37\lib\net40\System.Web.WebPages.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.WebPages.Deployment, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
-      <HintPath>..\packages\ServiceStack.Razor.3.9.33\lib\net40\System.Web.WebPages.Deployment.dll</HintPath>
+      <HintPath>..\packages\ServiceStack.Razor.3.9.37\lib\net40\System.Web.WebPages.Deployment.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.WebPages.Razor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
-      <HintPath>..\packages\ServiceStack.Razor.3.9.33\lib\net40\System.Web.WebPages.Razor.dll</HintPath>
+      <HintPath>..\packages\ServiceStack.Razor.3.9.37\lib\net40\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -147,6 +147,9 @@
     <None Include="Content\js\libs\FlexiJsonEditor\README" />
     <None Include="Content\js\libs\FlexiJsonEditor\README.md" />
     <None Include="Content\js\libs\glDatePicker\README.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\js\libs\jquery-1.9.1.min.map">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Views\Configuration\GetTagCloud.cshtml">
@@ -2360,12 +2363,6 @@
     <Content Include="Content\js\libs\google-code-prettify\sunburst.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\js\libs\jquery-1.7.2.min.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\js\libs\jquery-1.8.2.min.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Content\js\libs\jquery.details.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -2394,10 +2391,17 @@
     <Content Include="htmlreport.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\js\libs\signalr\jquery.signalR-1.0.0-rc2.js">
+    <Content Include="Content\js\libs\jquery-1.9.1-vsdoc.js" />
+    <Content Include="Content\js\libs\jquery-1.9.1.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\js\libs\signalr\jquery.signalR-1.0.0-rc2.min.js">
+    <Content Include="Content\js\libs\jquery-1.9.1.min.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\js\libs\signalr\jquery.signalR-1.0.0.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\js\libs\signalr\jquery.signalR-1.0.0.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
