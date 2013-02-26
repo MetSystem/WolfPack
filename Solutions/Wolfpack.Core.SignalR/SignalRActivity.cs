@@ -21,9 +21,6 @@ namespace Wolfpack.Core.SignalR
         public SignalRActivity(SignalRActivityConfig config)
         {
             _config = config;
-
-            //_config.BaseUrl = _config.BaseUrl.TrimEnd('/');
-            //_config.BaseUrl += "/";
         }
 
         public void Initialise()
@@ -85,8 +82,26 @@ namespace Wolfpack.Core.SignalR
     {
         protected override Task OnConnected(IRequest request, string connectionId)
         {
-            Logger.Debug("Connection id:={0} connected!", connectionId);            
+            Logger.Debug("Connected id:={0}", connectionId);            
             return base.OnConnected(request, connectionId);
+        }
+
+        protected override Task OnReceived(IRequest request, string connectionId, string data)
+        {
+            Logger.Debug("Received data from id:={0}", connectionId);
+            return base.OnReceived(request, connectionId, data);
+        }
+
+        protected override Task OnDisconnected(IRequest request, string connectionId)
+        {
+            Logger.Debug("Disconnected id:={0}", connectionId);            
+            return base.OnDisconnected(request, connectionId);
+        }
+
+        protected override Task OnReconnected(IRequest request, string connectionId)
+        {
+            Logger.Debug("Reconnected id:={0}", connectionId);
+            return base.OnReconnected(request, connectionId);
         }
     }
 
@@ -94,7 +109,10 @@ namespace Wolfpack.Core.SignalR
     {
         public void Configuration(IAppBuilder app)
         {
-            app.MapConnection<MyEndpoint>("/notifications");
+            app.MapConnection<MyEndpoint>("/notifications", new ConnectionConfiguration
+                                                                {
+                                                                    EnableCrossDomain = true
+                                                                });
         }
     }
 }
