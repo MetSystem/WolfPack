@@ -50,11 +50,20 @@
     <Compile Include="..\Build\Common\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="CSVLogParserCheck.cs" />
     <Compile Include="EVTLogParserCheck.cs" />
+    <Compile Include="FSLogParserCheck.cs" />
+    <Compile Include="IISLogParserCheck.cs" />
     <Compile Include="IISW3CLogParserCheck.cs" />
     <Compile Include="LogParserConfigBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="LogParserCheckBase.cs" />
+    <Compile Include="REGLogParserCheck.cs" />
+    <Compile Include="TextLineLogParserCheck.cs" />
+    <Compile Include="TSVLogParserCheck.cs" />
+    <Compile Include="URLSCANLogParserCheck.cs" />
+    <Compile Include="W3CLogParserCheck.cs" />
+    <Compile Include="XMLLogParserCheck.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Config\logparser.check.castle.config2" />

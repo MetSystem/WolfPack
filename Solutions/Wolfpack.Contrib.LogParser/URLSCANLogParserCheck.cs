@@ -1,29 +1,46 @@
 using System;
-using Wolfpack.Core.Checks;
+using Wolfpack.Core.Configuration;
 using Wolfpack.Core.Interfaces.Entities;
 using MSUtil;
+using Wolfpack.Core;
+using Wolfpack.Core.Notification.Filters.Request;
 
 namespace Wolfpack.Contrib.LogParser
 {
-    public class URLSCANLogParserCheckConfig : SqlScalarCheckConfig
+    public class URLSCANLogParserCheckConfig : LogParserConfigBase
     {
         public string CheckpointFile { get; set; }
     }
 
-    public class URLSCANLogParserCheck : LogParserCheckBase
+    public class URLScanLogParserConfigurationAdvertiser : HealthCheckDiscoveryBase<URLSCANLogParserCheckConfig>
     {
-        protected readonly URLSCANLogParserCheckConfig myConfig;
+        protected override URLSCANLogParserCheckConfig GetConfiguration()
+        {
+            return new URLSCANLogParserCheckConfig
+                       {
+                           CheckpointFile = string.Empty,
+                           Enabled = true,
+                           FriendlyId = "CHANGEME!",
+                           GenerateArtifacts = false,
+                           InterpretZeroRowsAsAFailure = false,
+                           NotificationMode = StateChangeNotificationFilter.FilterName,
+                           Query = LogParserConfigBase.DefaultQueryPropertyText
+                       };
+        }
 
+        protected override void Configure(ConfigurationEntry entry)
+        {
+            entry.Name = "LogParser:UrlScan";
+            entry.Description = "This logparser check will interrogate data files produced by the IIS URLScan filter. " + LogParserConfigBase.DefaultDescriptionText;
+            entry.Tags.AddIfMissing("LogParser", "UrlScan", "IIS");
+        }
+    }
+
+    public class URLSCANLogParserCheck : LogParserCheckBase<URLSCANLogParserCheckConfig>
+    {
         public URLSCANLogParserCheck(URLSCANLogParserCheckConfig config)
             : base(config)
         {
-            myConfig = config;
-            _identity = new PluginDescriptor
-                             {
-                                 Description = string.Format("URLSCAN LogParser Check"),
-                                 Name = config.FriendlyId,
-                                 TypeId = new Guid("0E16424C-1BE2-4ae4-A239-9826AD399B8C")
-                             };
         }
 
         /// <summary>
@@ -38,10 +55,20 @@ namespace Wolfpack.Contrib.LogParser
         {
             var context = new COMURLScanLogInputContextClass();
 
-            if (!string.IsNullOrEmpty(myConfig.CheckpointFile))
-                context.iCheckpoint = myConfig.CheckpointFile;
+            if (!string.IsNullOrEmpty(_config.CheckpointFile))
+                context.iCheckpoint = _config.CheckpointFile;
 
             return context;
+        }
+
+        protected override PluginDescriptor BuildIdentity()
+        {
+            return new PluginDescriptor
+                       {
+                           Description = string.Format("URLSCAN LogParser Check"),
+                           Name = _config.FriendlyId,
+                           TypeId = new Guid("0E16424C-1BE2-4ae4-A239-9826AD399B8C")
+                       };
         }
     }
 }

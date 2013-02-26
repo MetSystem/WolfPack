@@ -1,11 +1,23 @@
 using System;
+using Wolfpack.Core;
+using Wolfpack.Core.Configuration;
 using Wolfpack.Core.Interfaces.Entities;
 using MSUtil;
+using Wolfpack.Core.Notification.Filters.Request;
 
 namespace Wolfpack.Contrib.LogParser
 {
     public class IISW3CLogParserCheckConfig : LogParserConfigBase
     {
+        public static class Defaults
+        {
+            public const int Codepage = -2;
+            public const int Recurse = 0;
+            public const bool ConsolidateLogs = false;
+            public const bool DoubleQuotes = false;
+            public const bool DirTime = false;
+        }
+
         /// <summary>
         /// 0 is the system codepage; -2 specifies that the codepage is automatically 
         /// determined by inspecting the filename and/or the site's "LogInUTF8" property. 
@@ -20,9 +32,10 @@ namespace Wolfpack.Contrib.LogParser
         public int? Recurse { get; set; }
 
         /// <summary>
-        /// The number of days back to go. This will create the MinModDate from today
+        /// The number of days back to go. Zero means do not set.
+        /// This will create the MinModDate from today minus the number of days set
         /// </summary>
-        public int? Days { get; set; }
+        public int Days { get; set; }
 
         /// <summary>
         /// 
@@ -40,6 +53,37 @@ namespace Wolfpack.Contrib.LogParser
         public bool? ConsolidateLogs { get; set; }
 
         public string CheckpointFile { get; set; }
+    }
+
+    public class IISW3CLogParserConfigurationAdvertiser : HealthCheckDiscoveryBase<IISW3CLogParserCheckConfig>
+    {
+        protected override IISW3CLogParserCheckConfig GetConfiguration()
+        {
+            return new IISW3CLogParserCheckConfig
+                       {
+                           CheckpointFile = string.Empty,
+                           Codepage = IISW3CLogParserCheckConfig.Defaults.Codepage,
+                           ConsolidateLogs = IISW3CLogParserCheckConfig.Defaults.ConsolidateLogs,
+                           Days = 0,
+                           DirTime = IISW3CLogParserCheckConfig.Defaults.DirTime,
+                           DoubleQuotes = IISW3CLogParserCheckConfig.Defaults.DoubleQuotes,
+                           Enabled = true,
+                           FriendlyId = "CHANGEME!",
+                           GenerateArtifacts = false,
+                           InterpretZeroRowsAsAFailure = false,
+                           NotificationMode = StateChangeNotificationFilter.FilterName,
+                           Query = LogParserConfigBase.DefaultQueryPropertyText,
+                           Recurse = IISW3CLogParserCheckConfig.Defaults.Recurse
+                       };
+        }
+
+        protected override void Configure(ConfigurationEntry entry)
+        {
+            entry.Name = "LogParser:IISW3CLog";
+            entry.Description = "This logparser check will search the IIS W3C log for entries matching the criteria you set. " +
+                LogParserConfigBase.DefaultDescriptionText;
+            entry.Tags.AddIfMissing(LogParserConfigBase.LogParserTag, "IIS");
+        }
     }
 
     public class IISW3CLogParserCheck : LogParserCheckBase<IISW3CLogParserCheckConfig>
@@ -61,16 +105,16 @@ namespace Wolfpack.Contrib.LogParser
         {
             var context = new COMIISW3CInputContextClass
                               {
-                                  iCodepage = _config.Codepage.GetValueOrDefault(-2),
-                                  recurse = _config.Recurse.GetValueOrDefault(0),
-                                  consolidateLogs = _config.ConsolidateLogs.GetValueOrDefault(false),
-                                  dirTime = _config.DirTime.GetValueOrDefault(false),
-                                  dQuotes = _config.DoubleQuotes.GetValueOrDefault(false)
+                                  iCodepage = _config.Codepage.GetValueOrDefault(IISW3CLogParserCheckConfig.Defaults.Codepage),
+                                  recurse = _config.Recurse.GetValueOrDefault(IISW3CLogParserCheckConfig.Defaults.Recurse),
+                                  consolidateLogs = _config.ConsolidateLogs.GetValueOrDefault(IISW3CLogParserCheckConfig.Defaults.ConsolidateLogs),
+                                  dirTime = _config.DirTime.GetValueOrDefault(IISW3CLogParserCheckConfig.Defaults.DirTime),
+                                  dQuotes = _config.DoubleQuotes.GetValueOrDefault(IISW3CLogParserCheckConfig.Defaults.DoubleQuotes)
                               };
 
-            if (_config.Days.HasValue)
+            if (_config.Days > 0)
             {
-                var minDate = DateTime.Today.AddDays(Math.Abs(_config.Days.Value)*-1);
+                var minDate = DateTime.Today.AddDays(Math.Abs(_config.Days)*-1);
                 context.minDateMod = minDate.ToString("yyyy-MM-dd hh:mm:ss");
             }
             if (!string.IsNullOrEmpty(_config.CheckpointFile))

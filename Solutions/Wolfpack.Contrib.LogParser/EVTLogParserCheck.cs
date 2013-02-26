@@ -1,11 +1,26 @@
 using System;
+using Wolfpack.Core.Configuration;
 using Wolfpack.Core.Interfaces.Entities;
 using MSUtil;
+using Wolfpack.Core;
+using Wolfpack.Core.Notification.Filters.Request;
 
 namespace Wolfpack.Contrib.LogParser
 {
     public class EVTLogParserCheckConfig : LogParserConfigBase
     {
+        public static class Defaults
+        {
+            public const bool FullText = true;
+            public const bool ResolveSIDs = false;
+            public const bool FormatMsg = true;
+            public const bool FullEventCode = false;
+            public const string MsgErrorMode = "MSG";
+            public const string Direction = "FW";
+            public const string StringsSep = "|";
+            public const string BinaryFormat = "HEX";
+        }
+
         public bool? FullText { get; set; }
         public bool? ResolveSIDs { get; set; }
         public bool? FormatMsg { get; set; }
@@ -15,6 +30,39 @@ namespace Wolfpack.Contrib.LogParser
         public string StringsSep { get; set; }
         public string MsgErrorMode { get; set; }
         public string Direction { get; set; }
+    }
+
+    public class EVTLogParserConfigurationAdvertiser : HealthCheckDiscoveryBase<EVTLogParserCheckConfig>
+    {
+        protected override EVTLogParserCheckConfig GetConfiguration()
+            {
+            return new EVTLogParserCheckConfig
+                       {
+                           Enabled = true,
+                           BinaryFormat = EVTLogParserCheckConfig.Defaults.BinaryFormat,
+                           CheckpointFile = string.Empty,
+                           Direction = EVTLogParserCheckConfig.Defaults.Direction,
+                           FormatMsg = EVTLogParserCheckConfig.Defaults.FormatMsg,
+                           FriendlyId = "CHANGEME!",
+                           FullEventCode = EVTLogParserCheckConfig.Defaults.FullEventCode,
+                           FullText = EVTLogParserCheckConfig.Defaults.FullText,
+                           GenerateArtifacts = false,
+                           InterpretZeroRowsAsAFailure = false,
+                           MsgErrorMode = EVTLogParserCheckConfig.Defaults.MsgErrorMode,
+                           NotificationMode = StateChangeNotificationFilter.FilterName,
+                           Query = LogParserConfigBase.DefaultQueryPropertyText,
+                           ResolveSIDs = EVTLogParserCheckConfig.Defaults.ResolveSIDs,
+                           StringsSep = EVTLogParserCheckConfig.Defaults.StringsSep
+                       };
+        }
+
+        protected override void Configure(ConfigurationEntry entry)
+        {
+            entry.Name = "LogParser:EventLog";
+            entry.Description = "This logparser check will search the EventLog for entries matching the criteria you set. " +
+                LogParserConfigBase.DefaultDescriptionText;
+            entry.Tags.AddIfMissing(LogParserConfigBase.LogParserTag, "EventLog");
+        }
     }
 
     public class EVTLogParserCheck : LogParserCheckBase<EVTLogParserCheckConfig>
@@ -36,17 +84,17 @@ namespace Wolfpack.Contrib.LogParser
         {
             var context = new COMEventLogInputContextClass
                               {
-                                  fullText = _config.FullText.GetValueOrDefault(true),
-                                  resolveSIDs = _config.ResolveSIDs.GetValueOrDefault(false),
-                                  formatMsg = _config.FormatMsg.GetValueOrDefault(true),
-                                  fullEventCode = _config.FullEventCode.GetValueOrDefault(false),
-                                  msgErrorMode = _config.MsgErrorMode ?? "MSG",
-                                  direction = _config.Direction ?? "FW",
-                                  stringsSep = _config.StringsSep ?? "|",
-                                  binaryFormat = _config.BinaryFormat ?? "HEX"
+                                  fullText = _config.FullText.GetValueOrDefault(EVTLogParserCheckConfig.Defaults.FullText),
+                                  resolveSIDs = _config.ResolveSIDs.GetValueOrDefault(EVTLogParserCheckConfig.Defaults.ResolveSIDs),
+                                  formatMsg = _config.FormatMsg.GetValueOrDefault(EVTLogParserCheckConfig.Defaults.FormatMsg),
+                                  fullEventCode = _config.FullEventCode.GetValueOrDefault(EVTLogParserCheckConfig.Defaults.FullEventCode),
+                                  msgErrorMode = string.IsNullOrWhiteSpace(_config.MsgErrorMode) ? EVTLogParserCheckConfig.Defaults.MsgErrorMode : _config.MsgErrorMode,
+                                  direction = string.IsNullOrWhiteSpace(_config.Direction) ? EVTLogParserCheckConfig.Defaults.Direction : _config.Direction,
+                                  stringsSep = string.IsNullOrWhiteSpace(_config.StringsSep) ? EVTLogParserCheckConfig.Defaults.StringsSep : _config.StringsSep,
+                                  binaryFormat = string.IsNullOrWhiteSpace(_config.BinaryFormat) ? EVTLogParserCheckConfig.Defaults.BinaryFormat : _config.BinaryFormat
                               };
 
-            if (!string.IsNullOrEmpty(_config.CheckpointFile))
+            if (!string.IsNullOrWhiteSpace(_config.CheckpointFile))
                 context.iCheckpoint = _config.CheckpointFile;
 
             return context;
