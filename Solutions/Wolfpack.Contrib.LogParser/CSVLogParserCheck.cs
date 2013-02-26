@@ -1,12 +1,25 @@
 using System;
-using Wolfpack.Core.Checks;
+using Wolfpack.Core.Configuration;
 using Wolfpack.Core.Interfaces.Entities;
 using MSUtil;
+using Wolfpack.Core;
+using Wolfpack.Core.Notification.Filters.Request;
 
 namespace Wolfpack.Contrib.LogParser
 {
-    public class CSVLogParserCheckConfig : SqlScalarCheckConfig
+    public class CSVLogParserCheckConfig : LogParserConfigBase
     {
+        public static class Defaults
+        {
+            public const int CodePage = 0;
+            public const int SkipLines = 0;
+            public const int Lines = 10;
+            public const int Fields = -1;
+            public const bool HeaderRow = true;
+            public const bool FixedFields = true;
+            public const string DoubleQuotes = "Auto";
+        }
+
         public bool? HeaderRow { get; set; }
         public string HeaderFile { get; set; }
         public bool? FixedFields { get; set; }
@@ -25,20 +38,46 @@ namespace Wolfpack.Contrib.LogParser
         public string CheckpointFile { get; set; }
     }
 
-    public class CSVLogParserCheck : LogParserCheckBase
+    public class CSVLogParserConfigurationAdvertiser : HealthCheckDiscoveryBase<CSVLogParserCheckConfig>
     {
-        protected readonly CSVLogParserCheckConfig myConfig;
+        protected override CSVLogParserCheckConfig GetConfiguration()
+        {
+            return new CSVLogParserCheckConfig
+                       {
+                           CheckpointFile = string.Empty,
+                           CodePage = CSVLogParserCheckConfig.Defaults.CodePage,
+                           Comment = string.Empty,
+                           DoubleQuotes = CSVLogParserCheckConfig.Defaults.DoubleQuotes,
+                           Enabled = true,
+                           Fields = CSVLogParserCheckConfig.Defaults.Fields,
+                           FixedFields = CSVLogParserCheckConfig.Defaults.FixedFields,
+                           FriendlyId = "CHANGEME!",
+                           GenerateArtifacts = false,
+                           HeaderFile = string.Empty,
+                           HeaderRow = CSVLogParserCheckConfig.Defaults.HeaderRow,
+                           InterpretZeroRowsAsAFailure = false,
+                           Lines = CSVLogParserCheckConfig.Defaults.Lines,
+                           NotificationMode = StateChangeNotificationFilter.FilterName,
+                           Query = LogParserConfigBase.DefaultQueryPropertyText,
+                           SkipLines = CSVLogParserCheckConfig.Defaults.SkipLines,
+                           TimestampFormat = string.Empty
+                       };
+        }
 
+        protected override void Configure(ConfigurationEntry entry)
+        {
+            entry.Name = "LogParser:CSV";
+            entry.Description = "This logparser check will search a CSV datasource for entries matching the criteria you set. " +
+                LogParserConfigBase.DefaultDescriptionText;
+            entry.Tags.AddIfMissing(LogParserConfigBase.LogParserTag, "CSV");
+        }
+    }
+
+    public class CSVLogParserCheck : LogParserCheckBase<CSVLogParserCheckConfig>
+    {
         public CSVLogParserCheck(CSVLogParserCheckConfig config)
             : base(config)
         {
-            myConfig = config;
-            _identity = new PluginDescriptor
-                             {
-                                 Description = string.Format("CSV LogParser Check"),
-                                 Name = config.FriendlyId,
-                                 TypeId = new Guid("591DFDD0-FC26-44de-AF84-42C2BB20421D")
-                             };
         }
 
         /// <summary>
@@ -53,25 +92,35 @@ namespace Wolfpack.Contrib.LogParser
         {
             var context = new COMCSVInputContextClass
                               {
-                                  headerRow = myConfig.HeaderRow ?? true,
-                                  fixedFields = myConfig.FixedFields ?? true,
-                                  nFields = myConfig.Fields ?? -1,
-                                  dtLines = myConfig.Lines ?? 10,
-                                  iDQuotes = myConfig.DoubleQuotes ?? "Auto",
-                                  nSkipLines = myConfig.SkipLines ?? 0,
-                                  codepage = myConfig.CodePage ?? 0
+                                  headerRow = _config.HeaderRow.GetValueOrDefault(CSVLogParserCheckConfig.Defaults.HeaderRow),
+                                  fixedFields = _config.FixedFields.GetValueOrDefault(CSVLogParserCheckConfig.Defaults.FixedFields),
+                                  nFields = _config.Fields.GetValueOrDefault(CSVLogParserCheckConfig.Defaults.Fields),
+                                  dtLines = _config.Lines.GetValueOrDefault(CSVLogParserCheckConfig.Defaults.Lines),
+                                  iDQuotes = _config.DoubleQuotes ?? CSVLogParserCheckConfig.Defaults.DoubleQuotes,
+                                  nSkipLines = _config.SkipLines.GetValueOrDefault(CSVLogParserCheckConfig.Defaults.SkipLines),
+                                  codepage = _config.CodePage.GetValueOrDefault(CSVLogParserCheckConfig.Defaults.CodePage)
                               };
 
-            if (!string.IsNullOrEmpty(myConfig.TimestampFormat))
-                context.iTsFormat = myConfig.TimestampFormat;
-            if (!string.IsNullOrEmpty(myConfig.HeaderFile))
-                context.headerFile = myConfig.HeaderFile;
-            if (!string.IsNullOrEmpty(myConfig.Comment))
-                context.comment = myConfig.Comment;
-            if (!string.IsNullOrEmpty(myConfig.CheckpointFile))
-                context.iCheckpoint = myConfig.CheckpointFile;
+            if (!string.IsNullOrEmpty(_config.TimestampFormat))
+                context.iTsFormat = _config.TimestampFormat;
+            if (!string.IsNullOrEmpty(_config.HeaderFile))
+                context.headerFile = _config.HeaderFile;
+            if (!string.IsNullOrEmpty(_config.Comment))
+                context.comment = _config.Comment;
+            if (!string.IsNullOrEmpty(_config.CheckpointFile))
+                context.iCheckpoint = _config.CheckpointFile;
 
             return context;
+        }
+
+        protected override PluginDescriptor BuildIdentity()
+        {
+            return new PluginDescriptor
+            {
+                Description = string.Format("CSV LogParser Check"),
+                Name = _config.FriendlyId,
+                TypeId = new Guid("591DFDD0-FC26-44de-AF84-42C2BB20421D")
+            };
         }
     }
 }

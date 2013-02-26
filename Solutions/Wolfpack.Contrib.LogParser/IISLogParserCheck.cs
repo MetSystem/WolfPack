@@ -1,12 +1,18 @@
 using System;
-using Wolfpack.Core.Checks;
 using Wolfpack.Core.Interfaces.Entities;
 using MSUtil;
 
 namespace Wolfpack.Contrib.LogParser
 {
-    public class IISLogParserCheckConfig : SqlScalarCheckConfig
+    public class IISLogParserCheckConfig : LogParserConfigBase
     {
+        public static class Defaults
+        {
+            public const int Codepage = -2;
+            public const int Recurse = 0;
+            public const string Locale = "DEF";
+        }
+
         /// <summary>
         /// 0 is the system codepage; -2 specifies that the codepage is automatically 
         /// determined by inspecting the filename and/or the site's "LogInUTF8" property. 
@@ -21,9 +27,10 @@ namespace Wolfpack.Contrib.LogParser
         public int? Recurse { get; set; }
 
         /// <summary>
-        /// date/time (in "yyyy-MM-dd hh:mm:ss" format)
+        /// The number of days back to go. Zero means do not set.
+        /// This will create the MinModDate from today minus the number of days set
         /// </summary>
-        public string MinDateMod { get; set; }
+        public int Days { get; set; }
 
         /// <summary>
         /// default is DEF
@@ -33,21 +40,11 @@ namespace Wolfpack.Contrib.LogParser
         public string CheckpointFile { get; set; }
     }
 
-    public class IISLogParserCheck : LogParserCheckBase
+    public class IISLogParserCheck : LogParserCheckBase<IISLogParserCheckConfig>
     {
-        protected readonly IISLogParserCheckConfig myConfig;
-
         public IISLogParserCheck(IISLogParserCheckConfig config)
             : base(config)
         {
-            myConfig = config;
-
-            _identity = new PluginDescriptor
-                             {
-                                 Description = string.Format("IIS LogParser Check"),
-                                 Name = config.FriendlyId,
-                                 TypeId = new Guid("FA8E0B46-43E5-433b-B417-21216531F92F")
-                             };
         }
 
         /// <summary>
@@ -62,17 +59,30 @@ namespace Wolfpack.Contrib.LogParser
         {
             var context = new COMIISIISInputContextClass
                               {
-                                  iCodepage = myConfig.Codepage.GetValueOrDefault(-2),
-                                  recurse = myConfig.Recurse.GetValueOrDefault(0),
-                                  locale = myConfig.Locale ?? "DEF"
+                                  iCodepage = _config.Codepage.GetValueOrDefault(IISLogParserCheckConfig.Defaults.Codepage),
+                                  recurse = _config.Recurse.GetValueOrDefault(IISLogParserCheckConfig.Defaults.Recurse),
+                                  locale = _config.Locale ?? IISLogParserCheckConfig.Defaults.Locale
                               };
 
-            if (!string.IsNullOrEmpty(myConfig.MinDateMod))
-                context.minDateMod = myConfig.MinDateMod;
-            if (!string.IsNullOrEmpty(myConfig.CheckpointFile))
-                context.iCheckpoint = myConfig.CheckpointFile;
+            if (_config.Days > 0)
+            {
+                var minDate = DateTime.Today.AddDays(Math.Abs(_config.Days) * -1);
+                context.minDateMod = minDate.ToString("yyyy-MM-dd hh:mm:ss");
+            }
+            if (!string.IsNullOrEmpty(_config.CheckpointFile))
+                context.iCheckpoint = _config.CheckpointFile;
 
             return context;
+        }
+
+        protected override PluginDescriptor BuildIdentity()
+        {
+            return new PluginDescriptor
+                       {
+                           Description = string.Format("IIS LogParser Check"),
+                           Name = _config.FriendlyId,
+                           TypeId = new Guid("FA8E0B46-43E5-433b-B417-21216531F92F")
+                       };
         }
     }
 }
