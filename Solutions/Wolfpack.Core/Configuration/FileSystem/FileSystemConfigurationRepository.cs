@@ -2,11 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using ServiceStack.Text;
-using Wolfpack.Core.Checks;
 using Wolfpack.Core.Interfaces;
 using Wolfpack.Core.Interfaces.Entities;
-using Wolfpack.Core.Schedulers;
 
 namespace Wolfpack.Core.Configuration.FileSystem
 {    
@@ -33,9 +30,6 @@ namespace Wolfpack.Core.Configuration.FileSystem
             Logger.Info("Scanning for configuration entries in '{0}'...", _baseFolder);
             var files = Directory.GetFiles(_baseFolder, "*." + ConfigFileExtension, SearchOption.AllDirectories).ToList();
 
-            //CreateTemplateScheduleJsonFile();
-            //CreateTemplateHealthCheckConfigJsonFile();
-
             var entries = new List<FileSystemConfigurationEntry>();
             entries.AddRange(files.Select(
                 filename =>
@@ -59,49 +53,6 @@ namespace Wolfpack.Core.Configuration.FileSystem
 
             var validEntries = ProcessEntries(entries);
             return validEntries.Select(e => e.Entry);
-        }
-
-        
-        private void CreateTemplateHealthCheckConfigJsonFile()
-        {
-            var bob = new WmiProcessRunningCheckConfig
-                          {
-                              ProcessName = "notepad.exe",
-                              Enabled = true,
-                              FriendlyId = "IsNotepadRunning",
-                              NotificationMode = "FailureOnly",
-                              RemoteMachineId = "localhost"
-                          };
-
-            var fred = new ConfigurationEntry
-                           {
-                               ConcreteType = bob.GetType().AssemblyQualifiedName,
-                               Data = Serialiser.ToJson(bob),
-                               Tags = new List<string> { "HealthCheck", "WMI" }
-                           };
-
-            var filename = Path.Combine(_baseFolder, "notepad-running.config");
-            Serialiser.ToJsonInFile(filename, fred);
-        }
-
-        private void CreateTemplateScheduleJsonFile()
-        {
-            var bob = new HealthCheckTwentyFourSevenSchedulerConfig
-                          {
-                              Weekdays = "9:00,10:00,11:00,12:00,13:00,14:00,15:00,16:00,17:00"
-                          };
-
-            var fred = new ConfigurationEntry
-                           {
-                               ConcreteType = bob.GetType().AssemblyQualifiedName,
-                               Data = bob.SerializeToString(),
-                               Tags = new List<string> { "Scheduler" }
-                           };
-
-            using (var sw = new StreamWriter(Path.Combine(_baseFolder, "weekdays9to5.config")))
-            {
-                sw.Write(fred.SerializeToString());
-            }
         }
 
         protected static bool GetType<T>(string targetTypeName, out Type targetType)
@@ -134,11 +85,12 @@ namespace Wolfpack.Core.Configuration.FileSystem
             // detect a name change...
             if (!string.IsNullOrWhiteSpace(newname) && !newname.Equals(entry.Name, StringComparison.InvariantCultureIgnoreCase))
             {
-                File.Delete(filepath);
-
                 var folder = Path.GetDirectoryName(filepath) ?? string.Empty;
                 var ext = Path.GetExtension(filepath);
                 filepath = Path.Combine(folder, Path.ChangeExtension(newname, ext));
+
+                Directory.CreateDirectory(folder);
+                File.Delete(filepath);
 
                 if (File.Exists(filepath))
                     throw new InvalidOperationException(string.Format(

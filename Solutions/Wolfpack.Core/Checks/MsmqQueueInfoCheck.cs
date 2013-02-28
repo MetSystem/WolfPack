@@ -34,7 +34,7 @@ namespace Wolfpack.Core.Checks
         {
             entry.Name = "MsmqQueueInfoCheck";
             entry.Description = "This check will monitor a MSMQ Queue for breaches of too many items. If there are more items than the threshold set it will generate failure notifications.";
-            entry.Tags.Add("MSMQ");
+            entry.Tags.AddIfMissing("MSMQ", "Threshold");
         }
     }
 

@@ -1,50 +1,52 @@
 using System.Collections.Generic;
-using Wolfpack.Core.Interfaces;
+using Wolfpack.Core.Configuration;
 using Wolfpack.Core.Interfaces.Entities;
 using Wolfpack.Core.WebServices.Interfaces.Entities;
 
 namespace Wolfpack.Core.WebServices
 {
-    public class WebServiceConfigurationDiscovery : ISupportConfigurationDiscovery
+    public class WebServiceConfigurationDiscovery : PluginDiscoveryBase<WebServiceActivityConfig>
     {
-        public ConfigurationEntry GetConfigurationMetadata()
+        protected override WebServiceActivityConfig GetConfiguration()
         {
-            var template = new WebServiceActivityConfig
-                               {
-                                   BaseUrl = "http://*:802/",
-                                   Enabled = true
-                               };
-
-            return new ConfigurationEntry
+            return new WebServiceActivityConfig
                        {
-                           Name = "WebServiceActivity",
-                           Description = "This activity provides the Wolfpack Web Interface. This is a ServiceStack powered api that provides a REST interface and Razor view engine pages.",
-                           ConcreteType = template.GetType().AssemblyQualifiedName,
-                           Data = Serialiser.ToJson(template),
-                           Tags = new List<string> { "Activity" } 
+                           BaseUrl = "http://*:802/",
+                           Enabled = true,
+                           ApiKeys = new List<string> { "Leave blank to disable" }
                        };
-        }        
+        }
+
+        protected override void Configure(ConfigurationEntry entry)
+        {
+            entry.Name = "WebServiceActivity";
+            entry.Description = "This activity provides the Wolfpack Web Interface. This is a ServiceStack " + 
+                "powered api that provides a REST interface and Razor view engine pages.";
+            entry.Tags.AddIfMissing("Activity", "Api", "WebUI");
+        }
     }
 
-    public class WebServicePublisherConfigurationDiscovery : ISupportConfigurationDiscovery
+    public class WebServicePublisherConfigurationDiscovery : PluginDiscoveryBase<WebServicePublisherConfig>
     {
-        public ConfigurationEntry GetConfigurationMetadata()
+        protected override WebServicePublisherConfig GetConfiguration()
         {
-            var template = new WebServicePublisherConfig
-                               {
-                                   BaseUrl = "http://*:802/",
-                                   Enabled = true,
-                                   BaseFolder = "_outbox"
-                               };
-
-            return new ConfigurationEntry
+            return new WebServicePublisherConfig
                        {
-                           Name = "WebServicePublisher",
-                           Description = "This activity is used to publish notifications to another Wolfpack instance.",
-                           ConcreteType = template.GetType().AssemblyQualifiedName,
-                           Data = Serialiser.ToJson(template),
-                           Tags = new List<string> { "Activity", "Publisher" }
+                           BaseUrl = "http://localhost:802/",
+                           Enabled = true,
+                           BaseFolder = "_outbox",
+                           ApiKey = "Leave blank to disable",
+                           FriendlyId = "CHANGEME!",
+                           SendIntervalInSeconds = 10,
+                           UserAgent = string.Empty
                        };
+        }
+
+        protected override void Configure(ConfigurationEntry entry)
+        {
+            entry.Name = "WebServicePublisher";
+            entry.Description = "This activity is used to publish notifications to another Wolfpack instance via the Web REST Api.";
+            entry.Tags.AddIfMissing("Activity", "WebService", "Publisher");
         }
     }
 }

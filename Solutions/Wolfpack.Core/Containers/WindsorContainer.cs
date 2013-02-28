@@ -64,6 +64,12 @@ namespace Wolfpack.Core.Containers
             return this;
         }
 
+        public IContainer RegisterInstance(Type implType, object instance, string name)
+        {
+            _instance.Register(Component.For(implType).Instance(instance).Named(name));
+            return this;
+        }
+
         public IContainer RegisterAll<T>()
             where T : class
         {
