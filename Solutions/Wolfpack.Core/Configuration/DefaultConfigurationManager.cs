@@ -126,7 +126,7 @@ namespace Wolfpack.Core.Configuration
                                  {
                                      Tag = g.Key, 
                                      Count = g.Count()
-                                 });
+                                 }).OrderBy(t => t.Tag);
         }
 
         private IEnumerable<ConfigurationEntry> LoadConfiguration()

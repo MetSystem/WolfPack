@@ -50,7 +50,7 @@ namespace Wolfpack.Contrib.LogParser
                            InterpretZeroRowsAsAFailure = false,
                            MsgErrorMode = EVTLogParserCheckConfig.Defaults.MsgErrorMode,
                            NotificationMode = StateChangeNotificationFilter.FilterName,
-                           Query = LogParserConfigBase.DefaultQueryPropertyText,
+                           Query = "SELECT TOP 50 * FROM APPLICATION",
                            ResolveSIDs = EVTLogParserCheckConfig.Defaults.ResolveSIDs,
                            StringsSep = EVTLogParserCheckConfig.Defaults.StringsSep
                        };

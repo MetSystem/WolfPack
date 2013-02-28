@@ -120,11 +120,13 @@
     <Compile Include="Configuration\ConfigurationManager.cs" />
     <Compile Include="Configuration\ConfigurationManagerBootstrapper.cs" />
     <Compile Include="Configuration\DefaultConfigurationManager.cs" />
+    <Compile Include="Configuration\FileSystem\FileSystemActivityLoader.cs" />
     <Compile Include="Configuration\FileSystem\FileSystemHealthChecksByConventionLoader.cs" />
     <Compile Include="Configuration\FileSystem\FileSystemConfigurationEntry.cs" />
     <Compile Include="Configuration\FileSystem\FileSystemConfigurationRepository.cs" />
     <Compile Include="Configuration\FileSystem\FileSystemScheduleConfigurationRepository.cs" />
     <Compile Include="Configuration\HealthCheckDiscoveryBase.cs" />
+    <Compile Include="Configuration\PluginDiscoveryBase.cs" />
     <Compile Include="Container.cs" />
     <Compile Include="Containers\ContainerPredicates.cs" />
     <Compile Include="Containers\IContainer.cs" />

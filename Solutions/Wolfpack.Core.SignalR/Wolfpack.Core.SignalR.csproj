@@ -71,6 +71,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SignalRActivity.cs" />
     <Compile Include="SignalRBootstrapper.cs" />
+    <Compile Include="SignalRConfigurationDiscovery.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Wolfpack.Core.Interfaces.Magnum\Wolfpack.Core.Interfaces.Magnum.csproj">
@@ -88,16 +89,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="signalr.castle.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy $(TargetDir)Microsoft.AspNet.SignalR.*.* $(SolutionDir)Wolfpack.Agent\bin\Debug /Y /R /I
 xcopy $(TargetDir)Microsoft.Owin.*.dll $(SolutionDir)Wolfpack.Agent\bin\Debug /Y /R /I
 xcopy $(TargetDir)Owin.dll $(SolutionDir)Wolfpack.Agent\bin\Debug /Y /R /I
-xcopy $(TargetDir)*.castle.config $(SolutionDir)Wolfpack.Agent\bin\Debug\Config /Y /R /I</PostBuildEvent>
+</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
