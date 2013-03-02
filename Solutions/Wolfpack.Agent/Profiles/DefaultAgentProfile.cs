@@ -27,9 +27,7 @@ namespace Wolfpack.Agent.Profiles
         {            
             Container
                 .RegisterAllWithInterception<INotificationEventPublisher, IPublisherFilter>()
-                //.RegisterAll<IActivityPlugin>()
                 .RegisterAsSingleton<ILoader<BindingConfiguration>>(typeof(DefaultBindingConfigurationLoader))
-                //.RegisterAsSingleton<ILoader<IHealthCheckSchedulerPlugin>>(typeof(HealthCheckLoader))
                 .RegisterAsSingleton<ILoader<IHealthCheckSchedulerPlugin>>(typeof(ContainerPluginLoader<IHealthCheckSchedulerPlugin>))
                 .RegisterAsSingleton<ILoader<IActivityPlugin>>(typeof(ContainerPluginLoader<IActivityPlugin>))
                 .RegisterAsSingleton<ILoader<INotificationEventPublisher>>(typeof(ContainerPluginLoader<INotificationEventPublisher>))

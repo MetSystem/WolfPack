@@ -7,7 +7,6 @@ using ServiceStack.Common.Extensions;
 using System.Linq;
 using Wolfpack.Core.WebServices.Interfaces;
 using Wolfpack.Core.WebServices.Interfaces.Entities;
-using Wolfpack.Core.WebServices.Strategies;
 
 namespace Wolfpack.Core.WebServices
 {

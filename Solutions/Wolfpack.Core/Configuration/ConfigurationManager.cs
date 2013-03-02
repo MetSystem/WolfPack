@@ -8,6 +8,16 @@ namespace Wolfpack.Core.Configuration
     {
         private static IConfigurationManager _instance;
 
+        public static void Initialise()
+        {
+            if (!Container.IsRegistered<IConfigurationManager>())
+            {
+                Container.RegisterAsSingleton<IConfigurationManager>(typeof(DefaultConfigurationManager));
+            }
+
+            Initialise(Container.Resolve<IConfigurationManager>());
+        }
+
         public static void Initialise(IConfigurationManager instance)
         {
             _instance = instance;

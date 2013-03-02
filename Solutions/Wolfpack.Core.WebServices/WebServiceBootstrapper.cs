@@ -16,9 +16,15 @@ using System.Linq;
 
 namespace Wolfpack.Core.WebServices
 {
-    public class WebServiceBootstrapper : IStartupPlugin
+    public class WebServiceBootstrapper : IStartupPlugin, ICanBeSwitchedOff 
     {
+        public bool Enabled { get; set; }
         public Core.Interfaces.Entities.Status Status { get; set; }
+
+        public WebServiceBootstrapper(WebServiceActivityConfig config)
+        {
+            Enabled = config.Enabled;
+        }
 
         public void Initialise()
         {

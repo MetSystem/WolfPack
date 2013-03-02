@@ -10,15 +10,17 @@ using Omu.ValueInjecter;
 
 namespace Wolfpack.Core.WebServices.Publisher
 {
-    public class WebServicePublisherBootstrapper : IStartupPlugin
+    public class WebServicePublisherBootstrapper : IStartupPlugin, ICanBeSwitchedOff 
     {
         private readonly WebServicePublisherConfig _config;
 
         public WebServicePublisherBootstrapper(WebServicePublisherConfig config)
         {
             _config = config;
+            Enabled = _config.Enabled;
         }
 
+        public bool Enabled { get; set; }
         public Status Status { get; set; }
 
         public void Initialise()

@@ -118,7 +118,6 @@
     <Compile Include="Checks\WindowsServiceStateCheck.cs" />
     <Compile Include="Checks\WmiProcessRunningCheck.cs" />
     <Compile Include="Configuration\ConfigurationManager.cs" />
-    <Compile Include="Configuration\ConfigurationManagerBootstrapper.cs" />
     <Compile Include="Configuration\DefaultConfigurationManager.cs" />
     <Compile Include="Configuration\FileSystem\FileSystemActivityLoader.cs" />
     <Compile Include="Configuration\FileSystem\FileSystemHealthChecksByConventionLoader.cs" />
