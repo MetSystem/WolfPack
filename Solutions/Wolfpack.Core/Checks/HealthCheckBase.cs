@@ -4,9 +4,9 @@ using Wolfpack.Core.Interfaces.Entities;
 namespace Wolfpack.Core.Checks
 {
     /// <summary>
-    /// This provides a base class for legacy style Health Checks that use the original
-    /// mechanism of registering a config component with the container and then Wolfpack
-    /// runtime would use a convention to infer the actual Health Check component to load.
+    /// This provides a base class for Checks that register a config component with 
+    /// the container and then Wolfpack runtime would use a convention to infer the 
+    /// actual Health Check component to load.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public abstract class HealthCheckBase<T> : IHealthCheckPlugin

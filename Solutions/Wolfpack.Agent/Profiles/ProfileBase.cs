@@ -1,4 +1,5 @@
 using Wolfpack.Core;
+using Wolfpack.Core.Configuration;
 using Wolfpack.Core.Interfaces;
 
 namespace Wolfpack.Agent.Profiles
@@ -17,8 +18,8 @@ namespace Wolfpack.Agent.Profiles
         {
             get
             {
-                // this needs to happen first...
-                Messenger.Initialise(new MagnumMessenger());
+                ConfigurationManager.Initialise();
+                Messenger.Initialise();                
 
                 // load and execute all startup plugins
                 // ...not using .SafeInitialise() method as

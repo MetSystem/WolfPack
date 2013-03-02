@@ -14,15 +14,20 @@ namespace Wolfpack.Core
     {
         private static IMessenger _instance;
 
+        public static void Initialise()
+        {
+            if (!Container.IsRegistered<IMessenger>())
+            {
+                Container.RegisterAsSingleton<IMessenger>(typeof(MagnumMessenger));
+            }
+
+            Initialise(Container.Resolve<IMessenger>());
+        }
+
         public static void Initialise(IMessenger instance)
         {
             _instance = instance; 
         }
-
-        //public static IMessenger Publish<T>(T message) where T : class
-        //{
-        //    return _instance.Publish(message);
-        //}
 
         public static IMessenger Publish(NotificationRequest request)
         {

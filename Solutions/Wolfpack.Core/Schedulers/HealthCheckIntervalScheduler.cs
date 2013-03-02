@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using Wolfpack.Core.Interfaces;
 using Wolfpack.Core.Interfaces.Entities;
 using Wolfpack.Core.Notification;
@@ -10,6 +11,7 @@ namespace Wolfpack.Core.Schedulers
         
     }
 
+    [DebuggerDisplay("{Identity.Name}")]
     public class HealthCheckIntervalScheduler : IntervalSchedulerBase, IHealthCheckSchedulerPlugin
     {
         protected IHealthCheckPlugin _healthCheck;
@@ -28,6 +30,8 @@ namespace Wolfpack.Core.Schedulers
                                  ScheduleDescription = string.Format("Every {0} Minutes", myInterval.TotalMinutes)
                              };
         }
+
+        public bool Enabled { get; set; }
 
         public override PluginDescriptor Identity
         {

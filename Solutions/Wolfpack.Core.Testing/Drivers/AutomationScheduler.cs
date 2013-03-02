@@ -11,10 +11,12 @@ namespace Wolfpack.Core.Testing.Drivers
         public bool InitialiseCalled { get; set; }
         public IHealthCheckPlugin Check { get; set; }
         public Status Status { get; set; }
+        public bool Enabled { get; set; }
 
-        public AutomationScheduler(IHealthCheckPlugin check)
+        public AutomationScheduler(IHealthCheckPlugin check, bool enabled = true)
         {
             Check = check;
+            Enabled = enabled;
             Status = Status.For(Identity.Name)
                 .StateIsSuccess();
         }

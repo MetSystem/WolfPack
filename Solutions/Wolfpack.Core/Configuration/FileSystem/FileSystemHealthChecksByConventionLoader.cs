@@ -46,6 +46,13 @@ namespace Wolfpack.Core.Configuration.FileSystem
                         var name = Path.GetFileNameWithoutExtension(e.FileInfo.Name);
                         var checkConfigType = Type.GetType(e.Entry.ConcreteType);
                         var checkConfig = Serialiser.FromJson(e.Entry.Data, checkConfigType);
+
+                        if ((checkConfig is ICanBeSwitchedOff) && !((ICanBeSwitchedOff)checkConfig).Enabled)
+                        {
+                            // disabled plugin
+                            return;
+                        }
+
                         var checkTypeName = checkConfigType.Name.Replace("Config", string.Empty);
 
                         Type checkType;
