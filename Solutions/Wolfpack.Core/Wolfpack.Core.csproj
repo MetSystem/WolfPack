@@ -119,8 +119,9 @@
     <Compile Include="Checks\WmiProcessRunningCheck.cs" />
     <Compile Include="Configuration\ConfigurationManager.cs" />
     <Compile Include="Configuration\DefaultConfigurationManager.cs" />
+    <Compile Include="Configuration\FileSystem\FileSystemPublisherLoader.cs" />
     <Compile Include="Configuration\FileSystem\FileSystemActivityLoader.cs" />
-    <Compile Include="Configuration\FileSystem\FileSystemHealthChecksByConventionLoader.cs" />
+    <Compile Include="Configuration\FileSystem\FileSystemHealthChecksLoader.cs" />
     <Compile Include="Configuration\FileSystem\FileSystemConfigurationEntry.cs" />
     <Compile Include="Configuration\FileSystem\FileSystemConfigurationRepository.cs" />
     <Compile Include="Configuration\FileSystem\FileSystemScheduleConfigurationRepository.cs" />
@@ -137,12 +138,18 @@
     <Compile Include="Database\Oracle\OracleStatement.cs" />
     <Compile Include="Database\SmartConnectionString.cs" />
     <Compile Include="Database\SQLite\SQLiteConfiguration.cs" />
-    <Compile Include="Database\SQLite\SQLitePublishers.cs" />
+    <Compile Include="Database\SQLite\SQLitePublishers.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Database\SQLite\SQLiteStatement.cs" />
-    <Compile Include="Database\SQLite\SqlServerAdhocCommand.cs" />
+    <Compile Include="Database\SQLite\SQLiteAdhocCommand.cs" />
+    <Compile Include="Database\SQLite\SQLitePublisherConfigurationDiscovery.cs" />
     <Compile Include="Database\SqlServer\SqlServerAdhocCommand.cs" />
     <Compile Include="Database\SqlServer\SqlServerConfiguration.cs" />
-    <Compile Include="Database\SqlServer\SqlServerPublishers.cs" />
+    <Compile Include="Database\SqlServer\SqlServerPublisherConfigurationDiscovery.cs" />
+    <Compile Include="Database\SqlServer\SqlServerPublishers.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Database\SqlServer\SqlServerStatement.cs" />
     <Compile Include="Database\SqlStatementBase.cs" />
     <Compile Include="Database\TableSchema.cs" />
@@ -157,10 +164,8 @@
     <Compile Include="Growl\Formatters\DefaultGrowlHealthCheckFormatter.cs" />
     <Compile Include="Growl\Formatters\GrowlCountFormatter.cs" />
     <Compile Include="Growl\GrowlConfiguration.cs" />
-    <Compile Include="Growl\GrowlConnection.cs" />
     <Compile Include="Growl\GrowlPublisher.cs" />
-    <Compile Include="Growl\GrowlBootstrapper.cs" />
-    <Compile Include="Growl\IGrowlConnection.cs" />
+    <Compile Include="Growl\GrowlPublisherConfigurationDiscovery.cs" />
     <Compile Include="Growl\IGrowlNotificationFormatter.cs" />
     <Compile Include="Hosts\PluginHostBase.cs" />
     <Compile Include="InterceptorSelector.cs" />

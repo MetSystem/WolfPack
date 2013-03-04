@@ -104,9 +104,6 @@
     <None Include="Config\Activities\WolfpackWebService.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Config\binding.castle.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="Config\Checks\EveryMinute\Notepad-Running.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -126,12 +123,13 @@
     <None Include="Config\log4net.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Config\Publishers\sqlserver.castle.config">
-      <SubType>Designer</SubType>
+    <None Include="Config\Publishers\GrowlPublisher.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Config\Publishers\sqlite.castle.config">
-      <SubType>Designer</SubType>
+    <None Include="Config\Publishers\SQLitePublisher.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Config\Publishers\SqlServerPublisher.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Config\role.castle.config">

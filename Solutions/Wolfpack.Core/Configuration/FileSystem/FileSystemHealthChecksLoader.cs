@@ -7,9 +7,9 @@ using System.Linq;
 
 namespace Wolfpack.Core.Configuration.FileSystem
 {
-    public class FileSystemHealthChecksByConventionLoader : FileSystemConfigurationRepository
+    public class FileSystemHealthChecksLoader : FileSystemConfigurationRepository
     {
-        public FileSystemHealthChecksByConventionLoader(string baseFolder)
+        public FileSystemHealthChecksLoader(string baseFolder)
             : base(baseFolder)
         {
         }
@@ -25,7 +25,7 @@ namespace Wolfpack.Core.Configuration.FileSystem
                         {
                             shouldLoad = false;
 
-                            Logger.Warning(Logger.Event.During("FileSystemHealthChecksByConventionLoader.ProcessEntries")
+                            Logger.Warning(Logger.Event.During("FileSystemHealthChecksLoader.ProcessEntries")
                                 .Description("HealthCheck configuration file '{0}' is not following convention - it should be located in a schedule-named sub folder of {1}. ** Configuration has not been loaded **",
                                 e.FileInfo.FullName, _baseFolder));
                         }
@@ -46,6 +46,7 @@ namespace Wolfpack.Core.Configuration.FileSystem
                         var name = Path.GetFileNameWithoutExtension(e.FileInfo.Name);
                         var checkConfigType = Type.GetType(e.Entry.ConcreteType);
                         var checkConfig = Serialiser.FromJson(e.Entry.Data, checkConfigType);
+                        var scheduleConfigName = e.FileInfo.Directory.Name;
 
                         if ((checkConfig is ICanBeSwitchedOff) && !((ICanBeSwitchedOff)checkConfig).Enabled)
                         {
@@ -53,37 +54,39 @@ namespace Wolfpack.Core.Configuration.FileSystem
                             return;
                         }
 
+                        // probe for convention based component
                         var checkTypeName = checkConfigType.Name.Replace("Config", string.Empty);
 
                         Type checkType;
-                        if (!GetType<IHealthCheckPlugin>(checkTypeName, out checkType))
-                            throw new InvalidOperationException(
-                                string.Format("Searching for type name '{0}'; found no matches. Check the name of the folder", checkTypeName));
-                        var check = Activator.CreateInstance(checkType, checkConfig);
+                        if (GetType<IHealthCheckPlugin>(checkTypeName, out checkType))
+                        {
+                            // found it...
+                            var check = Activator.CreateInstance(checkType, checkConfig);
 
+                            // associate with a scheduler component
+                            var schedulerConfig = Container.Resolve(scheduleConfigName);
+                            var schedulerTypeName = schedulerConfig.GetType().Name.Replace("Config", string.Empty);
 
+                            Type schedulerType;
+                            if (!GetType<IHealthCheckSchedulerPlugin>(schedulerTypeName, out schedulerType))
+                                throw new InvalidOperationException(
+                                    string.Format(
+                                        "Searching for type name '{0}'; found no matches. Check the name of the folder",
+                                        schedulerTypeName));
 
-                        var scheduleConfigName = e.FileInfo.Directory.Name;
-                        var schedulerConfig = Container.Resolve(scheduleConfigName);
-                        var schedulerTypeName = schedulerConfig.GetType().Name.Replace("Config", string.Empty);
+                            var scheduler = Activator.CreateInstance(schedulerType, check, schedulerConfig) as
+                                            IHealthCheckSchedulerPlugin;
 
-                        Type schedulerType;
-                        if (!GetType<IHealthCheckSchedulerPlugin>(schedulerTypeName, out schedulerType))
-                            throw new InvalidOperationException(
-                                string.Format(
-                                    "Searching for type name '{0}'; found no matches. Check the name of the folder",
-                                    schedulerTypeName));
-
-
-
-                        var scheduler = Activator.CreateInstance(schedulerType, check, schedulerConfig) as
-                                        IHealthCheckSchedulerPlugin;
-
-
-
-                        Logger.Debug("\tAdding Scheduler Instance '{0}' running HealthCheck '{1}' named '{2}' to container...",
-                            scheduler.GetType().Name, checkTypeName, name);
-                        Container.RegisterInstance(scheduler, name);
+                            Logger.Debug("\tAdding Scheduler Instance '{0}' running HealthCheck '{1}' named '{2}' to container...",
+                                scheduler.GetType().Name, checkTypeName, name);
+                            Container.RegisterInstance(scheduler, name);
+                        }
+                        else
+                        {
+                            // just register the configuration component, something else 
+                            // might be expecting it eg: a bootstrapper component
+                            Container.RegisterInstance(checkConfig, name);
+                        }
 
                         e.Entry.RequiredProperties.AddIfMissing(
                             Tuple.Create(ConfigurationEntry.RequiredPropertyNames.Scheduler, scheduleConfigName),

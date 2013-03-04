@@ -25,9 +25,8 @@ namespace Wolfpack.Agent.Profiles
 
         public override void CustomiseRole()
         {            
-            Container
-                .RegisterAllWithInterception<INotificationEventPublisher, IPublisherFilter>()
-                .RegisterAsSingleton<ILoader<BindingConfiguration>>(typeof(DefaultBindingConfigurationLoader))
+            Container.RegisterAllWithInterception<INotificationEventPublisher, IPublisherFilter>()
+                //.RegisterAsSingleton<ILoader<BindingConfiguration>>(typeof(DefaultBindingConfigurationLoader))
                 .RegisterAsSingleton<ILoader<IHealthCheckSchedulerPlugin>>(typeof(ContainerPluginLoader<IHealthCheckSchedulerPlugin>))
                 .RegisterAsSingleton<ILoader<IActivityPlugin>>(typeof(ContainerPluginLoader<IActivityPlugin>))
                 .RegisterAsSingleton<ILoader<INotificationEventPublisher>>(typeof(ContainerPluginLoader<INotificationEventPublisher>))
