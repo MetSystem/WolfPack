@@ -46,7 +46,7 @@ namespace Wolfpack.Core.WebServices
         {
             entry.Name = "WebServicePublisher";
             entry.Description = "This activity is used to publish notifications to another Wolfpack instance via the Web REST Api.";
-            entry.Tags.AddIfMissing("Activity", "WebService", "Publisher");
+            entry.Tags.AddIfMissing("Activity", "WebService");
         }
     }
 }
