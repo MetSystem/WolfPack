@@ -100,7 +100,9 @@
     <None Include="Config\Activities\SignalR-Host.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Config\Activities\WolfpackPublisher.config" />
+    <None Include="Config\Activities\WolfpackPublisher.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Config\Activities\WolfpackWebService.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

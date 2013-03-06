@@ -49,6 +49,7 @@ namespace Wolfpack.Core.Configuration
                 if (_restartPending)
                     throw new InvalidOperationException(string.Format("Restart in progress"));
 
+                update.Entry.Tags.RemoveAll(SpecialTags.ThatShouldNotBePersisted);
                 _pendingChanges.Add(update);
             }
         }

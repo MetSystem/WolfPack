@@ -1,70 +1,110 @@
 using System;
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
+using Wolfpack.Core.Configuration;
+using Wolfpack.Core.Interfaces;
 using Wolfpack.Core.Interfaces.Entities;
 using Wolfpack.Core.Notification;
+using System.Linq;
+using Wolfpack.Core.Notification.Filters.Request;
 
 namespace Wolfpack.Core.Checks
 {
+    public class HostPingCheckConfig : PluginConfigBase, ISupportNotificationMode, ISupportNotificationThreshold
+    {
+        public List<string> Hosts { get; set; } 
+        public string NotificationMode { get; set; }
+        public double? NotificationThreshold { get; set; }
+    }
+
+    public class HostPingCheckConfigurationAdvertiser : HealthCheckDiscoveryBase<HostPingCheckConfig>
+    {
+        protected override HostPingCheckConfig GetConfiguration()
+        {
+            return new HostPingCheckConfig
+                       {
+                           Enabled = true,
+                           FriendlyId = "HostPing",
+                           Hosts = new List<string> {"", ""},
+                           NotificationMode = StateChangeNotificationFilter.FilterName,
+                           NotificationThreshold = 100
+                       };
+        }
+
+        protected override void Configure(ConfigurationEntry entry)
+        {
+            entry.Name = "HostPing";
+            entry.Description =
+                "Pings a host with an ICMP message and raises an alert if the response is not received or is too slow.";
+            entry.Tags.AddIfMissing(SpecialTags.HealthCheck, "ICMP", "Ping");
+        }
+    }
+
     /// <summary>
     /// Pings a set of hosts with an ICMP message
     /// </summary>
-    public class HostPingCheck : HealthCheckBaseEx
+    public class HostPingCheck : ThresholdCheckBase<HostPingCheckConfig>
     {
-        protected int? _timeout;
-        protected List<string> _hosts;
-
         /// <summary>
         /// default ctor
         /// </summary>
-        public HostPingCheck(string friendlyId, 
-            bool enabled,
-            string notificationMode,
-            int? timeout,
-            List<string> hosts)
-            : base(friendlyId, enabled, notificationMode,
-            new Guid("F29826F2-8930-4E76-8710-47F0C08A4461"),
-            "Pings a host with an ICMP message and raises an alert if no response is returned")
+        public HostPingCheck(HostPingCheckConfig config)
+            : base(config)
         {
-            _timeout = timeout;
-            _hosts = hosts;
         }
        
         public override void Initialise()
         {
             Logger.Debug("Initialising HostPingCheck check for...");
-            _hosts.ForEach(host => Logger.Debug("\t{0}", host));
+            _config.Hosts.ForEach(host => Logger.Debug("\t{0}", host));
         }
 
         public override void Execute()
         {
             Logger.Debug("HostPingCheck is pinging...");
 
-            _hosts.ForEach(host =>
+            _config.Hosts.ForEach(host =>
                                 {
                                     using (var pinger = new Ping())
                                     {
-                                        var reply = _timeout.HasValue 
-                                                              ? pinger.Send(host, _timeout.Value) 
+                                        var reply = _config.NotificationThreshold.HasValue
+                                                              ? pinger.Send(host, (int)_config.NotificationThreshold.Value) 
                                                               : pinger.Send(host);
 
                                         var data = HealthCheckData.For(Identity, "Successfully pinged host '{0}'",
                                                                          host)
                                             .Succeeded()
                                             .ResultCountIs(reply.RoundtripTime)
-                                            .AddTag(host)
-                                            .AddTag(reply.Status.ToString());
+                                            .DisplayUnitIs("ms")
+                                            .AddProperty("host", host)
+                                            .AddProperty("status", reply.Status.ToString());
 
                                         if (reply.Status != IPStatus.Success)
                                         {
-                                            data.Info = string.Format("Failure ({0}) pinging host {1}", reply.Status,
-                                                                        host);
+                                            data.Info = string.Format("Failure ({0}) pinging host {1}", reply.Status, host);
                                             data.Failed();
                                         }
 
-                                        Messenger.Publish(NotificationRequestBuilder.For(NotificationMode, data).Build());
+                                        Publish(NotificationRequestBuilder.For(_config.NotificationMode, data, 
+                                            BuildKeyWithHostName).Build());
                                     }
                                 });
+        }
+
+        private static void BuildKeyWithHostName(NotificationRequest request)
+        {
+            request.DataKeyGenerator = (message => string.Format("{0}_{1}", message.CheckId, 
+                message.Properties["host"]));
+        }
+
+        protected override PluginDescriptor BuildIdentity()
+        {
+            return new PluginDescriptor
+                       {
+                           Name = _config.FriendlyId,
+                           Description = "Pings a host with an ICMP message and raises an alert if no response is returned",
+                           TypeId = new Guid("F29826F2-8930-4E76-8710-47F0C08A4461")
+                       };
         }
     }
 }

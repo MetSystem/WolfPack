@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace Wolfpack.Core.Interfaces.Entities
 {
+    [DebuggerDisplay("{CheckId}")]
     public class NotificationRequest
     {
         public string Mode { get; set; }

@@ -8,7 +8,7 @@ namespace Wolfpack.Core.Configuration
     {
         public override List<string> GetTags()
         {
-            return new List<string>{ PluginTypes.HealthCheck };
+            return new List<string>{ SpecialTags.HealthCheck };
         }
 
         public override Properties GetRequiredProperties()

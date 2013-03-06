@@ -98,7 +98,7 @@ namespace Wolfpack.Core.Configuration.FileSystem
 
         public override void Save(ConfigurationChangeRequest change)
         {
-            if (!change.Entry.Tags.ContainsAll(PluginTypes.HealthCheck))
+            if (!change.Entry.Tags.ContainsAll(SpecialTags.HealthCheck))
                 return;
 
             string scheduler;
