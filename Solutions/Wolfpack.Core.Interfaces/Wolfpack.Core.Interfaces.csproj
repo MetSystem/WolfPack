@@ -52,7 +52,7 @@
     <Compile Include="Entities\RestartServiceInstruction.cs" />
     <Compile Include="Entities\SystemCommand.cs" />
     <Compile Include="Entities\NameValuePair.cs" />
-    <Compile Include="Entities\PluginTypes.cs" />
+    <Compile Include="Entities\SpecialTags.cs" />
     <Compile Include="Entities\TagCloudEntry.cs" />
     <Compile Include="IConfigurationManager.cs" />
     <Compile Include="INotificationRepositoryQuery.cs" />

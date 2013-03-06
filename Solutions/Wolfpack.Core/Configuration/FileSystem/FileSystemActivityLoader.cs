@@ -50,7 +50,7 @@ namespace Wolfpack.Core.Configuration.FileSystem
 
         public override void Save(ConfigurationChangeRequest change)
         {
-            if (!change.Entry.Tags.ContainsAll(PluginTypes.Activity))
+            if (!change.Entry.Tags.ContainsAll(SpecialTags.Activity))
                 return;
 
             var filepath = Path.Combine(_baseFolder, Path.ChangeExtension(change.Entry.Name, ConfigFileExtension));

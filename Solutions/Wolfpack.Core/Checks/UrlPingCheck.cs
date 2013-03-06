@@ -111,8 +111,9 @@ namespace Wolfpack.Core.Checks
                                 Publish(NotificationRequestBuilder.For(_config.NotificationMode, HealthCheckData.For(Identity,
                                     "Pinged url '{0}'", url)
                                     .Succeeded()
+                                    .DisplayUnitIs("ms")
                                     .AddProperty("url", url)
-                                    .ResultCountIs(timer.ElapsedMilliseconds))
+                                    .ResultCountIs(timer.ElapsedMilliseconds), BuildKeyFromUrl)
                                     .Build());
                             }
                             catch (WebException wex)
@@ -129,11 +130,17 @@ namespace Wolfpack.Core.Checks
                                 Publish(NotificationRequestBuilder.For(_config.NotificationMode, HealthCheckData.For(Identity,
                                     "Url '{0}' failed with code '{1}'{2}", url, wex.Status,
                                     extraInfo)
-                                    .Failed())
+                                    .Failed(), BuildKeyFromUrl)
                                     .Build());
                             }
                         }
                     });
+        }
+
+        private static void BuildKeyFromUrl(NotificationRequest request)
+        {
+            request.DataKeyGenerator = (message => string.Format("{0}_{1}", message.CheckId,
+                message.Properties["url"]));
         }
 
         protected override PluginDescriptor BuildIdentity()

@@ -20,7 +20,7 @@ namespace Wolfpack.Core.Database.SqlServer
         {
             entry.Name = "SqlServerPublisher";
             entry.Description = "Publishes Notification events to a SqlServer compatible database";
-            entry.Tags.AddIfMissing(PluginTypes.Publisher, "SqlServer");
+            entry.Tags.AddIfMissing(SpecialTags.Publisher, "SqlServer");
         }
     }
 }

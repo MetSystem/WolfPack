@@ -19,7 +19,7 @@ namespace Wolfpack.Core.Database.SQLite
         {
             entry.Name = "SQLitePublisher";
             entry.Description = "Publishes Notification events to a SQLite database";
-            entry.Tags.AddIfMissing(PluginTypes.Publisher, "SQLite");
+            entry.Tags.AddIfMissing(SpecialTags.Publisher, "SQLite");
         }
     }
 }

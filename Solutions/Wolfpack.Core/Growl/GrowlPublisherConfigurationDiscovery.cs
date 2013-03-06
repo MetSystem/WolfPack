@@ -25,7 +25,7 @@ namespace Wolfpack.Core.Growl
         {
             entry.Name = "GrowlPublisher";
             entry.Description = "This will publish Notifications to Growl.";
-            entry.Tags.AddIfMissing(PluginTypes.Publisher, "Growl");
+            entry.Tags.AddIfMissing(SpecialTags.Publisher, "Growl");
         }
     }
 }
