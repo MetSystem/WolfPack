@@ -109,10 +109,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{1B65B8C2
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wolfpack.Core.WebServices", "Wolfpack.Core.WebServices\Wolfpack.Core.WebServices.csproj", "{BAA3F1D4-196E-4683-A302-557FEC4465F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wolfpack.Contrib.LogParser", "Wolfpack.Contrib.LogParser\Wolfpack.Contrib.LogParser.csproj", "{4B298374-8549-47E0-8D35-F3560F72FCE1}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wolfpack.Contrib.LogParser.Tests", "Wolfpack.Contrib.LogParser.Tests\Wolfpack.Contrib.LogParser.Tests.csproj", "{4E587C79-95AA-41DE-8C05-0D1BB33A48A0}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wolfpack.Core.WebServices.Interfaces", "Wolfpack.Core.WebServices.Interfaces\Wolfpack.Core.WebServices.Interfaces.csproj", "{DDC40CE0-D9A2-4847-893C-AF7ECBCF0FE6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Wolfpack.WebServices", "Wolfpack.WebServices", "{F767A53C-845F-421B-BFEA-E6B6CAA31061}"
@@ -233,26 +229,6 @@ Global
 		{BAA3F1D4-196E-4683-A302-557FEC4465F9}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{BAA3F1D4-196E-4683-A302-557FEC4465F9}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{BAA3F1D4-196E-4683-A302-557FEC4465F9}.Release|x86.ActiveCfg = Release|Any CPU
-		{4B298374-8549-47E0-8D35-F3560F72FCE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4B298374-8549-47E0-8D35-F3560F72FCE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4B298374-8549-47E0-8D35-F3560F72FCE1}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{4B298374-8549-47E0-8D35-F3560F72FCE1}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{4B298374-8549-47E0-8D35-F3560F72FCE1}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{4B298374-8549-47E0-8D35-F3560F72FCE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4B298374-8549-47E0-8D35-F3560F72FCE1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4B298374-8549-47E0-8D35-F3560F72FCE1}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{4B298374-8549-47E0-8D35-F3560F72FCE1}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{4B298374-8549-47E0-8D35-F3560F72FCE1}.Release|x86.ActiveCfg = Release|Any CPU
-		{4E587C79-95AA-41DE-8C05-0D1BB33A48A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4E587C79-95AA-41DE-8C05-0D1BB33A48A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4E587C79-95AA-41DE-8C05-0D1BB33A48A0}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{4E587C79-95AA-41DE-8C05-0D1BB33A48A0}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{4E587C79-95AA-41DE-8C05-0D1BB33A48A0}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{4E587C79-95AA-41DE-8C05-0D1BB33A48A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4E587C79-95AA-41DE-8C05-0D1BB33A48A0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4E587C79-95AA-41DE-8C05-0D1BB33A48A0}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{4E587C79-95AA-41DE-8C05-0D1BB33A48A0}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{4E587C79-95AA-41DE-8C05-0D1BB33A48A0}.Release|x86.ActiveCfg = Release|Any CPU
 		{DDC40CE0-D9A2-4847-893C-AF7ECBCF0FE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DDC40CE0-D9A2-4847-893C-AF7ECBCF0FE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DDC40CE0-D9A2-4847-893C-AF7ECBCF0FE6}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
