@@ -48,7 +48,7 @@ namespace Wolfpack.Core
             return _container.RegisterInstance(implType, instance, name);
         }
 
-        public static IContainer RegisterInstance<T>(T instance)
+        public static IContainer RegisterInstance<T>(T instance, bool overwrite = false)
             where T : class
         {
             return _container.RegisterInstance(instance);

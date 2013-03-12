@@ -128,9 +128,9 @@ namespace Wolfpack.Core.Checks
                                 }
 
                                 Publish(NotificationRequestBuilder.For(_config.NotificationMode, HealthCheckData.For(Identity,
-                                    "Url '{0}' failed with code '{1}'{2}", url, wex.Status,
-                                    extraInfo)
-                                    .Failed(), BuildKeyFromUrl)
+                                    "Url '{0}' failed with code '{1}'{2}", url, wex.Status, extraInfo)
+                                    .Failed()
+                                    .AddProperty("url", url), BuildKeyFromUrl)
                                     .Build());
                             }
                         }

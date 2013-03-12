@@ -22,7 +22,7 @@ namespace Wolfpack.Core.Interfaces.Entities
         public string DisplayUnit { get; set; }
 
         public DateTime GeneratedOnUtc { get; set; }
-        public DateTime ReceivedOnUtc { get; set; }
+        public DateTime? ReceivedOnUtc { get; set; }
         public Guid Version { get; set; }
         public List<string> Tags { get; set; }
 

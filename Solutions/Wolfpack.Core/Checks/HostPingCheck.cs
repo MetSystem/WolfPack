@@ -5,7 +5,6 @@ using Wolfpack.Core.Configuration;
 using Wolfpack.Core.Interfaces;
 using Wolfpack.Core.Interfaces.Entities;
 using Wolfpack.Core.Notification;
-using System.Linq;
 using Wolfpack.Core.Notification.Filters.Request;
 
 namespace Wolfpack.Core.Checks
@@ -25,7 +24,7 @@ namespace Wolfpack.Core.Checks
                        {
                            Enabled = true,
                            FriendlyId = "HostPing",
-                           Hosts = new List<string> {"", ""},
+                           Hosts = new List<string> {"localhost", "AddMoreServersHere"},
                            NotificationMode = StateChangeNotificationFilter.FilterName,
                            NotificationThreshold = 100
                        };

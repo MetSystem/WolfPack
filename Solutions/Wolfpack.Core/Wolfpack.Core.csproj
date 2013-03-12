@@ -191,8 +191,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Publishers\FilteredResultPublisherBase.cs" />
     <Compile Include="Publishers\PublisherBase.cs" />
+    <Compile Include="Repositories\EfDatabase\EfDbContext.cs" />
+    <Compile Include="Repositories\EfDatabase\EfDbRepository.cs" />
+    <Compile Include="Repositories\EfDatabase\IEfDbContext.cs" />
     <Compile Include="Repositories\FileSystem\FileSystemNotificationRepositoryConfig.cs" />
     <Compile Include="Repositories\FileSystem\FileSystemNotificationRepository.cs" />
+    <Compile Include="Repositories\Queries\NotificationByIdQuery.cs" />
     <Compile Include="Repositories\Queries\NotificationHasTagsQuery.cs" />
     <Compile Include="Schedulers\DateTimeExtensions.cs" />
     <Compile Include="Schedulers\FakeNow.cs" />

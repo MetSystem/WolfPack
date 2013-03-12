@@ -88,7 +88,10 @@ namespace Wolfpack.Core.WebServices
             if (message.EventType == NotificationEventAgentStart.EventTypeName)
             {
                 var agentstart = Serialiser.FromJson<NotificationEventAgentStart>(message.Data);
-                Container.RegisterInstance(agentstart);
+
+                // possible to get multiple start messages - they could have been
+                // backed up on the client so just keep overwriting this one.
+                Container.RegisterInstance(agentstart, true);
             }
         }
     }
