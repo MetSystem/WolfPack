@@ -15,14 +15,14 @@ namespace Wolfpack.Core.Repositories.FileSystem
             _config = config;
         }
 
-        public void Save<T>(T message) where T : NotificationEvent
+        public void Add(NotificationEvent notification)
         {
-            var filename = MakeItemFilename(message.Id);
+            var filename = MakeItemFilename(notification.Id);
 
             Directory.CreateDirectory(Path.GetDirectoryName(filename));
-            Serialiser.ToJsonInFile(filename, message);
+            Serialiser.ToJsonInFile(filename, notification);
 
-            Logger.Debug("Stored Notification ({0}): {1}", message.EventType, filename);
+            Logger.Debug("Stored Notification ({0}): {1}", notification.EventType, filename);
         }
 
         private string MakeItemFilename(Guid id)

@@ -41,8 +41,9 @@ namespace Wolfpack.Core.WebServices.Publisher
 
         public void Consume(NotificationEvent message)
         {
+            // store and forward...
             message.Tags.AddIfMissing("Queued");
-            _notificationRepository.Save(message);
+            _notificationRepository.Add(message);
         }
 
         public override PluginDescriptor Identity

@@ -50,10 +50,12 @@ namespace Wolfpack.Core.Containers
             return this;
         }
 
-        public IContainer RegisterInstance<T>(T instance)
+        public IContainer RegisterInstance<T>(T instance, bool overwrite = false)
             where T : class
         {
-            _instance.Register(Component.For<T>().Instance(instance));
+            _instance.Register(overwrite
+                                   ? Component.For<T>().Instance(instance).OverWrite()
+                                   : Component.For<T>().Instance(instance));
             return this;
         }
 
@@ -100,7 +102,7 @@ namespace Wolfpack.Core.Containers
 
         public object Resolve(string componentName)
         {
-            return _instance.Resolve(componentName, new Dictionary<string, string>());
+            return _instance.Resolve<object>(componentName, new Dictionary<string, string>());
         }
 
         public T Resolve<T>()

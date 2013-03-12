@@ -17,7 +17,7 @@ namespace Wolfpack.Core.Interfaces.Entities
         public double? ResultCount { get; set; }
         public string DisplayUnit { get; set; }
         public DateTime GeneratedOnUtc { get; set; }
-        public DateTime ReceivedOnUtc { get; set; }
+        public DateTime? ReceivedOnUtc { get; set; }
         public List<string> Tags { get; set; }
         public int? HourBucket { get; set; }
         public int? MinuteBucket { get; set; }

@@ -15,7 +15,7 @@ namespace Wolfpack.Core.Interfaces
         double? ResultCount { get; set; }
         string DisplayUnit { get; set; }
         DateTime GeneratedOnUtc { get; set; }
-        DateTime ReceivedOnUtc { get; set; }
+        DateTime? ReceivedOnUtc { get; set; }
         Guid Version { get; set; }
         List<string> Tags { get; set; }
         int? HourBucket { get; set; }

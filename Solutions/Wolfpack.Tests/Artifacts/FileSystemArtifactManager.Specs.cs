@@ -12,7 +12,7 @@ namespace Wolfpack.Tests.Artifacts
         protected override Feature DescribeFeature()
         {
             return new Story("Ensuing the FileSystemArtifactManager behaves correctly")
-                .InOrderTo("Save artifact data to the file system")
+                .InOrderTo("Add artifact data to the file system")
                 .AsA("producer or consumer of artifact data")
                 .IWant("the file system artifact manager to handle this for me")
                 .Tag("ArtifactManager");
