@@ -12,7 +12,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Provides the necessary interfaces and base classes to create your own custom Wolfpack HealthChecks.</description>
     <summary>Provides the necessary interfaces and base classes to create your own custom Wolfpack HealthChecks.</summary>
-    <language>en-US</language>
+    <language>en-GB</language>
     <tags>Wolfpack Monitoring</tags>
   </metadata>
 </package>

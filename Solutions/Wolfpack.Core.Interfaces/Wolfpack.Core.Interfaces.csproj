@@ -48,6 +48,7 @@
     </Compile>
     <Compile Include="Entities\ConfigurationActions.cs" />
     <Compile Include="Entities\ConfigurationChangeRequest.cs" />
+    <Compile Include="Entities\MessageStateTypes.cs" />
     <Compile Include="Entities\RestartConsoleInstruction.cs" />
     <Compile Include="Entities\RestartServiceInstruction.cs" />
     <Compile Include="Entities\SystemCommand.cs" />

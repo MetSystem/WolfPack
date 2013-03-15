@@ -13,7 +13,7 @@ namespace Wolfpack.Core.Repositories.Queries
             _tags = tags;
         }
 
-        public IQueryable<NotificationEvent> Query(IQueryable<NotificationEvent> data)
+        public IQueryable<NotificationEvent> Filter(IQueryable<NotificationEvent> data)
         {
             return data.Where(msg => msg.Tags.ContainsAll(_tags));
         }

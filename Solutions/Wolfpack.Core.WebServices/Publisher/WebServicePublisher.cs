@@ -42,7 +42,7 @@ namespace Wolfpack.Core.WebServices.Publisher
         public void Consume(NotificationEvent message)
         {
             // store and forward...
-            message.Tags.AddIfMissing("Queued");
+            message.State = MessageStateTypes.Queued;
             _notificationRepository.Add(message);
         }
 
@@ -61,7 +61,6 @@ namespace Wolfpack.Core.WebServices.Publisher
 
         protected override void Execute()
         {
-            //Logger.Debug("{0} executing...", GetType().Name);
             _strategy.Execute();
         }
     }

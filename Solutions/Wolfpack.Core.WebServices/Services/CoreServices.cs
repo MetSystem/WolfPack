@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ServiceStack.Common.Web;
 using ServiceStack.ServiceInterface;
 using Wolfpack.Core.Interfaces.Entities;
@@ -37,10 +38,14 @@ namespace Wolfpack.Core.WebServices.Services
         /// <param name="request"></param>
         /// <returns></returns>
         public NotificationEventResponse Post(NotificationEvent request)
-        {            
+        {
+            request.State = MessageStateTypes.Delivered;
+            request.ReceivedOnUtc = DateTime.UtcNow;
+
             //Messenger.Publish(request);
             Logger.Info("Received Notification ({0}) {1}", request.EventType, request.Id);
             _strategy.Execute(request);
+
             return new NotificationEventResponse();
         }
 

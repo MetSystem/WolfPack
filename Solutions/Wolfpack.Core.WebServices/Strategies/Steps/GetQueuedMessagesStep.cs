@@ -20,7 +20,7 @@ namespace Wolfpack.Core.WebServices.Strategies.Steps
 
         public override void Execute(WebServicePublisherContext context)
         {
-            var messages = _repository.Query(new NotificationHasTagsQuery("Queued"))
+            var messages = _repository.Filter(new NotificationByStateQuery(MessageStateTypes.Queued))
                 .OrderBy(msg => msg.GeneratedOnUtc)
                 .ToList();
 

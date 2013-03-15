@@ -55,9 +55,6 @@
       <HintPath>..\packages\Magnum.2.0.1.0\lib\NET40\Magnum.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.ServiceModel.Web">
-      <HintPath>..\References\WCF-REST\Microsoft.ServiceModel.Web.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -79,7 +76,6 @@
     <Reference Include="System.Messaging" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
-    <Reference Include="System.ServiceModel.Web" />
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
@@ -196,8 +192,9 @@
     <Compile Include="Repositories\EfDatabase\IEfDbContext.cs" />
     <Compile Include="Repositories\FileSystem\FileSystemNotificationRepositoryConfig.cs" />
     <Compile Include="Repositories\FileSystem\FileSystemNotificationRepository.cs" />
-    <Compile Include="Repositories\Queries\NotificationByIdQuery.cs" />
-    <Compile Include="Repositories\Queries\NotificationHasTagsQuery.cs" />
+    <Compile Include="Repositories\Plugins\NotificationStateFilter.cs" />
+    <Compile Include="Repositories\Plugins\NotificationIdFilter.cs" />
+    <Compile Include="Repositories\Plugins\NotificationTagsFilter.cs" />
     <Compile Include="Schedulers\DateTimeExtensions.cs" />
     <Compile Include="Schedulers\FakeNow.cs" />
     <Compile Include="Schedulers\HealthCheckIntervalScheduler.cs" />

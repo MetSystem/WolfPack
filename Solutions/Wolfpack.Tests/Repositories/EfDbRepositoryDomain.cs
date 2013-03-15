@@ -14,6 +14,8 @@ namespace Wolfpack.Tests.Repositories
         private readonly EfDbContext _dbContext;
         private readonly EfDbRepository _sut;
 
+        private IQueryable<NotificationEvent> _queryResults;
+
         public override void Dispose()
         {           
         }
@@ -41,7 +43,17 @@ namespace Wolfpack.Tests.Repositories
 
         public void TheNotificationWithId_ShouldBeInTheNotificationTable(Guid id)
         {
-            Assert.That(_sut.Query(new NotificationByIdQuery(id)).Count(), Is.EqualTo(1));
+            Assert.That(_sut.Filter(new NotificationByIdQuery(id)).Count(), Is.EqualTo(1));
+        }
+
+        public void TheQueryForId_AndState_IsExecuted(Guid id, MessageStateTypes state)
+        {
+            _queryResults = _sut.Filter(new NotificationByIdQuery(id), new NotificationByStateQuery(state));
+        }
+
+        public void TheQueryResultsShouldHave_Items(int expected)
+        {
+            Assert.That(_queryResults.Count(), Is.EqualTo(expected));
         }
     }
 }
