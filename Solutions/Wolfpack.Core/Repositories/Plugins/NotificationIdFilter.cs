@@ -14,7 +14,7 @@ namespace Wolfpack.Core.Repositories.Queries
             _id = id;
         }
 
-        public IQueryable<NotificationEvent> Query(IQueryable<NotificationEvent> data)
+        public IQueryable<NotificationEvent> Filter(IQueryable<NotificationEvent> data)
         {
             return data.Where(msg => msg.Id == _id);
         }

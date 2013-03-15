@@ -13,6 +13,7 @@ namespace Wolfpack.Core.Interfaces.Entities
         public string AgentId { get; set; }
         public string CheckId { get; set; }
         public string Message { get; set; }
+        public MessageStateTypes State { get; set; }
 
         public bool CriticalFailure { get; set; }
         public CriticalFailureDetails CriticalFailureDetails { get; set; }

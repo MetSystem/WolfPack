@@ -27,6 +27,7 @@ namespace Wolfpack.Core.Interfaces.Entities
         public string Data { get; set; }
         public Guid Version { get; set; }
         public Properties Properties { get; set; }
+        public MessageStateTypes State { get; set; }
 
         public NotificationEvent()
         {

@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using Wolfpack.Core.Interfaces;
 using Wolfpack.Core.Interfaces.Entities;
+using Castle.Core.Internal;
 
 namespace Wolfpack.Core.Repositories.FileSystem
 {
@@ -13,6 +14,17 @@ namespace Wolfpack.Core.Repositories.FileSystem
         public FileSystemNotificationRepository(FileSystemNotificationRepositoryConfig config)
         {
             _config = config;
+        }
+
+        public bool GetById(Guid id, out NotificationEvent notification)
+        {
+            notification = LoadAll().FirstOrDefault(n => n.Id.Equals(id));
+            return notification != null;
+        }
+
+        public IQueryable<NotificationEvent> GetByState(MessageStateTypes state)
+        {
+            return LoadAll().Where(n => n.State.Equals(state));
         }
 
         public void Add(NotificationEvent notification)
@@ -37,13 +49,13 @@ namespace Wolfpack.Core.Repositories.FileSystem
             File.Delete(filename);
         }
 
-        public IQueryable<NotificationEvent> Query(params INotificationRepositoryQuery[] queries)
+        public IQueryable<NotificationEvent> Filter(params INotificationRepositoryQuery[] filters)
         {
-            var messages = LoadMessages();
-            return queries.SelectMany(q => q.Query(messages)).AsQueryable();
+            var result = LoadAll();
+            return filters.Aggregate(result, (current, filter) => filter.Filter(current));
         }
 
-        private IQueryable<NotificationEvent> LoadMessages()
+        private IQueryable<NotificationEvent> LoadAll()
         {
             return Directory.GetFiles(SmartLocation.GetLocation(_config.BaseFolder), "*.*", SearchOption.TopDirectoryOnly)
                 .ToList().Select(f => Serialiser.FromJsonInFile<NotificationEvent>(f)).AsQueryable();

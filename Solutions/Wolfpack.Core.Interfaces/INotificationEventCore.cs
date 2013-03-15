@@ -29,6 +29,7 @@ namespace Wolfpack.Core.Interfaces
         bool CriticalFailure { get; set; }
         CriticalFailureDetails CriticalFailureDetails { get; set; }
         string Message { get; set; }
+        MessageStateTypes State { get; set; }
 
         void AssociateArtifact(ArtifactDescriptor artifact);
     }

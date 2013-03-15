@@ -34,20 +34,20 @@ namespace Wolfpack.Tests.Repositories
             }
         }
 
-        //[Test]
-        //public void UpdateItemInRepository()
-        //{
-        //    var id = Guid.NewGuid();
-            
-        //    using (var domain = new EfDbRepositoryDomain())
-        //    {
-        //        Feature.WithScenario("Add an item then update it in the database")
-        //            .Given(domain.TheWolfpackDatabaseIsClearedOfNotifications)
-        //                .And(domain.NotificationWithId_IsAddedToTheRepository, id)
-        //            .When(domain.NotificationWithId_HasTheResultPropertySetTo_, true)
-        //            .Then(domain.TheNotificationWithId_ShouldBeInTheNotificationTable, id)
-        //            .ExecuteWithReport();
-        //    }
-        //}
+        [Test]
+        public void ChainedQuery()
+        {
+            var id = Guid.NewGuid();
+
+            using (var domain = new EfDbRepositoryDomain())
+            {
+                Feature.WithScenario("chaining multiple queries together")
+                    .Given(domain.TheWolfpackDatabaseIsClearedOfNotifications)
+                        .And(domain.NotificationWithId_IsAddedToTheRepository, id)
+                    .When(domain.TheQueryForId_AndState_IsExecuted, id, MessageStateTypes.NotSet)
+                    .Then(domain.TheQueryResultsShouldHave_Items, 1)
+                    .ExecuteWithReport();
+            }
+        }
     }
 }

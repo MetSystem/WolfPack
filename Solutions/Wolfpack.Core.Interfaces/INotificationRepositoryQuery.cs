@@ -5,6 +5,6 @@ namespace Wolfpack.Core.Interfaces
 {
     public interface INotificationRepositoryQuery
     {
-        IQueryable<NotificationEvent> Query(IQueryable<NotificationEvent> data);
+        IQueryable<NotificationEvent> Filter(IQueryable<NotificationEvent> data);
     }
 }

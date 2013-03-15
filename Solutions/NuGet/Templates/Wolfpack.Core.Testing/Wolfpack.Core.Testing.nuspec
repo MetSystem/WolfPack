@@ -1,17 +1,17 @@
 <?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
-    <id>WolfpackR.Core.Testing</id>
+    <id>Wolfpack.Core.Testing</id>
     <version>1.0.0.0</version>
-    <title>WolfpackR.Core.Testing</title>
+    <title>Wolfpack.Core.Testing</title>
     <authors>jimbobdog</authors>
     <owners>James Simmonds</owners>
     <licenseUrl>http://wolfpack.codeplex.com/license</licenseUrl>
     <projectUrl>http://wolfpack.codeplex.com/</projectUrl>
     <iconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=Wolfpack&amp;DownloadId=140622&amp;Build=17672</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>WolfpackR.Core.Testing provides a set of helpers and mocks to help test Wolfpack plug-ins. Wolfpack uses StoryQ to provide a BDD framework for plugin development.</description>
-    <summary>Wolfpackr.Core.Testing provides a set of helpers and mocks to help test Wolfpack plug-ins</summary>
+    <description>Wolfpack.Core.Testing provides a set of helpers and mocks to help test Wolfpack plug-ins. Wolfpack uses StoryQ to provide a BDD framework for plugin development.</description>
+    <summary>Wolfpack.Core.Testing provides a set of helpers and mocks to help test Wolfpack plug-ins</summary>
     <language>en-GB</language>
     <tags>Wolfpack Monitoring Testing BDD</tags>
     <dependencies>
