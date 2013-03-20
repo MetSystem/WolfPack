@@ -70,15 +70,25 @@ namespace Wolfpack.Core.Checks
             if (!success)
                 throw new System.ComponentModel.Win32Exception(string.Format("GetDiskFreeSpaceEx({0}) failed", _config.Path));
 
-            var percentage = (freeBytesAvailable*100)/totalNumberOfBytes;
+            var usedpercentage = 100 - (freeBytesAvailable*100)/totalNumberOfBytes;
 
-            Publish(NotificationRequestBuilder.For(_config.NotificationMode, HealthCheckData.For(Identity, 
-                "Disk space used on drive '{0}' is {1}%", _config.Path, percentage)
+            Logger.Debug(FormatMessage(usedpercentage));
+
+            Publish(NotificationRequestBuilder.For(_config.NotificationMode, HealthCheckData.For(Identity,
+                FormatMessage(usedpercentage))
                 .Succeeded()
-                .ResultCountIs(percentage)
+                .ResultCountIs(usedpercentage)
                 .DisplayUnitIs("%")
                 .AddTag(_config.Path))
                 .Build());
+        }
+
+        private string FormatMessage(ulong usedpercentage)
+        {
+            return string.Format("Disk space used on '{0}' is {1}%{2}", _config.Path, usedpercentage,
+                                 _config.NotificationThreshold.HasValue
+                                     ? string.Format(" (Threshold={0}%)", _config.NotificationThreshold.Value)
+                                     : string.Empty);
         }
 
         protected override PluginDescriptor BuildIdentity()
