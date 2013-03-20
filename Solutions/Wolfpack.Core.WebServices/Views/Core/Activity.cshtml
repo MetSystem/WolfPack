@@ -3,7 +3,6 @@
 <!-- ko foreach: notifications -->
 <div id="activityList">
 	<div class="big-message anthracite-gradient glow" style="margin-bottom: 20px; padding-top: 15px; min-height: 96px; height: 96px; height: auto !important; ">
-		@*<span class="show-on-parent-hover">Close</span>*@
 		<img data-bind="attr: { src: ResultImage }" class="float-left margin-right"/>
 		<div class="float-right thin" style="font-size:70px; line-height: normal" data-bind="visible: ResultValue != null, text: ResultValue"></div>
 		<span class="thin large-margin-bottom" style="display: block; font-size:20px;" data-bind="text: When"></span>
@@ -23,9 +22,7 @@
 	<script  type="text/javascript" src="/content/js/libs/moment-min.js"></script>
 	<script  type="text/javascript" src="/content/js/developr.message.js"></script>
 	<script  type="text/javascript" src="/content/js/libs/signalr/jquery.signalR-1.0.0.min.js"></script>
-	<script type="text/javascript" language="javascript">
-		jQuery.support.cors = true;
-		
+	<script type="text/javascript">
 		function Notification(alert) {
 			var self = this;
 			self.Alert = alert;
@@ -71,8 +68,10 @@
 		};
 
 		$(document).ready(function () {
-			$('#shortcutActivity').addClass('current');
-			var model = new ViewModel('http://localhost:803/notifications');
+		    $('#shortcutActivity').addClass('current');
+
+		    var signalrhost = 'http://' + document.domain + ':803/notifications';
+		    var model = new ViewModel(signalrhost);
 			ko.applyBindings(model);
 			model.startMonitoring();
 		});
