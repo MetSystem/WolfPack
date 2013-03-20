@@ -14,8 +14,8 @@ namespace Wolfpack.Core.Notification.Filters.Request
         public StateChangeNagFailNotificationFilter()
             : this(new KeyValuePair<int, int>(0, 1),
             new KeyValuePair<int, int>(3, 3),
-            new KeyValuePair<int, int>(5, 10),
-            new KeyValuePair<int, int>(10, 60))
+            new KeyValuePair<int, int>(15, 10),
+            new KeyValuePair<int, int>(35, 60))
         {
         }
 
@@ -38,6 +38,7 @@ namespace Wolfpack.Core.Notification.Filters.Request
                     alertHistory.FailuresSinceLastSuccess = 0;
                 }
 
+                Logger.Debug("{0} state changed!", request.CheckId);
                 return true;
             }
            
@@ -47,13 +48,16 @@ namespace Wolfpack.Core.Notification.Filters.Request
                 if (alertHistory.LastResult.Value)
                 {
                     // stream of success messages
+                    Logger.Debug("{0} result:={1} (success stream)", alertHistory.LastResult.Value);
                     return false;
                 }
 
                 // stream of failures...check frequency                
                 alertHistory.FailuresSinceLastSuccess++;
                 var minimumMinutesSeparation = FindAlertSeparation(alertHistory.FailuresSinceLastSuccess);                
-                var minutesDiff = DateTime.UtcNow.Subtract(alertHistory.LastReceived).TotalMinutes;               
+                var minutesDiff = DateTime.UtcNow.Subtract(alertHistory.LastReceived).TotalMinutes;
+
+                Logger.Debug("{0} failures;={1}, separation:={2}, lastdiff:={3}", request.CheckId, alertHistory.FailuresSinceLastSuccess, minimumMinutesSeparation, minutesDiff);
                 return (minutesDiff >= minimumMinutesSeparation);
             }
             
