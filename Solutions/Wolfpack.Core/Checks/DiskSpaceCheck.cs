@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading;
+using System.Runtime.InteropServices;
 using Wolfpack.Core.Configuration;
 using Wolfpack.Core.Interfaces;
 using Wolfpack.Core.Interfaces.Entities;
@@ -12,8 +10,7 @@ namespace Wolfpack.Core.Checks
 {
     public class DiskSpaceCheckConfig : PluginConfigBase, ISupportNotificationMode, ISupportNotificationThreshold
     {
-        public string MachineName { get; set; }
-        public string Drive { get; set; }
+        public string Path { get; set; }
         public string NotificationMode { get; set; }
         public double? NotificationThreshold { get; set; }
     }
@@ -28,8 +25,7 @@ namespace Wolfpack.Core.Checks
                 FriendlyId = "CHANGEME!",
                 NotificationMode = StateChangeNotificationFilter.FilterName,
                 NotificationThreshold = 80,
-                MachineName = "localhost",
-                Drive = "C"
+                Path = @"C:\"
             };
         }
 
@@ -44,36 +40,44 @@ namespace Wolfpack.Core.Checks
 
     public class DiskSpaceCheck : ThresholdCheckBase<DiskSpaceCheckConfig>
     {
-        protected PerformanceCounter _counter;
+        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool GetDiskFreeSpaceEx(string lpDirectoryName,
+        out ulong lpFreeBytesAvailable,
+        out ulong lpTotalNumberOfBytes,
+        out ulong lpTotalNumberOfFreeBytes);
 
-        /// <summary>
-        /// default ctor
-        /// </summary>
         public DiskSpaceCheck(DiskSpaceCheckConfig config)
             : base(config)
         {
         }
 
-        public override void  Initialise()
+        public override void Initialise()
         {
-            _counter = string.IsNullOrEmpty(_config.MachineName) 
-                ? new PerformanceCounter("LogicalDisk", "% Free Space", _config.Drive)
-                : new PerformanceCounter("LogicalDisk", "% Free Space", _config.Drive, _config.MachineName);
+            // http://msdn.microsoft.com/en-us/library/aa364937%28VS.85%29.aspx
+            // UNC paths must be \ terminated            
+            if (_config.Path.StartsWith(@"\\"))
+                _config.Path = _config.Path.TrimEnd(@"\") + @"\";
         }
 
         public override void Execute()
         {
-            var sample = _counter.NextSample();
-            Thread.Sleep(1000);
-            var sample2 = _counter.NextSample();
-            var value = 100 - Math.Round(CounterSampleCalculator.ComputeCounterValue(sample, sample2));
+            ulong freeBytesAvailable;
+            ulong totalNumberOfBytes;
+            ulong totalNumberOfFreeBytes;
+
+            var success = GetDiskFreeSpaceEx(_config.Path, out freeBytesAvailable, out totalNumberOfBytes, out totalNumberOfFreeBytes);
+            if (!success)
+                throw new System.ComponentModel.Win32Exception(string.Format("GetDiskFreeSpaceEx({0}) failed", _config.Path));
+
+            var percentage = (freeBytesAvailable*100)/totalNumberOfBytes;
 
             Publish(NotificationRequestBuilder.For(_config.NotificationMode, HealthCheckData.For(Identity, 
-                "Disk space used on drive '{0}' is {1}%", _config.Drive, value)
+                "Disk space used on drive '{0}' is {1}%", _config.Path, percentage)
                 .Succeeded()
-                .ResultCountIs(value)
+                .ResultCountIs(percentage)
                 .DisplayUnitIs("%")
-                .AddTag(_config.Drive))
+                .AddTag(_config.Path))
                 .Build());
         }
 
