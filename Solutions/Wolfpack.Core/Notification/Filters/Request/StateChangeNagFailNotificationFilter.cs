@@ -48,7 +48,7 @@ namespace Wolfpack.Core.Notification.Filters.Request
                 if (alertHistory.LastResult.Value)
                 {
                     // stream of success messages
-                    Logger.Debug("{0} result:={1} (success stream)", alertHistory.LastResult.Value);
+                    Logger.Debug("{0} result:={1} (success stream)", request.CheckId, alertHistory.LastResult.Value);
                     return false;
                 }
 
