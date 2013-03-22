@@ -156,6 +156,8 @@ namespace Wolfpack.Core.Checks
                                 {
                                     Logger.Debug("Timing ping to '{0}'...", url);
                                     response = string.Empty;
+
+                                    throw new NotImplementedException();
                                 }
                                 else
                                 {
