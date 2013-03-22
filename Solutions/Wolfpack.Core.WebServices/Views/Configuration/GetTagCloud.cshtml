@@ -1,0 +1,421 @@
+﻿@inherits ViewPage<IEnumerable<Wolfpack.Core.Interfaces.Entities.TagCloudEntry>>
+
+<div id="edit-page" style="display: none;">
+	<div id="edit-msg-container" class="big-message anthracite-gradient glow" style="margin-top: 20px; padding-top: 15px; min-height: 96px; height: 96px; height: auto !important; display: none">
+		<span class="close show-on-parent-hover">Close</span>
+		<img src="/content/img/resultfalse.png" class="float-left margin-right"/>
+		<div class="thin">some message goes here</div>
+	</div>
+
+	<div class="block anthracite-gradient glow margin-top" data-bind="with: $root.entry">
+		<h3 class="block-title anthracite-gradient glow">Editing <span data-bind="text: Entry.Name"></span></h3>
+
+		<div class="with-padding">
+			<!-- content here -->
+			<div style="padding-top: 10px;" class="big-text" data-bind="text: Entry.Description"></div>
+			<div style="padding-top: 10px;">
+				Interface Type: <span style="font-style: italic;" data-bind="text: Entry.InterfaceType"></span>
+			</div>
+			<div style="padding-top: 10px;">
+				Concrete Type: <span style="font-style: italic;" data-bind="text: Entry.ConcreteType"></span>
+			</div>
+
+			<div id="editor" class="json-editor"></div>
+
+			<div style="padding-top: 10px;">
+				<a href="#" class="button big green-gradient glossy" data-bind="click: $root.saveEntry">Save</a>
+				<a href="#" class="button big red-gradient glossy small-margin-left" data-bind="click: $root.deleteEntry">Delete</a>
+				<a href="#" class="button big orange-gradient glossy small-margin-left"  data-bind="click: $root.cancelEditEntry">Cancel</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="restart-page" style="display: none;">
+	<span class="big-text">Restarting Wolfpack, please wait...</span>
+	<span id="spinner-restart" class="loader huge refreshing"></span>
+</div>
+
+<div id="main-page">    
+	<div id="pending-container" class="block anthracite-gradient glow margin-top" data-bind="visible: $root.pending().length > 0">
+		<h3 class="block-title anthracite-gradient glow">Pending Changes</h3>
+
+		<div class="with-padding">
+			<div style="display: block; min-height: 96px; height: 96px; height: auto !important; ">
+				<div class="float-left large-margin-right margin-bottom">
+					<img width="96" height="96" src="/content/img/warning.png"/>
+				</div>
+				<p class="button-height margin-bottom">
+					<span class="big-text margin-left margin-right">Restart?</span><input type="checkbox" class="switch" data-text-on="YES" data-text-off="NO" data-bind="checked: restart">
+				</p>
+				<span class="button green-gradient huge glossy margin-bottom margin-left" data-bind="html: PendingChangesAccept, click: AcceptPendingChanges"></span>
+				<span class="button red-gradient huge glossy margin-bottom margin-left">Cancel</span>
+			</div>
+		</div>
+	</div>
+		
+	<span id="spinner-tags" class="loader huge refreshing"></span>	
+	<div id="tags-container" class="block anthracite-gradient glow margin-top">
+		<h3 class="block-title anthracite-gradient glow">Tag Filter</h3>
+
+		<div class="with-padding">
+			<div style="display: block; padding-top: 10px;">
+				<!-- ko foreach: $root.tags -->
+				<span class="button huge glossy margin-bottom margin-right" data-bind="text: Tag, click: $parent.reloadConfiguration, css: StateStyle, html: ButtonContent"></span>
+				<!-- /ko -->
+			</div>
+		</div>
+	</div>
+
+	<span id="spinner-entries" class="loader huge refreshing"></span>
+	<div id="entries-container">        
+		<!-- ko foreach: entries -->
+		<div class="block anthracite-gradient glow margin-top">
+			<h3 class="block-title anthracite-gradient glow" data-bind="text: Entry.Name"></h3>
+
+			<div class="with-padding">
+				<div id="content-body-wrapper" style="display:table; border-collapse:collapse;">
+					<div id="content-body" style="display:table-row;">
+						
+						<div id="primary-nav" style="display:table-cell;">
+							<!-- some navigation column here -->
+							<div class="large-margin-right margin-bottom" style="min-height: 96px; height: 96px; height: auto !important;">
+								<img width="96" height="96" data-bind="attr: { src: ImageUrl }"/>
+							</div>    
+						</div>
+
+						<div id="secondary-nav" style="display:table-cell; vertical-align: top; padding-right: 10px;">
+							<!-- some additional column here -->
+							<div style="display: block; padding-top: 10px;" class="big-text" data-bind="text: Entry.Description"></div>
+							<div style="display: block; padding-top: 10px;">
+								Interface Type: <span style="font-style: italic;" data-bind="text: Entry.InterfaceType"></span>
+							</div>
+							<div style="display: block; padding-top: 10px;">
+								Concrete Type: <span style="font-style: italic;" data-bind="text: Entry.ConcreteType"></span>
+							</div>
+							<div class="margin-top" style="display: block; padding-top: 10px;">
+								<!-- ko if: IsRunning -->
+								<a href="#" class="button big blue-gradient glossy" data-bind="click: $parent.editEntry">Edit</a>
+								<!-- /ko -->
+								<!-- ko ifnot: IsRunning -->
+								<a href="#" class="button big green-gradient glossy main-page" data-bind="click: $parent.editEntry">Create</a>
+								<!-- /ko -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>        
+		</div>
+		<!-- /ko -->
+	</div>
+</div>
+
+@section PageStyles {
+	<link rel="stylesheet" href="/content/js/libs/FlexiJsonEditor/jsoneditor.css"/>
+	<link rel="stylesheet" href="/content/css/styles/switches.css"/>
+}
+
+@section Header {
+	<h1>Configuration Catalogue</h1>
+}
+
+
+@section PageScript {
+	<script type="text/javascript" src="/content/js/libs/knockout/knockout-2.2.1.js"></script>
+	<script type="text/javascript" src="/content/js/libs/FlexiJsonEditor/jquery.jsoneditor.min.js"></script>
+	<script type="text/javascript" src="/content/js/developr.modal.js"></script>
+	<script type="text/javascript" src="/content/js/developr.input.js"></script>
+	<script type="text/javascript" language="javascript">
+		var model = new ViewModel;
+
+		function ViewModel() {
+			var self = this;
+			self.tags = ko.observableArray();
+			self.entries = ko.observableArray();
+			self.pending = ko.observableArray();
+			self.entry = ko.observable();
+			self.jsonConfig = { };
+			self.restart = ko.observable(true);
+		    self.restartHandle = 0;
+
+			self.PendingChangesAccept = ko.computed(function () {
+				return '<span class="count">' + self.pending().length + '</span><span>Accept</span>';
+			}, this);
+
+			self.AcceptPendingChanges = function () {
+				console.log('AcceptPendingChanges()');
+
+				$.ajax({
+					type: 'GET',
+					url: '/configuration/applychanges',
+					data: { Restart: self.restart },
+					contentType: 'application/json; charset=utf-8',
+					dataType: 'json'
+				}).done(function (data, status, jqXhr) {
+					console.log('applied changes ok');
+					console.log(data);
+					self.waitForRestart();
+					
+				}).fail(function (jqXhr, status, err) {
+					console.log(err);
+
+					$('#edit-msg-container').show();
+				});
+			};
+
+			self.editEntry = function (entry) {
+				self.entry(entry);
+				console.log('Editing Entry: ' + self.entry().Entry.Name);
+
+				self.jsonConfig = {
+					RequiredProperties: entry.Entry.RequiredProperties,
+					Config: JSON.parse(entry.Entry.Data)
+				};
+
+				var editor = $('#editor');
+				editor.jsonEditor(self.jsonConfig);
+				$('span.expander').trigger('click');
+
+				$('#main-page').hide();
+				$('#edit-page').show();
+			};
+
+			self.deleteEntry = function (entry) {
+				sendChangeRequest(entry.Entry, 'delete');
+			};
+
+			self.saveEntry = function (entry) {			    
+				sendChangeRequest(entry.Entry, 'update');
+			};
+			
+			self.cancelEditEntry = function (entry) {
+				console.log('Cancelled Edit: ' + entry.Entry.Name);
+
+				$('#main-page').show();
+				$('#edit-page').hide();
+			};
+
+			self.waitForRestart = function () {
+			    $('#main-page').hide();
+			    $('#restart-page').show();
+
+			    self.restartHandle = setInterval(function () {
+			        $.ajax({
+			            type: 'GET',
+			            url: '/'
+			        }).done(function (data, status, jqXhr) {
+			            console.log('service restarted (' + self.restartHandle + ')');
+
+			            if (self.restartHandle > 0) {
+			                console.log('refreshing config after restart...');
+			                clearInterval(self.restartHandle);
+			                self.restartHandle = 0;
+
+			                self.refreshConfiguration();
+			                $('#restart-page').hide();
+			                $('#main-page').show();
+			            }
+			        }).fail(function (jqXhr, status, err) {
+
+			        });
+			    }, 5000);
+			};
+
+			self.refreshConfiguration = function() {
+				var tags = new Array();
+				$.each(self.tags(), function (index, value) {
+					if (value.Selected() === true) {
+						tags.push(value.Tag());
+					}
+				});
+
+				var qsTags = tags.join(',');
+				console.log('Loading configuration for: ' + qsTags);
+				self.loadConfiguration(qsTags);
+			};
+
+			self.reloadConfiguration = function (tag) {
+				console.log('reloadConfiguration (tagClick): ' + tag.Tag());
+
+				if (tag.Tag() === 'All') {
+					$.each(self.tags(), function (index, t) {
+						t.Selected(true);
+					});
+				} else if (tag.Tag() === 'None') {
+					$.each(self.tags(), function (index, t) {
+						t.Selected(false);
+					});
+				} else {
+					tag.Selected(!tag.Selected());
+				}
+
+				console.log(tag.Tag() + ' is now selected:' + tag.Selected());
+				self.refreshConfiguration();
+			};
+
+			self.loadTags = function () {
+			    self.tags.removeAll();
+
+			    var tag = new Tag();
+			    tag.Selected(true);
+			    tag.Tag('All');
+			    self.tags.push(tag);
+
+			    tag = new Tag();
+			    tag.Selected(true);
+			    tag.Tag('None');
+			    self.tags.push(tag);
+
+			    $.getJSON('/configuration/tagcloud', function (data) {
+			        console.log('Loaded tagcloud');
+			        console.log(data);
+
+			        $.each(data, function (index, value) {
+			            tag = new Tag();
+			            tag.Count(value.Count);
+			            tag.Tag(value.Tag);
+			            tag.Selected(true);
+
+			            self.tags.push(tag);
+			        });
+
+			        $('#spinner-tags').hide();
+			        $('#tag-container').show();
+			    });
+			};
+
+			self.loadConfiguration = function (tags) {
+			    $('#spinner-entries').show();
+			    $('#entries-container').hide();
+			    self.entries.removeAll();
+			    self.pending.removeAll();
+
+			    console.log('loading config, entries.len=' + self.entries.length + ', pending.len=' + self.pending.length);
+
+			    if (typeof tags === 'undefined') {
+			        tags = '';
+			    } else if (tags === '*') {
+			        tags = '';
+			    } else if (tags === '') {
+			        // no tags selected
+			        $('#spinner-entries').hide();
+			        return;
+			    }
+
+			    $.getJSON('/configuration/catalogue/' + tags, function (data) {
+			        console.log('configuration loaded');
+			        console.log(data);
+
+			        $.each(data.Items, function (index, value) {
+			            var entry = new Entry(value);
+			            self.entries.push(entry);
+			        });
+
+			        $.each(data.Pending, function (index, value) {
+			            var change = new PendingChange(value);
+			            self.pending.push(change);
+			        });
+
+			        $('#spinner-entries').hide();
+			        $('#entries-container').show();
+			    });
+			};
+
+			function sendChangeRequest(entry, action) {
+				console.log('Sending CR: ' + entry.Name + ' (' + action + ')');
+
+				entry.RequiredProperties = self.jsonConfig.RequiredProperties;
+				entry.Data = JSON.stringify(self.jsonConfig.Config);
+
+				$.ajax({
+					type: 'POST',
+					url: '/configuration/',
+					data: JSON.stringify({ Action: action, Entry: entry }),
+					contentType: 'application/json; charset=utf-8',
+					dataType: 'json'
+				}).done(function (data, status, jqXhr) {
+					console.log('change request accepted');
+					console.log(data);
+
+					self.refreshConfiguration();
+
+					$('#main-page').show();
+					$('#edit-page').hide();
+				}).fail(function (jqXhr, status, err) {
+					console.log('change request rejected');
+					console.log(err);
+
+					$('#edit-msg-container').show();
+				});
+			};
+		}
+
+		function PendingChange(change) {
+			var self = this;
+			self.Change = change;
+		}
+		
+		function Entry(entry) {
+			var self = this;
+			self.Entry = entry;
+
+			self.ContainsTag = function (term) {
+				var tags = self.Entry.Tags;
+				for (var j = 0; j < tags.length; j++) {
+					if (tags[j].match(term)) return true;
+				}
+				return false;
+			};
+
+			self.IsRunning = ko.computed(function () {
+				return self.ContainsTag('Running');
+			}, this);
+
+			self.ImageUrl = ko.computed(function () {
+				if (self.ContainsTag('HealthCheck'))
+					return '/content/img/check.png';
+				if (self.ContainsTag('Schedule'))
+					return '/content/img/scheduler.png';
+				if (self.ContainsTag('Publisher'))
+					return '/content/img/publisher.png';
+				if (self.ContainsTag('Activity'))
+					return '/content/img/activity.png';
+				return '/content/img/agent.png';
+			}, this);
+		}
+		
+		function Tag() {
+			this.Tag = ko.observable();
+			this.Count = ko.observable();
+			this.Selected = ko.observable(true);
+			this.StateStyle = ko.computed(function () {
+				if (this.Tag() === 'All' || this.Tag() === 'None') 
+					return 'blue-gradient';
+
+				if (this.Selected()) {
+					if (this.Tag() === 'Running')
+						return 'green-gradient';
+					return 'orange-gradient';
+				}
+
+				return 'grey-gradient';
+			}, this);
+			this.ButtonContent = ko.computed(function () {
+				var text = '<span>'+ this.Tag() +'</span>';
+				if (this.Tag() === 'All' || this.Tag() === 'None') return text;                
+				return '<span class="count">' + this.Count() + '</span>' + text;
+			}, this);
+		}
+
+		$(document).ready(function () {
+			$('tag-container').hide();
+			$('entries-container').hide();
+			$('#shortcutConfiguration').addClass('current');
+
+			ko.applyBindings(model);
+
+			model.loadConfiguration('*');
+			model.loadTags();
+		});
+	</script>
+}

@@ -1,0 +1,238 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{4409B842-D0FE-4DBC-ADA8-B7CA52689E6E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Wolfpack.Tests</RootNamespace>
+    <AssemblyName>Wolfpack.Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Castle.Core, Version=3.2.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Castle.Core.3.2.0\lib\net40-client\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=4.4.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.5.0.0\lib\net40\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Growl.Connector">
+      <HintPath>..\packages\Growl.0.6\lib\Growl.Connector.dll</HintPath>
+    </Reference>
+    <Reference Include="Growl.CoreLibrary">
+      <HintPath>..\packages\Growl.0.6\lib\Growl.CoreLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Magnum, Version=2.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Magnum.2.0.1.0\lib\NET40\Magnum.dll</HintPath>
+    </Reference>
+    <Reference Include="Moq">
+      <HintPath>..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="NServiceBus, Version=2.5.0.0, Culture=neutral, PublicKeyToken=349438b4be075135, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\NServiceBus\v2.5\NServiceBus.dll</HintPath>
+    </Reference>
+    <Reference Include="NServiceBus.Core, Version=2.5.0.0, Culture=neutral, PublicKeyToken=349438b4be075135, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\NServiceBus\v2.5\NServiceBus.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework, Version=2.6.2.12296, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Ploeh.AutoFixture, Version=2.16.2.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\AutoFixture.2.16.2\lib\net35\Ploeh.AutoFixture.dll</HintPath>
+    </Reference>
+    <Reference Include="Ploeh.SemanticComparison, Version=2.16.2.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\AutoFixture.2.16.2\lib\net35\Ploeh.SemanticComparison.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack, Version=3.9.37.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\ServiceStack.3.9.37\lib\net35\ServiceStack.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Common, Version=3.9.37.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\ServiceStack.Common.3.9.37\lib\net35\ServiceStack.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Interfaces, Version=3.9.37.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\ServiceStack.Common.3.9.37\lib\net35\ServiceStack.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.OrmLite">
+      <HintPath>..\packages\ServiceStack.OrmLite.SqlServer.3.9.37\lib\ServiceStack.OrmLite.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.OrmLite.SqlServer">
+      <HintPath>..\packages\ServiceStack.OrmLite.SqlServer.3.9.37\lib\ServiceStack.OrmLite.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Redis">
+      <HintPath>..\packages\ServiceStack.Redis.3.9.37\lib\net35\ServiceStack.Redis.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.ServiceInterface, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ServiceStack.3.9.37\lib\net35\ServiceStack.ServiceInterface.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Text, Version=3.9.37.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\ServiceStack.Text.3.9.37\lib\net35\ServiceStack.Text.dll</HintPath>
+    </Reference>
+    <Reference Include="StoryQ">
+      <HintPath>..\packages\StoryQ.2.0.5\lib\StoryQ.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TestData\v2.4.0\HealthCheckResult.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+    <Content Include="TestData\12345\StoryQ.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\AcceptanceTestReport.htm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\ncover_summary_report.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\StoryQ.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\StoryQ_SubFolder.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\SpecFlow.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestData\SpecFlow_SubFolder.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="TestData\Config\Schedules\everyminute.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Build\Common\AssemblyVersion.cs">
+      <Link>Properties\AssemblyVersion.cs</Link>
+    </Compile>
+    <Compile Include="..\Build\Common\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Activities\WebServiceActivitySpecs.cs" />
+    <Compile Include="Activities\WebServicesActivityDomain.cs" />
+    <Compile Include="Activities\WebServiceTestBootstrapper.cs" />
+    <Compile Include="Activities\WebServiceTestReceiverStrategy.cs" />
+    <Compile Include="Agent\CmdLineArgTests.cs" />
+    <Compile Include="Artifacts\FileSystemArtifactManager.Domain.cs" />
+    <Compile Include="Artifacts\FileSystemArtifactManager.Specs.cs" />
+    <Compile Include="Checks\ThresholdBased.Specs.cs" />
+    <Compile Include="Checks\WindowServiceStartup.Domain.cs" />
+    <Compile Include="Checks\WindowServiceStartup.Specs.cs" />
+    <Compile Include="Checks\WindowServiceState.Domain.cs" />
+    <Compile Include="Checks\WindowServiceState.Specs.cs" />
+    <Compile Include="Configuration\ConfigurationManagerSpecs.cs" />
+    <Compile Include="Configuration\DummyCatalogueDiscovery.cs" />
+    <Compile Include="Configuration\FileSystemDummyConfigurationRepository.cs" />
+    <Compile Include="Growl\NotificationFormatterTests.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\EfDbRepositoryDomain.cs" />
+    <Compile Include="Repositories\EfDbRepositorySpecs.cs" />
+    <Compile Include="System\TypeDiscovery.Domain.cs" />
+    <Compile Include="System\TypeDiscovery.Specs.cs" />
+    <Compile Include="System\Entities.Domain.cs" />
+    <Compile Include="System\Entity.Specs.cs" />
+    <Compile Include="Timers\TwentyFourSevenTimerTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="license.txt" />
+    <Content Include="TestData\StoryQ.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HelloWorldHealthCheck\HelloWorldHealthCheck.csproj">
+      <Project>{79C0B713-6040-4E36-9607-0364F9AADB39}</Project>
+      <Name>HelloWorldHealthCheck</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Wolfpack.Agent\Wolfpack.Agent.csproj">
+      <Project>{5A1F7719-5EC2-46C3-9E4A-1BAD421EE291}</Project>
+      <Name>Wolfpack.Agent</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Wolfpack.Core.Interfaces.Castle\Wolfpack.Core.Interfaces.Castle.csproj">
+      <Project>{98CD5D7E-5A81-4F65-9E56-F589311899C3}</Project>
+      <Name>Wolfpack.Core.Interfaces.Castle</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Wolfpack.Core.Interfaces.Magnum\Wolfpack.Core.Interfaces.Magnum.csproj">
+      <Project>{2CFB5B81-6F29-43C7-A539-CF185A5AFD0E}</Project>
+      <Name>Wolfpack.Core.Interfaces.Magnum</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Wolfpack.Core.Interfaces\Wolfpack.Core.Interfaces.csproj">
+      <Project>{21083526-1E2F-468C-A08B-D2CAC99EC4FC}</Project>
+      <Name>Wolfpack.Core.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Wolfpack.Core.Testing\Wolfpack.Core.Testing.csproj">
+      <Project>{CBAADBCA-E16F-4D88-80DB-7CFB455B98F6}</Project>
+      <Name>Wolfpack.Core.Testing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Wolfpack.Core.WebServices.Client\Wolfpack.Core.WebServices.Client.csproj">
+      <Project>{BA5F9564-B6B1-4146-9F1E-0B3C9CD2996F}</Project>
+      <Name>Wolfpack.Core.WebServices.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Wolfpack.Core.WebServices.Interfaces\Wolfpack.Core.WebServices.Interfaces.csproj">
+      <Project>{DDC40CE0-D9A2-4847-893C-AF7ECBCF0FE6}</Project>
+      <Name>Wolfpack.Core.WebServices.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Wolfpack.Core.WebServices\Wolfpack.Core.WebServices.csproj">
+      <Project>{BAA3F1D4-196E-4683-A302-557FEC4465F9}</Project>
+      <Name>Wolfpack.Core.WebServices</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Wolfpack.Core\Wolfpack.Core.csproj">
+      <Project>{EEFB2D36-3C15-4420-8A07-2D3CB381741D}</Project>
+      <Name>Wolfpack.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
