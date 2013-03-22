@@ -40,6 +40,7 @@ namespace Wolfpack.Core.WebServices
         {
             container.Register(_config);
             container.Register(c => Core.Container.Resolve<IWebServiceReceiverStrategy>());
+            container.Register(c => Core.Container.Resolve<ActivityTracker>());
 
             _extenders.ForEach(ex =>
                                    {

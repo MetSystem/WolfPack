@@ -1,18 +1,32 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Net;
+using System.Text;
 using Wolfpack.Core.Configuration;
 using Wolfpack.Core.Interfaces;
 using Wolfpack.Core.Interfaces.Entities;
 using System.Linq;
 using Wolfpack.Core.Notification;
 using Wolfpack.Core.Notification.Filters.Request;
+using Magnum.Extensions;
 
 namespace Wolfpack.Core.Checks
 {
     public class UrlPingCheckConfig : PluginConfigBase, ISupportNotificationMode, ISupportNotificationThreshold
     {
+        /// <summary>
+        /// Set to true to replicate a call from XMLHttpRequest
+        /// </summary>
+        public bool IsAjaxCall { get; set; }
+
+        /// <summary>
+        /// Set to true to allows Wolfpack to attach it's default service account credentials
+        /// to the request or false for an anonymous unauthenticated request
+        /// </summary>
+        public bool UseDefaultCredentials { get; set; }
+
         /// <summary>
         /// A list of Urls to ping
         /// </summary>
@@ -27,6 +41,11 @@ namespace Wolfpack.Core.Checks
         public string UserAgentString { get; set; }
 
         /// <summary>
+        /// This allows you to set headers for the call(s)
+        /// </summary>
+        public Dictionary<string, string> Headers { get; set; }
+
+        /// <summary>
         /// default ctor
         /// </summary>
         public UrlPingCheckConfig()
@@ -34,8 +53,14 @@ namespace Wolfpack.Core.Checks
             UserAgentString = "Wolfpack.Agent";
         }
 
+        /// <summary>
+        /// If you need to make the ping a POST request then set this to the value you want to POST to the Url.
+        /// Leave blank to ensure the ping is a GET.
+        /// </summary>
+        public string PostData { get; set; }
+
         public double? NotificationThreshold { get; set; }
-        public string NotificationMode { get; set; }
+        public string NotificationMode { get; set; }        
     }
 
     public class UrlPingConfigurationAdvertiser : HealthCheckDiscoveryBase<UrlPingCheckConfig>
@@ -48,6 +73,13 @@ namespace Wolfpack.Core.Checks
                            FriendlyId = "CHANGEME!",
                            NotificationMode = StateChangeNotificationFilter.FilterName,
                            NotificationThreshold = 5000,
+                           UseDefaultCredentials = false,
+                           IsAjaxCall = false,
+                           PostData = "The data to POST or blank to do a GET ping",
+                           Headers = new Dictionary<string, string>
+                                         {
+                                             {"Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"}
+                                         },
                            Urls = new List<string>
                                       {
                                           "http://wolfpack.codeplex.com",
@@ -60,9 +92,9 @@ namespace Wolfpack.Core.Checks
         protected override void Configure(ConfigurationEntry entry)
         {
             entry.Name = "UrlPingCheck";
-            entry.Description = "This check will ping a set of urls and raise notifications if the ping fails or is too slow. You can " +
-                "control the failure threshold using the 'NotificationThreshold' property of the configuration; set it to the number of " +
-                "milliseconds that the endpoint must respond by.";
+            entry.Description = "This check will ping a set of urls (including data apis; use Headers property to control Accept type) and " + 
+                "raise notifications if the ping fails or is too slow. You can control the failure threshold using the 'NotificationThreshold' " + 
+                "property of the configuration; set it to the number of milliseconds that the endpoint must respond by.";
             entry.Tags.AddIfMissing("Url", "Ping", "Threshold");
         }
     }
@@ -96,23 +128,64 @@ namespace Wolfpack.Core.Checks
             _config.Urls.ToList().ForEach(
                 url =>
                     {
-                        using (var wc = new WebClient())
+                        var wc = WebRequest.Create(url);
+
                         {
                             try
                             {
-                                wc.Headers.Add("User-Agent", _config.UserAgentString);
+                                wc.UseDefaultCredentials = _config.UseDefaultCredentials;
 
-                                Logger.Debug("Starting request Timer for {0}", url);
+                                if (!string.IsNullOrWhiteSpace(_config.UserAgentString))
+                                    wc.Headers.Add(HttpRequestHeader.UserAgent, _config.UserAgentString);
+
+                                if (_config.Headers != null)
+                                {
+                                    foreach (var header in _config.Headers)
+                                    {
+                                        wc.Headers.Add(header.Key, header.Value);
+                                    }                                    
+                                }
+
+                                if (_config.IsAjaxCall)
+                                    wc.Headers.Add("X-Requested-With", "XMLHttpRequest");
+
+                                string response;
                                 var timer = Stopwatch.StartNew();
-                                wc.DownloadString(url);
+
+                                if (string.IsNullOrWhiteSpace(_config.PostData))
+                                {
+                                    Logger.Debug("Timing ping to '{0}'...", url);
+                                    response = string.Empty;
+                                }
+                                else
+                                {
+                                    Logger.Debug("Timing ping (POST) to '{0}'...", url);
+
+                                    wc.Method = "POST";
+                                    wc.ContentType = "application/x-www-form-urlencoded";
+                                    var streamUp = wc.GetRequestStream();                                   
+                                    var dataUp = Encoding.UTF8.GetBytes(_config.PostData);
+                                    streamUp.Write(dataUp, 0, dataUp.Length);
+
+                                    var webResponse = wc.GetResponse();
+
+                                    using (var streamDown = webResponse.GetResponseStream())
+                                    {
+                                        response = streamDown.ReadToEndAsText();
+                                    }                                    
+                                }
+                                                                
                                 timer.Stop();
-                                Logger.Debug("Stopped request Timer({1}) for {0}", url, timer.ElapsedMilliseconds);
+                                Logger.Debug("Ping '{0}' = {1}ms", url, timer.ElapsedMilliseconds);
+
+                                var sizeInBytes = Encoding.UTF8.GetByteCount(response).ToString(CultureInfo.InvariantCulture);
 
                                 Publish(NotificationRequestBuilder.For(_config.NotificationMode, HealthCheckData.For(Identity,
-                                    "Pinged url '{0}'", url)
+                                    "Pinged url '{0}' ({1}bytes)", url, sizeInBytes)
                                     .Succeeded()
                                     .DisplayUnitIs("ms")
                                     .AddProperty("url", url)
+                                    .AddProperty("bytes", sizeInBytes)
                                     .ResultCountIs(timer.ElapsedMilliseconds), BuildKeyFromUrl)
                                     .Build());
                             }
