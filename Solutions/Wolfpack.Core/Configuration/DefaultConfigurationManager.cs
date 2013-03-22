@@ -108,7 +108,7 @@ namespace Wolfpack.Core.Configuration
             Logger.Info("Launching Wolfpack Helper to manage system restart...");
             Process.Start(new ProcessStartInfo("wolfpack.manager.exe")
                               {
-                                  WindowStyle = ProcessWindowStyle.Hidden
+                                  //WindowStyle = ProcessWindowStyle.Hidden
                               });
         }
 

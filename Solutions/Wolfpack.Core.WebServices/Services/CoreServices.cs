@@ -6,6 +6,7 @@ using Wolfpack.Core.Interfaces.Entities;
 using Wolfpack.Core.WebServices.Interfaces;
 using Wolfpack.Core.WebServices.Interfaces.Messages;
 using Status = Wolfpack.Core.WebServices.Interfaces.Messages.Status;
+using System.Linq;
 
 namespace Wolfpack.Core.WebServices.Services
 {
@@ -13,10 +14,12 @@ namespace Wolfpack.Core.WebServices.Services
     public class CoreServices : Service
     {
         private readonly IWebServiceReceiverStrategy _strategy;
+        private readonly ActivityTracker _tracker;
 
-        public CoreServices(IWebServiceReceiverStrategy strategy)
+        public CoreServices(IWebServiceReceiverStrategy strategy, ActivityTracker tracker)
         {
             _strategy = strategy;
+            _tracker = tracker;
         }
 
         public object Get(Status request)
@@ -57,10 +60,10 @@ namespace Wolfpack.Core.WebServices.Services
         }
 
         public object Get(Activity request)
-        {
+        {            
             return new ActivityResponse
                        {
-                           CurrentNotifications = new List<NotificationEvent>()
+                           CurrentNotifications = _tracker.Notifications.ToList()
                        };
         }
     }

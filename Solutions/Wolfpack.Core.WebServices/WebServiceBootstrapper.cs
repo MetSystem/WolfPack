@@ -28,6 +28,7 @@ namespace Wolfpack.Core.WebServices
 
         public void Initialise()
         {
+            Container.RegisterInstance(new ActivityTracker());
             Container.RegisterAll<IWebServiceExtender>();            
             Container.RegisterAsSingleton<IActivityPlugin>(typeof (WebServiceActivity));
 
@@ -41,7 +42,7 @@ namespace Wolfpack.Core.WebServices
 
     public class RegisterCoreServices : IWebServiceExtender, IConsumer<NotificationEvent>
     {
-        private WebServiceActivityConfig _config;
+        private readonly WebServiceActivityConfig _config;
 
         public RegisterCoreServices(WebServiceActivityConfig config)
         {
@@ -83,16 +84,10 @@ namespace Wolfpack.Core.WebServices
             }
         }
 
-        public void Consume(NotificationEvent message)
-        {
-            if (message.EventType == NotificationEventAgentStart.EventTypeName)
-            {
-                var agentstart = Serialiser.FromJson<NotificationEventAgentStart>(message.Data);
-
-                // possible to get multiple start messages - they could have been
-                // backed up on the client so just keep overwriting this one.
-                Container.RegisterInstance(agentstart, true);
-            }
+        public void Consume(NotificationEvent notification)
+        {            
+            Container.Resolve<ActivityTracker>().Track(notification);
+            Logger.Debug("Tracking notification {0}", notification.Id);
         }
     }
 }
