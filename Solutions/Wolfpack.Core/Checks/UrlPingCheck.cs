@@ -128,12 +128,13 @@ namespace Wolfpack.Core.Checks
             _config.Urls.ToList().ForEach(
                 url =>
                     {
-                        var wc = WebRequest.Create(url);
+                        var wc = (HttpWebRequest)WebRequest.Create(url);
 
                         {
                             try
                             {
-                                wc.UseDefaultCredentials = _config.UseDefaultCredentials;
+                                wc.AllowAutoRedirect = true;
+                                wc.UseDefaultCredentials = _config.UseDefaultCredentials;                                
 
                                 if (!string.IsNullOrWhiteSpace(_config.UserAgentString))
                                     wc.Headers.Add(HttpRequestHeader.UserAgent, _config.UserAgentString);
@@ -155,9 +156,9 @@ namespace Wolfpack.Core.Checks
                                 if (string.IsNullOrWhiteSpace(_config.PostData))
                                 {
                                     Logger.Debug("Timing ping to '{0}'...", url);
-                                    response = string.Empty;
 
-                                    throw new NotImplementedException();
+                                    wc.Method = "GET";
+                                    response = DownloadString(wc);
                                 }
                                 else
                                 {
@@ -168,13 +169,7 @@ namespace Wolfpack.Core.Checks
                                     var streamUp = wc.GetRequestStream();                                   
                                     var dataUp = Encoding.UTF8.GetBytes(_config.PostData);
                                     streamUp.Write(dataUp, 0, dataUp.Length);
-
-                                    var webResponse = wc.GetResponse();
-
-                                    using (var streamDown = webResponse.GetResponseStream())
-                                    {
-                                        response = streamDown.ReadToEndAsText();
-                                    }                                    
+                                    response = DownloadString(wc);
                                 }
                                                                 
                                 timer.Stop();
@@ -211,6 +206,15 @@ namespace Wolfpack.Core.Checks
                         }
                     });
         }
+
+        private static string DownloadString(WebRequest wc)
+        {
+            using (var streamDown = wc.GetResponse().GetResponseStream())
+            {
+                return streamDown.ReadToEndAsText();
+            }
+        }
+
 
         private static void BuildKeyFromUrl(NotificationRequest request)
         {
