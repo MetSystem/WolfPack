@@ -45,9 +45,9 @@ namespace Wolfpack.Core.Checks
         protected virtual bool IsThresholdBreached(double? resultCount)
         {
             if (!_config.NotificationThreshold.HasValue)
-                return false;
+                return true;
             if (!resultCount.HasValue)
-                return false;
+                return true;
             return _comparer(resultCount.Value, _config.NotificationThreshold.Value);
         }
 
