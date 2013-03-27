@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using Wolfpack.Core.Configuration;
 using Wolfpack.Core.Interfaces;
 using Wolfpack.Core.Interfaces.Entities;
@@ -16,6 +17,12 @@ namespace Wolfpack.Core.Checks
 {
     public class UrlPingCheckConfig : PluginConfigBase, ISupportNotificationMode, ISupportNotificationThreshold
     {
+        /// <summary>
+        /// A regex that the content returned from the ping should match - leave 
+        /// blank to omit this check
+        /// </summary>
+        public string ContentRegex { get; set; }
+
         /// <summary>
         /// Set to true to replicate a call from XMLHttpRequest
         /// </summary>
@@ -71,6 +78,7 @@ namespace Wolfpack.Core.Checks
                        {
                            Enabled = true,
                            FriendlyId = "CHANGEME!",
+                           ContentRegex = "Content Regex or blank",
                            NotificationMode = StateChangeNotificationFilter.FilterName,
                            NotificationThreshold = 5000,
                            UseDefaultCredentials = false,
@@ -100,7 +108,7 @@ namespace Wolfpack.Core.Checks
     }
 
     /// <summary>
-    /// This will make a GET call to a set of Urls specified in the <see cref="UrlPingCheckConfig"/>
+    /// This will make a call to a set of Urls specified in the <see cref="UrlPingCheckConfig"/>
     /// configuration. If the call fails it will publish a failed result. If you have set the optional
     /// "FailIfResponseMillisecondsOver" property in the configuration and the response takes longer
     /// than this value a failed result is also published. NOTE: Each url is treated separately and you
@@ -170,16 +178,25 @@ namespace Wolfpack.Core.Checks
                                     var dataUp = Encoding.UTF8.GetBytes(_config.PostData);
                                     streamUp.Write(dataUp, 0, dataUp.Length);
                                     response = DownloadString(wc);
-                                }
-                                                                
+                                }                                                                
                                 timer.Stop();
                                 Logger.Debug("Ping '{0}' = {1}ms", url, timer.ElapsedMilliseconds);
+
+                                var result = true;
+                                var regexMsg = string.Empty;
+
+                                if (!string.IsNullOrWhiteSpace(_config.ContentRegex))
+                                {
+                                    result = Regex.IsMatch(response, _config.ContentRegex);
+                                    regexMsg = " - **Failed, Response did not match Regex**";
+                                }
 
                                 var sizeInBytes = Encoding.UTF8.GetByteCount(response).ToString(CultureInfo.InvariantCulture);
 
                                 Publish(NotificationRequestBuilder.For(_config.NotificationMode, HealthCheckData.For(Identity,
-                                    "Pinged url '{0}' ({1}bytes)", url, sizeInBytes)
-                                    .Succeeded()
+                                    "Pinged url '{0}' (Threshold is {1}, returned {2}bytes){3}", 
+                                        url, _config.NotificationThreshold ?? 0, sizeInBytes, regexMsg)
+                                    .ResultIs(result)
                                     .DisplayUnitIs("ms")
                                     .AddProperty("url", url)
                                     .AddProperty("bytes", sizeInBytes)
