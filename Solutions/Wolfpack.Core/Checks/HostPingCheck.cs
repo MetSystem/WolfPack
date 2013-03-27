@@ -35,7 +35,7 @@ namespace Wolfpack.Core.Checks
             entry.Name = "HostPing";
             entry.Description =
                 "Pings a host with an ICMP message and raises an alert if the response is not received or is too slow.";
-            entry.Tags.AddIfMissing(SpecialTags.HealthCheck, "ICMP", "Ping");
+            entry.Tags.AddIfMissing("ICMP", "Ping");
         }
     }
 
