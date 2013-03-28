@@ -194,7 +194,7 @@ namespace Wolfpack.Core.Checks
                                 var sizeInBytes = Encoding.UTF8.GetByteCount(response).ToString(CultureInfo.InvariantCulture);
 
                                 Publish(NotificationRequestBuilder.For(_config.NotificationMode, HealthCheckData.For(Identity,
-                                    "Pinged url '{0}' (Threshold is {1}, returned {2}bytes){3}", 
+                                    "Pinged url '{0}' (Threshold is {1}ms; returned {2}bytes){3}", 
                                         url, _config.NotificationThreshold ?? 0, sizeInBytes, regexMsg)
                                     .ResultIs(result)
                                     .DisplayUnitIs("ms")
