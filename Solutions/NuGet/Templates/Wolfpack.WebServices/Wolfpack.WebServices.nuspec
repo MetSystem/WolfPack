@@ -16,7 +16,6 @@
     <tags>Wolfpack Monitoring ServiceStack</tags>
     <dependencies>
       <dependency id="ServiceStack" version="[3.9.37]" />
-      <dependency id="ServiceStack.Common" version="[3.9.37]" />
     </dependencies>
   </metadata>
 </package>
