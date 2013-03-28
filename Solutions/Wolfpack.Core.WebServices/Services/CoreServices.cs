@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using ServiceStack.Common.Web;
 using ServiceStack.ServiceInterface;
 using Wolfpack.Core.Interfaces.Entities;
@@ -26,9 +25,9 @@ namespace Wolfpack.Core.WebServices.Services
         {
             var response = new StatusResponse {Status = "Initialising"};
 
-            if (Container.IsRegistered<NotificationEventAgentStart>())
+            if (Container.IsRegistered<ActivityTracker>())
             {
-                response.Info = Container.Resolve<NotificationEventAgentStart>();
+                response.Info = Container.Resolve<ActivityTracker>().StartEvent;
                 response.Status = "Running";
             }
 
