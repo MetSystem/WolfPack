@@ -21,6 +21,7 @@ namespace Wolfpack.Tests.Activities
         public void Initialise()
         {
             Container.RegisterInstance(_config);
+            Container.RegisterInstance(new ActivityTracker());
             Container.RegisterAsSingleton<IWebServiceExtender>(typeof(RegisterCoreServices));
             Container.RegisterAsSingleton<IActivityPlugin>(typeof(WebServiceActivity));
             Container.RegisterAsSingleton<IWebServiceReceiverStrategy>(typeof(WebServiceTestReceiverStrategy));

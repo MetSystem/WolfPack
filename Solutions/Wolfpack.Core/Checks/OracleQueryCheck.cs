@@ -1,20 +1,21 @@
 using System;
+using System.Data;
 using Wolfpack.Core.Database.Oracle;
 using Wolfpack.Core.Interfaces.Entities;
 
 namespace Wolfpack.Core.Checks
 {
-    public class OracleScalarCheckConfig : ScalarCheckConfigBase
+    public class OracleQueryCheckConfig : QueryCheckConfigBase
     {
         public string ConnectionString { get; set; }
     }
 
-    public class OracleScalarCheck : ScalarCheckBase<OracleScalarCheckConfig>
+    public class OracleQueryCheck : QueryCheckBase<OracleQueryCheckConfig>
     {
         /// <summary>
         /// default ctor
         /// </summary>
-        public OracleScalarCheck(OracleScalarCheckConfig config)
+        public OracleQueryCheck(OracleQueryCheckConfig config)
             : base(config)
         {
         }
@@ -23,21 +24,29 @@ namespace Wolfpack.Core.Checks
         {
             base.ValidateConfig();
 
-            if (_config.FromQuery.Contains(";"))
+            if (_config.Query.Contains(";"))
                 throw new FormatException("Semi-colons are not accepted in Sql from-query statements");
         }
 
-        protected override int RunQuery(string query)
+        protected override DataTable RunQuery(string query)
         {
-            int rowcount;
+            var data = new DataTable();
 
             using (var cmd = OracleAdhocCommand.UsingSmartConnection(_config.ConnectionString)
                 .WithSql(query))
             {
-                rowcount = (int)cmd.ExecuteScalar();
+                using (var reader = cmd.ExecuteReader())
+                {
+                    data.Load(reader);
+                }
             }
 
-            return rowcount;
+            return data;
+        }
+
+        protected override string DescribeNotification()
+        {
+            return "Oracle Scalar Check";
         }
 
         protected override PluginDescriptor BuildIdentity()

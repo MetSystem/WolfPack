@@ -160,6 +160,8 @@
     <Compile Include="Agent\CmdLineArgTests.cs" />
     <Compile Include="Artifacts\FileSystemArtifactManager.Domain.cs" />
     <Compile Include="Artifacts\FileSystemArtifactManager.Specs.cs" />
+    <Compile Include="Checks\SqlQueryCheck.Domain.cs" />
+    <Compile Include="Checks\SqlQueryCheck.Specs.cs" />
     <Compile Include="Checks\ThresholdBased.Specs.cs" />
     <Compile Include="Checks\WindowServiceStartup.Domain.cs" />
     <Compile Include="Checks\WindowServiceStartup.Specs.cs" />

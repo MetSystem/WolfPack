@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using Wolfpack.Core.Interfaces;
 using Wolfpack.Core.Interfaces.Entities;
-using Castle.Core.Internal;
 
 namespace Wolfpack.Core.Repositories.FileSystem
 {
@@ -47,6 +46,11 @@ namespace Wolfpack.Core.Repositories.FileSystem
         {
             var filename = MakeItemFilename(notificationId);
             File.Delete(filename);
+        }
+
+        public void Initialise()
+        {
+            // do nothing!
         }
 
         public IQueryable<NotificationEvent> Filter(params INotificationRepositoryQuery[] filters)
