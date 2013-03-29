@@ -29,7 +29,7 @@ namespace Wolfpack.Tests.Checks
                         .And(domain.TheAgentIsStarted)
                     .When(domain.TheHealthCheckIsInvoked)
                     .Then(domain.ThereShouldBe_NotificationRequestMessagesOfType_Published, 1, NotificationEventHealthCheck.EventTypeName)
-                        .And(domain.ThereShouldBe_HealthCheckNotificationsReceived, 0)
+                        .And(domain.ThereShouldBe_HealthCheckNotificationsReceived, 1)
                     .ExecuteWithReport();
             }
         }

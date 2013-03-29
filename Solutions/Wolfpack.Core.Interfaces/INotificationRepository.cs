@@ -6,6 +6,7 @@ namespace Wolfpack.Core.Interfaces
 {
     public interface INotificationRepository
     {
+        void Initialise();
         IQueryable<NotificationEvent> Filter(params INotificationRepositoryQuery[] filters);
 
         bool GetById(Guid id, out NotificationEvent notification);

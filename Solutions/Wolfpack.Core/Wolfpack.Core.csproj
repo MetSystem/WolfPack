@@ -105,9 +105,10 @@
     <Compile Include="Checks\HealthCheckBaseEx.cs" />
     <Compile Include="Checks\HostPingCheck.cs" />
     <Compile Include="Checks\MsmqQueueInfoCheck.cs" />
-    <Compile Include="Checks\OracleScalarCheck.cs" />
-    <Compile Include="Checks\ScalarCheckBase.cs" />
-    <Compile Include="Checks\SqlScalarCheck.cs" />
+    <Compile Include="Checks\OracleQueryCheck.cs" />
+    <Compile Include="Checks\QueryCheckBase.cs" />
+    <Compile Include="Checks\QueryCheckConfigBase.cs" />
+    <Compile Include="Checks\SqlQueryCheck.cs" />
     <Compile Include="Checks\ThresholdCheckBase.cs" />
     <Compile Include="Checks\UrlPingCheck.cs" />
     <Compile Include="Checks\WindowsServiceStartupCheck.cs" />

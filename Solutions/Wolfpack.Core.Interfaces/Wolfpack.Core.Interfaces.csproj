@@ -57,6 +57,7 @@
     <Compile Include="Entities\TagCloudEntry.cs" />
     <Compile Include="IConfigurationManager.cs" />
     <Compile Include="INotificationRepositoryQuery.cs" />
+    <Compile Include="ISupportArtifactGeneration.cs" />
     <Compile Include="ISupportConfigurationDiscovery.cs" />
     <Compile Include="Entities\AgentConfiguration.cs" />
     <Compile Include="Entities\AgentInfo.cs" />

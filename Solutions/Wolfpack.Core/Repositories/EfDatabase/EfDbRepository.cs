@@ -14,6 +14,11 @@ namespace Wolfpack.Core.Repositories.EfDatabase
             _context = context;
         }
 
+        public void Initialise()
+        {
+            throw new NotImplementedException();
+        }
+
         public IQueryable<NotificationEvent> Filter(params INotificationRepositoryQuery[] filters)
         {
             return filters.Aggregate(_context.Notifications.AsQueryable(), (current, filter) => filter.Filter(current));            
