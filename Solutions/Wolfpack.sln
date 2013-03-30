@@ -141,6 +141,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "net40", "net40", "{68CB6FFE
 		NuGet\Templates\Wolfpack.WebServices.Client\lib\Net40\delete.me = NuGet\Templates\Wolfpack.WebServices.Client\lib\Net40\delete.me
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "content", "content", "{86E052FA-4B01-4AE1-8B54-86E6B0B8AE9C}"
+	ProjectSection(SolutionItems) = preProject
+		NuGet\Templates\Wolfpack.Core.Testing\content\app.config.transform = NuGet\Templates\Wolfpack.Core.Testing\content\app.config.transform
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -305,6 +310,7 @@ Global
 		{DA773E49-2C40-4601-8662-896ABB32951F} = {741A7329-0919-4109-A086-9EBBD33A4084}
 		{41E87ECF-4F6F-4B67-ABF8-E549688D4D13} = {741A7329-0919-4109-A086-9EBBD33A4084}
 		{8FD61883-869C-4D62-9C55-C498F095F5C2} = {CE4229D8-6176-4BF2-94E6-E18A34218BB0}
+		{86E052FA-4B01-4AE1-8B54-86E6B0B8AE9C} = {CE4229D8-6176-4BF2-94E6-E18A34218BB0}
 		{AAA182C2-8B5E-46D6-93DE-31D718E59415} = {8FD61883-869C-4D62-9C55-C498F095F5C2}
 		{FD1684B9-4987-446C-B2D6-8BF32A3C1C8F} = {F767A53C-845F-421B-BFEA-E6B6CAA31061}
 		{9847DE2C-436E-4256-A115-86DCB1660D98} = {FD1684B9-4987-446C-B2D6-8BF32A3C1C8F}
