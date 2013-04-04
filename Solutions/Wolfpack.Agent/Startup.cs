@@ -7,6 +7,7 @@ using Wolfpack.Core;
 using Wolfpack.Core.Interfaces;
 using Wolfpack.Core.Loaders;
 using Topshelf;
+using Logger = Wolfpack.Core.Logger;
 
 namespace Wolfpack.Agent
 {

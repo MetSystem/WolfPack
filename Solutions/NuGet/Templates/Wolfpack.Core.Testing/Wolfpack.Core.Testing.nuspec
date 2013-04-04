@@ -15,12 +15,18 @@
     <language>en-GB</language>
     <tags>Wolfpack Monitoring Testing BDD</tags>
     <dependencies>
+      <dependency id="Growl" version="[0.6]" />
+      <dependency id="Castle.Core" version="[3.2.0]" />
+      <dependency id="Castle.Windsor" version="[3.2.0]" />
+      <dependency id="EntityFramework" version="[5.0.0]" />
       <dependency id="FluentAssertions" version="[2.0.0.1]" />
       <dependency id="FluentPath" version="[1.0.0]" />
       <dependency id="Magnum" version="[2.0.1.0]" />
       <dependency id="StoryQ" version="[2.0.5]" />
       <dependency id="ServiceStack.Text" version="[3.9.37]" />
       <dependency id="log4net" version="[1.2.10]" />
+      <dependency id="Newtonsoft.Json" version="[4.5.11]" />
+      <dependency id="Sidewinder.Core" version="[1.5.0]" />      
     </dependencies>
   </metadata>
 </package>
