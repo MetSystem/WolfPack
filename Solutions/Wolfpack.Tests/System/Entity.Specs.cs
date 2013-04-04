@@ -28,5 +28,18 @@ namespace Wolfpack.Tests.System
                     .ExecuteWithReport();
             }
         }
+
+        [Test]
+        public void AllNotificationPropertiesAreCopiedFromRequestToEvent()
+        {
+            using (var domain = new EntitiesDomain())
+            {
+                Feature.WithScenario("when converting a notification request to an event all notification properties are copied across")
+                    .Given(domain.TheNotificationRequestIsFullyPopulated)
+                    .When(domain.TheNotificationRequestIsConvertedToAnEvent)
+                    .Then(domain.AllTheNotificationEventPropertiesMatchTheRequestNotification)
+                    .ExecuteWithReport();
+            }
+        }
     }
 }

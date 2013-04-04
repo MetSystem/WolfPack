@@ -40,13 +40,19 @@ rem copy Wolfpack.Contrib.BuildAnalytics\bin\debug\Sharp2City.pdb NuGet\Template
 
 rem Core.Testing
 del NuGet\Templates\Wolfpack.Core.Testing\lib\net40\delete.me
-copy Wolfpack.Core.Testing\bin\debug\*.* NuGet\Templates\Wolfpack.Core.Testing\lib\net40
-del NuGet\Templates\Wolfpack.Core.Testing\lib\net40\wolfpack.agent.exe.config
-del NuGet\Templates\Wolfpack.Core.Testing\lib\net40\FluentIO.*
-del NuGet\Templates\Wolfpack.Core.Testing\lib\net40\FluentAssertions.*
-del NuGet\Templates\Wolfpack.Core.Testing\lib\net40\Magnum.*
-del NuGet\Templates\Wolfpack.Core.Testing\lib\net40\StoryQ*.*
-del NuGet\Templates\Wolfpack.Core.Testing\lib\net40\ServiceStack*.*
+copy Wolfpack.Core.Testing\bin\debug\Wolfpack.Agent.exe NuGet\Templates\Wolfpack.Core.Testing\lib\net40
+copy Wolfpack.Core.Testing\bin\debug\Wolfpack.Agent.pdb NuGet\Templates\Wolfpack.Core.Testing\lib\net40
+copy Wolfpack.Core.Testing\bin\debug\Wolfpack.Core.dll NuGet\Templates\Wolfpack.Core.Testing\lib\net40
+copy Wolfpack.Core.Testing\bin\debug\Wolfpack.Core.pdb NuGet\Templates\Wolfpack.Core.Testing\lib\net40
+copy Wolfpack.Core.Testing\bin\debug\Wolfpack.Core.Interfaces.Castle.dll NuGet\Templates\Wolfpack.Core.Testing\lib\net40
+copy Wolfpack.Core.Testing\bin\debug\Wolfpack.Core.Interfaces.Castle.pdb NuGet\Templates\Wolfpack.Core.Testing\lib\net40
+copy Wolfpack.Core.Testing\bin\debug\Wolfpack.Core.Interfaces.dll NuGet\Templates\Wolfpack.Core.Testing\lib\net40
+copy Wolfpack.Core.Testing\bin\debug\Wolfpack.Core.Interfaces.pdb NuGet\Templates\Wolfpack.Core.Testing\lib\net40
+copy Wolfpack.Core.Testing\bin\debug\Wolfpack.Core.Interfaces.Magnum.dll NuGet\Templates\Wolfpack.Core.Testing\lib\net40
+copy Wolfpack.Core.Testing\bin\debug\Wolfpack.Core.Interfaces.Magnum.pdb NuGet\Templates\Wolfpack.Core.Testing\lib\net40
+copy Wolfpack.Core.Testing\bin\debug\Wolfpack.Core.Testing.dll NuGet\Templates\Wolfpack.Core.Testing\lib\net40
+copy Wolfpack.Core.Testing\bin\debug\Wolfpack.Core.Testing.pdb NuGet\Templates\Wolfpack.Core.Testing\lib\net40
+
 
 rem Wolfpack (+Sidewinder)
 del NuGet\Templates\Wolfpack\tools\delete.me
