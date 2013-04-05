@@ -4,19 +4,15 @@ namespace Wolfpack.Core.Interfaces.Entities
 {
     public class AgentConfiguration
     {
-        public string SiteId { get; set; }
-
-        public string Longitude { get; set; }
-
-        public string Latitude { get; set; }
-
-        public AgentInfo BuildInfo()
+        private string _siteId;
+        public string SiteId
         {
-            return new AgentInfo
-            {
-                SiteId = Environment.MachineName,
-                AgentId = SiteId
-            };
+            get { return string.IsNullOrWhiteSpace(_siteId) ? Environment.MachineName : _siteId; }
+            set { _siteId = value; }
         }
+
+        public string AgentId { get; set; }
+        public string Longitude { get; set; }
+        public string Latitude { get; set; }
     }
 }

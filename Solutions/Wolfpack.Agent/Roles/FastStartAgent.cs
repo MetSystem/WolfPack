@@ -20,9 +20,8 @@ namespace Wolfpack.Agent.Roles
         public FastStartAgent(AgentConfiguration config,
             ILoader<INotificationEventPublisher> publisherLoader,
             ILoader<IHealthCheckSchedulerPlugin> checksLoader,
-            ILoader<IActivityPlugin> activitiesLoader,
-            INotificationHub hub)
-            : base(config, publisherLoader, checksLoader, activitiesLoader, hub)
+            ILoader<IActivityPlugin> activitiesLoader)
+            : base(config, publisherLoader, checksLoader, activitiesLoader)
         {
             _identity = new PluginDescriptor
                              {

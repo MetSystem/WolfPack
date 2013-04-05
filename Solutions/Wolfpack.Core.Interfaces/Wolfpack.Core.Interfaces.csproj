@@ -60,7 +60,6 @@
     <Compile Include="ISupportArtifactGeneration.cs" />
     <Compile Include="ISupportConfigurationDiscovery.cs" />
     <Compile Include="Entities\AgentConfiguration.cs" />
-    <Compile Include="Entities\AgentInfo.cs" />
     <Compile Include="Entities\AnalyticsBaseline.cs" />
     <Compile Include="Entities\ArtifactDescriptor.cs" />
     <Compile Include="Entities\Binding.cs" />

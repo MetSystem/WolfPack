@@ -57,7 +57,7 @@ namespace Wolfpack.Tests.System
 
         public void TheNotificationRequestIsConvertedToAnEvent()
         {
-            var hub = new NotificationHub(_filters);
+            var hub = new DefaultNotificationHub(new AgentConfiguration(), _filters);
             _event = hub.ConvertRequestToEvent(_request);
         }
 

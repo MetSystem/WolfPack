@@ -1,6 +1,7 @@
 using Wolfpack.Core;
 using Wolfpack.Core.Configuration;
 using Wolfpack.Core.Interfaces;
+using Wolfpack.Core.Notification;
 
 namespace Wolfpack.Agent.Profiles
 {
@@ -19,7 +20,8 @@ namespace Wolfpack.Agent.Profiles
             get
             {
                 ConfigurationManager.Initialise();
-                Messenger.Initialise();                
+                Messenger.Initialise();
+                NotificationHub.Initialise();
 
                 // load and execute all startup plugins
                 // ...not using .SafeInitialise() method as
