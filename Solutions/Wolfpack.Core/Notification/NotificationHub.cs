@@ -1,4 +1,5 @@
 ﻿using Wolfpack.Core.Interfaces;
+using Wolfpack.Core.Interfaces.Entities;
 
 namespace Wolfpack.Core.Notification
 {
@@ -25,5 +26,9 @@ namespace Wolfpack.Core.Notification
             _instance.Initialise();
         }
 
+        public static NotificationEvent ConvertRequestToEvent(NotificationRequest request)
+        {
+            return _instance.ConvertRequestToEvent(request);
+        }
     }
 }
