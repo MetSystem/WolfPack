@@ -14,23 +14,19 @@ namespace Wolfpack.Agent.Roles
         protected readonly ILoader<INotificationEventPublisher> _publisherLoader;
         protected readonly ILoader<IHealthCheckSchedulerPlugin> _checksLoader;
         protected readonly ILoader<IActivityPlugin> _activitiesLoader;
-        
-        protected readonly INotificationHub _hub;
-        protected PluginDescriptor _identity;
 
-        protected AgentInfo _agentInfo;
+        private readonly AgentConfiguration _config;
+        protected PluginDescriptor _identity;
 
         public Agent(AgentConfiguration config,
             ILoader<INotificationEventPublisher> publisherLoader,
             ILoader<IHealthCheckSchedulerPlugin> checksLoader,
-            ILoader<IActivityPlugin> activitiesLoader,
-            INotificationHub hub)
+            ILoader<IActivityPlugin> activitiesLoader)
         {
-            _hub = hub;
+            _config = config;
             _publisherLoader = publisherLoader;
             _checksLoader = checksLoader;
             _activitiesLoader = activitiesLoader;
-            _agentInfo = config.BuildInfo();            
 
             _identity = new PluginDescriptor
                              {
@@ -51,8 +47,8 @@ namespace Wolfpack.Agent.Roles
             var sessionInfo = new NotificationEventAgentStart
             {
                 DiscoveryStarted = DateTime.UtcNow,
-                AgentId = _agentInfo.AgentId,
-                SiteId =  _agentInfo.SiteId
+                AgentId = _config.AgentId,
+                SiteId = _config.SiteId
             };
 
             INotificationEventPublisher[] publishers;
@@ -119,9 +115,6 @@ namespace Wolfpack.Agent.Roles
             sessionInfo.UnhealthyActivities = (from activity in activities
                                       where !activity.Status.IsHealthy()
                                       select activity.Identity).ToList();
-
-            // ensure we are listening for anything to be published
-            _hub.Initialise(_agentInfo);
 
             Messenger.Publish(NotificationRequestBuilder.AlwaysPublish(sessionInfo).Build());
 

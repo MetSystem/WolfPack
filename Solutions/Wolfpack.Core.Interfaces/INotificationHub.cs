@@ -4,7 +4,7 @@ namespace Wolfpack.Core.Interfaces
 {
     public interface INotificationHub
     {
-        void Initialise(AgentInfo info);
+        void Initialise();
         INotificationRequestFilter SelectFilter(NotificationRequest request);
         NotificationEvent ConvertRequestToEvent(NotificationRequest request);
         void PublishEvent(NotificationEvent notification);

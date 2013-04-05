@@ -17,7 +17,6 @@ namespace Wolfpack.Core.Testing.Drivers
         private IRolePlugin _role;
 
         private readonly List<INotificationRequestFilter> _notificationFilters; 
-        private INotificationHub _notificationHub;
 
         private readonly AutomationLoader<IStartupPlugin> _startupLoader;
         private readonly AutomationLoader<INotificationEventPublisher> _publisherLoader;
@@ -86,25 +85,25 @@ namespace Wolfpack.Core.Testing.Drivers
 
         public IRolePlugin Start()
         {
+            var agentConfig = new AgentConfiguration
+                                  {
+                                      AgentId = "TestAgent"
+                                  };
+
             Container.Initialise();
             Messenger.Initialise(new MagnumMessenger());
             Messenger.InterceptBefore<NotificationEvent>(msg => NotificationEvents.Add(msg));
             Messenger.InterceptBefore<NotificationRequest>(msg => NotificationRequests.Add(msg));
-
-            _notificationHub = new NotificationHub(_notificationFilters);
+            NotificationHub.Initialise(new DefaultNotificationHub(agentConfig, _notificationFilters));
 
             RunStartupPlugins();
 
             _customPluginActions.ForEach(a => a(this));
 
-            _role = new Agent.Roles.Agent(new AgentConfiguration
-                                               {
-                                                   SiteId = "Test"
-                                               },
+            _role = new Agent.Roles.Agent(agentConfig,
                                            _publisherLoader,
                                            _checkLoader,
-                                           _activityLoader,
-                                           _notificationHub);
+                                           _activityLoader);
             _role.Start();
             return _role;
         }

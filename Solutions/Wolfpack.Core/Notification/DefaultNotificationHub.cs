@@ -7,21 +7,20 @@ using Wolfpack.Core.Notification.Filters.Request;
 
 namespace Wolfpack.Core.Notification
 {
-    public class NotificationHub : INotificationHub, IConsumer<NotificationRequest>
+    public class DefaultNotificationHub : INotificationHub, IConsumer<NotificationRequest>
     {
-        protected AgentInfo _agentInfo;
+        private readonly AgentConfiguration _config;
 
         protected Dictionary<string, INotificationRequestFilter> _filters;
 
-        public NotificationHub(IEnumerable<INotificationRequestFilter> filters)
+        public DefaultNotificationHub(AgentConfiguration config, IEnumerable<INotificationRequestFilter> filters)
         {
+            _config = config;
             LoadFilters(filters);
         }
 
-        public void Initialise(AgentInfo info)
+        public void Initialise()
         {
-            _agentInfo = info;
-
             // listen for request messages being published 
             // & route to the most appropriate filter
             Messenger.Subscribe(this);
@@ -75,9 +74,9 @@ namespace Wolfpack.Core.Notification
                 return;
 
             if (string.IsNullOrWhiteSpace(request.Notification.AgentId))
-                request.Notification.AgentId = _agentInfo.AgentId;
+                request.Notification.AgentId = _config.AgentId;
             if (string.IsNullOrWhiteSpace(request.Notification.SiteId))
-                request.Notification.SiteId = _agentInfo.SiteId;
+                request.Notification.SiteId = _config.SiteId;
         }
 
         public virtual NotificationEvent ConvertRequestToEvent(NotificationRequest request)

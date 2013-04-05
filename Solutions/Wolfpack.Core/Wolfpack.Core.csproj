@@ -181,9 +181,9 @@
     <Compile Include="Notification\Filters\Request\StateChangeNagFailNotificationFilter.cs" />
     <Compile Include="Notification\Filters\Request\StateChangeNotificationFilter.cs" />
     <Compile Include="Notification\Filters\Request\SuccessOnlyNotificationFilter.cs" />
-    <Compile Include="Notification\NotificationRequestBuilder.cs" />
     <Compile Include="Notification\NotificationHub.cs" />
-    <Compile Include="Notification\NotificationHubBootstrapper.cs" />
+    <Compile Include="Notification\NotificationRequestBuilder.cs" />
+    <Compile Include="Notification\DefaultNotificationHub.cs" />
     <Compile Include="Pipeline\DefaultPipeline.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Publishers\FilteredResultPublisherBase.cs" />
