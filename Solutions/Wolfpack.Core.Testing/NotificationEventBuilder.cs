@@ -26,6 +26,7 @@ namespace Wolfpack.Core.Testing
                                                    Longitude = coreEvent.Longitude,
                                                    Message = coreEvent.Message,
                                                    MinuteBucket = coreEvent.MinuteBucket,
+                                                   Properties = coreEvent.Properties,
                                                    ReceivedOnUtc = coreEvent.ReceivedOnUtc,
                                                    Result = coreEvent.Result,
                                                    ResultCount = coreEvent.ResultCount,
