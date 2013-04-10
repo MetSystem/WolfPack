@@ -22,11 +22,17 @@ namespace Wolfpack.Core.Configuration
             return new List<string>();
         }
 
+        public virtual string GetLink()
+        {
+            return string.Empty;
+        }
+
         public virtual ConfigurationEntry GetConfigurationMetadata()
         {
             var entry = new ConfigurationEntry
                             {
                                 Tags = GetTags(),
+                                Link = GetLink(),
                                 RequiredProperties = GetRequiredProperties(),
                                 Data = Serialiser.ToJson(GetConfiguration()),
                                 ConcreteType = typeof (T).AssemblyQualifiedName

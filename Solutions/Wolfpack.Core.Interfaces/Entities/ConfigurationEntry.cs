@@ -18,6 +18,7 @@ namespace Wolfpack.Core.Interfaces.Entities
         public string ConcreteType { get; set; }
         public string Data { get; set; }
         public List<string> Tags { get; set; }
+        public string Link { get; set; }
         public Properties RequiredProperties { get; set; }
 
         public ConfigurationEntry()
