@@ -16,6 +16,7 @@
     <tags>Wolfpack Monitoring ServiceStack</tags>
     <dependencies>
       <dependency id="ServiceStack" version="[3.9.37]" />
+      <dependency id="ValueInjecter" version="[2.3.3]" />
     </dependencies>
   </metadata>
 </package>
