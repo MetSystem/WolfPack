@@ -17,6 +17,8 @@
     <dependencies>
       <dependency id="ServiceStack" version="[3.9.37]" />
       <dependency id="ValueInjecter" version="[2.3.3]" />
+      <dependency id="log4net" version="[1.2.10]" />
+      <dependency id="Magnum" version="[2.0.1.0]" />
     </dependencies>
   </metadata>
 </package>
