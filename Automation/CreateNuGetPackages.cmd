@@ -10,13 +10,18 @@ pushd ..\releases\v%1\source
 rem WebServices
 del NuGet\Templates\Wolfpack.WebServices\lib\net40\delete.me
 copy Wolfpack.Agent\bin\debug\Wolfpack.Core.WebServices.Interfaces.dll NuGet\Templates\Wolfpack.WebServices\lib\net40
+copy Wolfpack.Agent\bin\debug\Wolfpack.Core.WebServices.Interfaces.pdb NuGet\Templates\Wolfpack.WebServices\lib\net40
 copy Wolfpack.Agent\bin\debug\Wolfpack.Core.Interfaces.dll NuGet\Templates\Wolfpack.WebServices\lib\net40
+copy Wolfpack.Agent\bin\debug\Wolfpack.Core.Interfaces.pdb NuGet\Templates\Wolfpack.WebServices\lib\net40
 
 rem WebServices Client
 del NuGet\Templates\Wolfpack.WebServices.Client\lib\net40\delete.me
 copy Wolfpack.Agent\bin\debug\Wolfpack.Core.WebServices.Client.dll NuGet\Templates\Wolfpack.WebServices.Client\lib\net40
+copy Wolfpack.Agent\bin\debug\Wolfpack.Core.WebServices.Client.pdb NuGet\Templates\Wolfpack.WebServices.Client\lib\net40
 copy Wolfpack.Agent\bin\debug\Wolfpack.Core.WebServices.Interfaces.dll NuGet\Templates\Wolfpack.WebServices.Client\lib\net40
+copy Wolfpack.Agent\bin\debug\Wolfpack.Core.WebServices.Interfaces.pdb NuGet\Templates\Wolfpack.WebServices.Client\lib\net40
 copy Wolfpack.Agent\bin\debug\Wolfpack.Core.Interfaces.dll NuGet\Templates\Wolfpack.WebServices.Client\lib\net40
+copy Wolfpack.Agent\bin\debug\Wolfpack.Core.Interfaces.pdb NuGet\Templates\Wolfpack.WebServices.Client\lib\net40
 
 
 rem Publishers
