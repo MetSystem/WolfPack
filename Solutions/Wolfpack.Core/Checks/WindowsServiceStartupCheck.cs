@@ -44,7 +44,7 @@ namespace Wolfpack.Core.Checks
         public string NotificationMode { get; set; }
     }
 
-    public class WindowsServiceStartupConfigurationAdvertiser : HealthCheckDiscoveryBase<WindowsServiceStartupCheckConfig>
+    public class WindowsServiceStartupConfigurationAdvertiser : HealthCheckDiscoveryBase<WindowsServiceStartupCheckConfig, WindowsServiceStartupCheck>
     {
         protected override WindowsServiceStartupCheckConfig GetConfiguration()
         {

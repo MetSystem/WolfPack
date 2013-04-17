@@ -16,7 +16,7 @@ namespace Wolfpack.Core.Checks
         public double? NotificationThreshold { get; set; }
     }
 
-    public class HostPingCheckConfigurationAdvertiser : HealthCheckDiscoveryBase<HostPingCheckConfig>
+    public class HostPingCheckConfigurationAdvertiser : HealthCheckDiscoveryBase<HostPingCheckConfig, HostPingCheck>
     {
         protected override HostPingCheckConfig GetConfiguration()
         {

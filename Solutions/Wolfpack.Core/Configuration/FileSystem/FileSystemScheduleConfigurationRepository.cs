@@ -19,8 +19,8 @@ namespace Wolfpack.Core.Configuration.FileSystem
                                     var name = Path.GetFileNameWithoutExtension(e.FileInfo.Name);
 
                                     Logger.Debug("\tAdding type '{0}' named '{1}' to container...",
-                                        e.Entry.ConcreteType, name); 
-                                    var concreteType = Type.GetType(e.Entry.ConcreteType);
+                                        e.Entry.ConfigurationType, name); 
+                                    var concreteType = Type.GetType(e.Entry.ConfigurationType);
                                     var instance = Serialiser.FromJson(e.Entry.Data, concreteType);
 
                                     Container.RegisterInstance(instance, name);

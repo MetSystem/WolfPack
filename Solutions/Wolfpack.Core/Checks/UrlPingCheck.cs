@@ -70,7 +70,7 @@ namespace Wolfpack.Core.Checks
         public string NotificationMode { get; set; }        
     }
 
-    public class UrlPingConfigurationAdvertiser : HealthCheckDiscoveryBase<UrlPingCheckConfig>
+    public class UrlPingConfigurationAdvertiser : HealthCheckDiscoveryBase<UrlPingCheckConfig, UrlPingCheck>
     {
         protected override UrlPingCheckConfig GetConfiguration()
         {

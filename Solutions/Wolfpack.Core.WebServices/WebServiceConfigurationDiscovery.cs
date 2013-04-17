@@ -2,10 +2,11 @@ using System.Collections.Generic;
 using Wolfpack.Core.Configuration;
 using Wolfpack.Core.Interfaces.Entities;
 using Wolfpack.Core.WebServices.Interfaces.Entities;
+using Wolfpack.Core.WebServices.Publisher;
 
 namespace Wolfpack.Core.WebServices
 {
-    public class WebServiceConfigurationDiscovery : PluginDiscoveryBase<WebServiceActivityConfig>
+    public class WebServiceConfigurationDiscovery : PluginDiscoveryBase<WebServiceActivityConfig, WebServiceActivity>
     {
         protected override WebServiceActivityConfig GetConfiguration()
         {
@@ -26,7 +27,7 @@ namespace Wolfpack.Core.WebServices
         }
     }
 
-    public class WebServicePublisherConfigurationDiscovery : PluginDiscoveryBase<WebServicePublisherConfig>
+    public class WebServicePublisherConfigurationDiscovery : PluginDiscoveryBase<WebServicePublisherConfig, WebServicePublisher>
     {
         protected override WebServicePublisherConfig GetConfiguration()
         {

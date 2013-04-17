@@ -74,6 +74,7 @@
     <Compile Include="Drivers\AutomationLoader.cs" />
     <Compile Include="Drivers\AutomationProfile.cs" />
     <Compile Include="Drivers\AutomationScheduler.cs" />
+    <Compile Include="Drivers\BootstrapperRunner.cs" />
     <Compile Include="NotificationEventBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

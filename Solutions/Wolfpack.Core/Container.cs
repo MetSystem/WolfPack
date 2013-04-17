@@ -37,6 +37,12 @@ namespace Wolfpack.Core
             return _container.RegisterAsSingleton<T>(implType);
         }
 
+        public static IContainer RegisterAsSingletonWithInterception<TPlugin, TIntercept>(Type type) 
+            where TPlugin : class
+        {
+            return _container.RegisterAsSingletonWithInterception<TPlugin, TIntercept>(type);
+        }
+
         public static IContainer RegisterInstance<T>(T instance, string name) 
             where T : class
         {

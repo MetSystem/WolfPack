@@ -5,6 +5,7 @@ using Wolfpack.Core;
 using Wolfpack.Core.Interfaces;
 using Wolfpack.Core.Interfaces.Entities;
 using Wolfpack.Core.Testing.Domains;
+using Wolfpack.Core.Testing.Drivers;
 using Wolfpack.Core.WebServices;
 using Wolfpack.Core.WebServices.Client;
 using Wolfpack.Core.WebServices.Interfaces;
@@ -98,7 +99,7 @@ namespace Wolfpack.Tests.Activities
                                  ApiKey = _clientApiKey
                              };
 
-            Agent.Run(new WebServicePublisherBootstrapper(config));
+            Agent.Run(new BootstrapperRunner<WebServicePublisherConfig, WebServicePublisherBootstrapper>(config));
             Agent.Run(agent =>
                           {
                               var publisher = Container.Resolve<IActivityPlugin, WebServicePublisher>();

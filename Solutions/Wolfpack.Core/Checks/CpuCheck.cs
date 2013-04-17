@@ -19,7 +19,7 @@ namespace Wolfpack.Core.Checks
         public double? NotificationThreshold { get; set; }
     }
 
-    public class CpuCheckConfigurationAdvertiser : HealthCheckDiscoveryBase<CpuCheckConfig>
+    public class CpuCheckConfigurationAdvertiser : HealthCheckDiscoveryBase<CpuCheckConfig, CpuCheck>
     {
         protected override CpuCheckConfig GetConfiguration()
         {

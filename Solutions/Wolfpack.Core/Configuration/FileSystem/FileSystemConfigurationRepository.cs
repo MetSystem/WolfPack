@@ -117,5 +117,28 @@ namespace Wolfpack.Core.Configuration.FileSystem
 
             return false;
         }
+
+        protected virtual void FindAndExecuteBootstrappers(Type configType, object config)
+        {
+            var bootstrapBuilderType = typeof(ISupportBootStrapping<>);
+            var bootstrapperInterfaceType = bootstrapBuilderType.MakeGenericType(configType);
+
+            Type[] bootstrapperTypes;
+            if (!TypeDiscovery.Discover(bootstrapperInterfaceType, out bootstrapperTypes))
+                return;
+
+            // found some...
+            foreach (var bootstrapperType in bootstrapperTypes)
+            {
+                dynamic bootstrapper = Activator.CreateInstance(bootstrapperType);
+                bootstrapperInterfaceType.GetMethod("Execute")
+                    .Invoke(bootstrapper, new[] { config });
+            }
+        }
+
+        protected virtual bool IsDisabled(object config)
+        {
+            return (config is ICanBeSwitchedOff && !((ICanBeSwitchedOff)config).Enabled);
+        }
     }
 }

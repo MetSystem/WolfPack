@@ -15,7 +15,7 @@ namespace Wolfpack.Core.Checks
         public double? NotificationThreshold { get; set; }
     }
 
-    public class DiskSpaceConfigurationAdvertiser : HealthCheckDiscoveryBase<DiskSpaceCheckConfig>
+    public class DiskSpaceConfigurationAdvertiser : HealthCheckDiscoveryBase<DiskSpaceCheckConfig, DiskSpaceCheck>
     {
         protected override DiskSpaceCheckConfig GetConfiguration()
         {

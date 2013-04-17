@@ -4,7 +4,7 @@ using Wolfpack.Core.SignalR.Interfaces.Entities;
 
 namespace Wolfpack.Core.SignalR
 {
-    public class SignalRConfigurationDiscovery : PluginDiscoveryBase<SignalRActivityConfig>
+    public class SignalRConfigurationDiscovery : PluginDiscoveryBase<SignalRActivityConfig, SignalRActivity>
     {
         protected override SignalRActivityConfig GetConfiguration()
         {

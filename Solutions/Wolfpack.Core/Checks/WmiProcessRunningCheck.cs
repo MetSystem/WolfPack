@@ -18,7 +18,7 @@ namespace Wolfpack.Core.Checks
         public string NotificationMode { get; set; }
     }
 
-    public class WmiProcessConfigurationAdvertiser : HealthCheckDiscoveryBase<WmiProcessRunningCheckConfig>
+    public class WmiProcessConfigurationAdvertiser : HealthCheckDiscoveryBase<WmiProcessRunningCheckConfig, WmiProcessRunningCheck>
     {
         protected override WmiProcessRunningCheckConfig GetConfiguration()
         {

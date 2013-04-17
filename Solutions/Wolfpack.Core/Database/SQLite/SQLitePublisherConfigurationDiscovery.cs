@@ -3,7 +3,7 @@ using Wolfpack.Core.Interfaces.Entities;
 
 namespace Wolfpack.Core.Database.SQLite
 {
-    public class SQLitePublisherConfigurationDiscovery : PluginDiscoveryBase<SQLiteConfiguration>
+    public class SQLitePublisherConfigurationDiscovery : PluginDiscoveryBase<SQLiteConfiguration, SQLitePublisher>
     {
         protected override SQLiteConfiguration GetConfiguration()
         {

@@ -16,7 +16,7 @@ namespace Wolfpack.Core.Checks
         public double? NotificationThreshold { get; set; }
     }
 
-    public class MsmqQueueInfoConfigurationAdvertiser : HealthCheckDiscoveryBase<MsmqQueueInfoCheckConfig>
+    public class MsmqQueueInfoConfigurationAdvertiser : HealthCheckDiscoveryBase<MsmqQueueInfoCheckConfig, MsmqQueueInfoCheck>
     {
         protected override MsmqQueueInfoCheckConfig GetConfiguration()
         {
