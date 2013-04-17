@@ -50,6 +50,18 @@ namespace Wolfpack.Core.Containers
             return this;
         }
 
+        public IContainer RegisterAsSingletonWithInterception<TPlugin, TIntercept>(Type type) where TPlugin : class
+        {
+            var interceptorTypes = (from iType in ResolveAll<TIntercept>()
+                                    select iType.GetType()).ToArray();
+
+            _instance.Register(Component.For(typeof(TPlugin))
+                                    .LifeStyle.Transient
+                                    .ImplementedBy(type)
+                                    .Interceptors(interceptorTypes));
+            return this;
+        }
+
         public IContainer RegisterInstance<T>(T instance, bool overwrite = false)
             where T : class
         {

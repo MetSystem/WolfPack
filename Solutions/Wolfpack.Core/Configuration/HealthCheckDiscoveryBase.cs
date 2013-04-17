@@ -4,7 +4,7 @@ using Wolfpack.Core.Interfaces.Entities;
 
 namespace Wolfpack.Core.Configuration
 {
-    public abstract class HealthCheckDiscoveryBase<T> : PluginDiscoveryBase<T>
+    public abstract class HealthCheckDiscoveryBase<TConfig, TPlugin> : PluginDiscoveryBase<TConfig, TPlugin>
     {
         public override List<string> GetTags()
         {

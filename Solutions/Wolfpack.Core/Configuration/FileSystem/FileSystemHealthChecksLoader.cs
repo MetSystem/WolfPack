@@ -44,24 +44,21 @@ namespace Wolfpack.Core.Configuration.FileSystem
                 e =>
                     {
                         var name = Path.GetFileNameWithoutExtension(e.FileInfo.Name);
-                        var checkConfigType = Type.GetType(e.Entry.ConcreteType);
-                        var checkConfig = Serialiser.FromJson(e.Entry.Data, checkConfigType);
+                        var configType = Type.GetType(e.Entry.ConfigurationType);
+                        var config = Serialiser.FromJson(e.Entry.Data, configType);
                         var scheduleConfigName = e.FileInfo.Directory.Name;
 
-                        if ((checkConfig is ICanBeSwitchedOff) && !((ICanBeSwitchedOff)checkConfig).Enabled)
-                        {
-                            // disabled plugin
+                        if (IsDisabled(config))
                             return;
-                        }
 
                         // probe for convention based component
-                        var checkTypeName = checkConfigType.Name.Replace("Config", string.Empty);
+                        var checkTypeName = configType.Name.Replace("Config", string.Empty);
 
                         Type checkType;
                         if (GetType<IHealthCheckPlugin>(checkTypeName, out checkType))
                         {
                             // found it...
-                            var check = Activator.CreateInstance(checkType, checkConfig);
+                            var check = Activator.CreateInstance(checkType, config);
 
                             // associate with a scheduler component
                             var schedulerConfig = Container.Resolve(scheduleConfigName);
@@ -85,7 +82,7 @@ namespace Wolfpack.Core.Configuration.FileSystem
                         {
                             // just register the configuration component, something else 
                             // might be expecting it eg: a bootstrapper component
-                            Container.RegisterInstance(checkConfig, name);
+                            Container.RegisterInstance(config, name);
                         }
 
                         e.Entry.RequiredProperties.AddIfMissing(

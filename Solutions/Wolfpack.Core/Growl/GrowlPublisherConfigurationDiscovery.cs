@@ -3,7 +3,7 @@ using Wolfpack.Core.Interfaces.Entities;
 
 namespace Wolfpack.Core.Growl
 {
-    public class GrowlPublisherConfigurationDiscovery : PluginDiscoveryBase<GrowlConfiguration>
+    public class GrowlPublisherConfigurationDiscovery : PluginDiscoveryBase<GrowlConfiguration, GrowlPublisher>
     {
         protected override GrowlConfiguration GetConfiguration()
         {

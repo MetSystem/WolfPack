@@ -3,7 +3,7 @@ using Wolfpack.Core.Interfaces.Entities;
 
 namespace Wolfpack.Core.Database.SqlServer
 {
-    public class SqlServerPublisherConfigurationDiscovery : PluginDiscoveryBase<SqlServerConfiguration>
+    public class SqlServerPublisherConfigurationDiscovery : PluginDiscoveryBase<SqlServerConfiguration, SqlNotificationEventPublisher>
     {
         protected override SqlServerConfiguration GetConfiguration()
         {
@@ -18,7 +18,7 @@ namespace Wolfpack.Core.Database.SqlServer
 
         protected override void Configure(ConfigurationEntry entry)
         {
-            entry.Name = "SqlServerPublisher";
+            entry.Name = "SqlServerPublisherBase";
             entry.Description = "Publishes Notification events to a SqlServer compatible database";
             entry.Tags.AddIfMissing(SpecialTags.Publisher, "SqlServer");
         }

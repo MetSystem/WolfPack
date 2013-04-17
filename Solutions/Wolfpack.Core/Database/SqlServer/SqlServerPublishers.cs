@@ -6,13 +6,13 @@ using Wolfpack.Core.Publishers;
 
 namespace Wolfpack.Core.Database.SqlServer
 {
-    public class SqlServerPublisherBase : PublisherBase
+    public abstract class SqlServerPublisherBase : PublisherBase
     {
-        protected readonly SqlServerConfiguration myConfig;
+        protected readonly SqlServerConfiguration _config;
 
-        public SqlServerPublisherBase(SqlServerConfiguration config)
+        protected SqlServerPublisherBase(SqlServerConfiguration config)
         {
-            myConfig = config;
+            _config = config;
 
             Enabled = config.Enabled;
             FriendlyId = config.FriendlyId;
@@ -22,14 +22,14 @@ namespace Wolfpack.Core.Database.SqlServer
         {
             try
             {
-                Logger.Debug("\tCreating {0} schema...", myConfig.SchemaName);
-                using (var cmd = SqlServerAdhocCommand.UsingSmartConnection(myConfig.ConnectionString)
-                    .WithSql(SqlServerStatement.Create("IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = N'{0}') SELECT CAST(1 as bit) ELSE Select CAST(0 as bit)", myConfig.SchemaName)))
+                Logger.Debug("\tCreating {0} schema...", _config.SchemaName);
+                using (var cmd = SqlServerAdhocCommand.UsingSmartConnection(_config.ConnectionString)
+                    .WithSql(SqlServerStatement.Create("IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = N'{0}') SELECT CAST(1 as bit) ELSE Select CAST(0 as bit)", _config.SchemaName)))
                 {
                     bool exists = (bool)cmd.ExecuteScalar();
                     if (exists)
-                        using (var createCmd = SqlServerAdhocCommand.UsingSmartConnection(myConfig.ConnectionString)
-                            .WithSql(SqlServerStatement.Create("CREATE SCHEMA {0}", myConfig.SchemaName)))
+                        using (var createCmd = SqlServerAdhocCommand.UsingSmartConnection(_config.ConnectionString)
+                            .WithSql(SqlServerStatement.Create("CREATE SCHEMA {0}", _config.SchemaName)))
                         {
                             createCmd.ExecuteNonQuery();
                             Logger.Debug("\tDone");
@@ -37,9 +37,9 @@ namespace Wolfpack.Core.Database.SqlServer
                 }
 
                 Logger.Debug("\tCreating AgentData table...");
-                using (var cmd = SqlServerAdhocCommand.UsingSmartConnection(myConfig.ConnectionString)
-                    .WithSql(SqlServerStatement.Create("IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[{0}].[AgentData]') AND type in (N'U')) BEGIN", myConfig.SchemaName)
-                    .Append("CREATE TABLE [{0}].[AgentData](", myConfig.SchemaName)
+                using (var cmd = SqlServerAdhocCommand.UsingSmartConnection(_config.ConnectionString)
+                    .WithSql(SqlServerStatement.Create("IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[{0}].[AgentData]') AND type in (N'U')) BEGIN", _config.SchemaName)
+                    .Append("CREATE TABLE [{0}].[AgentData](", _config.SchemaName)
                     .Append("[TypeId] [uniqueidentifier] NOT NULL,")
                     .Append("[EventType] [varchar](20) COLLATE Latin1_General_CI_AS NOT NULL,")
                     .Append("[SiteId] [varchar](50) COLLATE Latin1_General_CI_AS NOT NULL,")
@@ -56,12 +56,12 @@ namespace Wolfpack.Core.Database.SqlServer
                 }
 
                 Logger.Debug("\tApplying schema updates (ResultCount) to AgentData table...");
-                using (var cmd = SqlServerAdhocCommand.UsingSmartConnection(myConfig.ConnectionString)
+                using (var cmd = SqlServerAdhocCommand.UsingSmartConnection(_config.ConnectionString)
                     .WithSql(SqlServerStatement.Create("IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'AgentData' AND COLUMN_NAME = 'ResultCount') BEGIN")
-                    .Append("ALTER TABLE {0}.AgentData ADD ResultCount DECIMAL(20,4) NULL", myConfig.SchemaName)
+                    .Append("ALTER TABLE {0}.AgentData ADD ResultCount DECIMAL(20,4) NULL", _config.SchemaName)
                     .Append("END ELSE BEGIN")
                     .Append("IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'AgentData' AND COLUMN_NAME = 'ResultCount' AND DATA_TYPE = 'bigint') BEGIN")
-                    .Append("ALTER TABLE {0}.AgentData ALTER COLUMN ResultCount DECIMAL(20,4)", myConfig.SchemaName)
+                    .Append("ALTER TABLE {0}.AgentData ALTER COLUMN ResultCount DECIMAL(20,4)", _config.SchemaName)
                     .Append("END")
                     .Append("END")))
                 {
@@ -91,7 +91,7 @@ namespace Wolfpack.Core.Database.SqlServer
         {
             var columns = new List<TableSchema.ColumnDefinition>();
 
-            using (var cmd = SqlServerAdhocCommand.UsingSmartConnection(myConfig.ConnectionString)
+            using (var cmd = SqlServerAdhocCommand.UsingSmartConnection(_config.ConnectionString)
                 .WithSql(SqlServerStatement.Create("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{0}'", table)))
             {
                 using (var reader = cmd.ExecuteReader())
@@ -121,12 +121,12 @@ namespace Wolfpack.Core.Database.SqlServer
             if (GetSchema("AgentData").HasColumn(column))
                 return false;
 
-            using (var cmd = SqlServerAdhocCommand.UsingSmartConnection(myConfig.ConnectionString)
+            using (var cmd = SqlServerAdhocCommand.UsingSmartConnection(_config.ConnectionString)
                 .WithSql(SqlServerStatement.Create("ALTER TABLE [{3}].[AgentData] ADD {0} {1} {2} NULL",
                     column,
                     datatype,
                     nullable ? string.Empty : "NOT",
-                    myConfig.SchemaName)))
+                    _config.SchemaName)))
             {
                 cmd.ExecuteNonQuery();
                 Logger.Debug("\tAdded column {0} [{1}]", column, datatype);
@@ -134,41 +134,6 @@ namespace Wolfpack.Core.Database.SqlServer
             return true;
         }
     }
-
-    //public class SqlHealthCheckSessionPublisher : SqlServerPublisherBase, IHealthCheckSessionPublisher
-    //{
-    //    public SqlHealthCheckSessionPublisher(SqlServerConfiguration config)
-    //        : base(config)
-    //    {
-    //    }
-
-    //    public void Publish(NotificationEventAgentStart message)
-    //    {
-    //        var data = Serialiser<NotificationEventAgentStart>.ToXml(message);
-
-    //        using (var cmd = SqlServerAdhocCommand.UsingSmartConnection(myConfig.ConnectionString)
-    //            .WithSql(SqlServerStatement.Create("INSERT INTO {0}.AgentData (", myConfig.SchemaName)
-    //            .Append("TypeId,EventType,SiteId,AgentId,GeneratedOnUtc,ReceivedOnUtc,Data,Version")
-    //            .Append(") VALUES (")
-    //            .InsertParameter("@pTypeId", message.Id).Append(",")
-    //            .InsertParameter("@pEventType", "SessionStart").Append(",")
-    //            .InsertParameter("@pSiteId", message.Agent.SiteId).Append(",")
-    //            .InsertParameter("@pAgentId", message.Agent.AgentId).Append(",")
-    //            .InsertParameter("@pGeneratedOnUtc", message.GeneratedOnUtc).Append(",")
-    //            .InsertParameter("@pReceivedOnUtc", DateTime.UtcNow).Append(",")
-    //            .InsertParameter("@pData", data).Append(",")
-    //            .InsertParameter("@pVersion", message.Id)
-    //            .Append(")")))
-    //        {
-    //            cmd.ExecuteNonQuery();
-    //        }
-    //    }
-
-    //    public void Consume(NotificationEventAgentStart message)
-    //    {
-    //        Publish(message);
-    //    }
-    //}
 
     public class SqlNotificationEventPublisher : SqlServerPublisherBase, INotificationEventPublisher
     {

@@ -4,7 +4,6 @@ using System.IO;
 using Castle.Core.Internal;
 using Wolfpack.Core.Interfaces;
 using Wolfpack.Core.Interfaces.Entities;
-using System.Linq;
 
 namespace Wolfpack.Core.Configuration.FileSystem
 {
@@ -19,29 +18,21 @@ namespace Wolfpack.Core.Configuration.FileSystem
         {
             entries.ForEach(
                 e =>
-                    {
+                    {                        
+                        var configType = Type.GetType(e.Entry.ConfigurationType);
+                        var config = Serialiser.FromJson(e.Entry.Data, configType);
+
+                        if (IsDisabled(config))
+                            return;
+
                         var name = Path.GetFileNameWithoutExtension(e.FileInfo.Name);
-                        var pluginConfigType = Type.GetType(e.Entry.ConcreteType);
-                        var pluginConfig = Serialiser.FromJson(e.Entry.Data, pluginConfigType);
+                        Container.RegisterInstance(configType, config, name);
 
-                        // probe for loading component by convention
-                        var pluginTypeName = pluginConfigType.Name.Replace("Config", string.Empty);
+                        var pluginType = Type.GetType(e.Entry.PluginType);
+                        Container.RegisterAsSingleton<IActivityPlugin>(pluginType);
 
-                        Type pluginType;
-                        if (GetType<IActivityPlugin>(pluginTypeName, out pluginType) &&
-                            pluginType.GetConstructor(new[] { pluginConfigType }) != null)
-                        {
-                            // found it...
-                            var plugin = (IActivityPlugin)Activator.CreateInstance(pluginType, pluginConfig);
-                            Container.RegisterInstance(plugin, name);
-                        }
-                        else
-                        {
-                            // otherwise just register the configuration component, maybe
-                            // another component (boostrapper?) will make use of it
-                            Container.RegisterInstance(pluginConfigType, pluginConfig, name);
-                        }
-                        
+                        FindAndExecuteBootstrappers(configType, config);
+
                         e.Entry.RequiredProperties.AddIfMissing(Tuple.Create(ConfigurationEntry.RequiredPropertyNames.Name, name));
                     });
 

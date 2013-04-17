@@ -14,8 +14,8 @@ namespace Wolfpack.Core.Interfaces.Entities
 
         public string Name { get; set; }
         public string Description { get; set; }
-        public string InterfaceType { get; set; }
-        public string ConcreteType { get; set; }
+        public string PluginType { get; set; }
+        public string ConfigurationType { get; set; }
         public string Data { get; set; }
         public List<string> Tags { get; set; }
         public string Link { get; set; }

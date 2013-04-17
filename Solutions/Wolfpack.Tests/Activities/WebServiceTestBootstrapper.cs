@@ -2,6 +2,7 @@
 using Wolfpack.Core.Interfaces;
 using Wolfpack.Core.Interfaces.Entities;
 using Wolfpack.Core.WebServices;
+using Wolfpack.Core.WebServices.Extenders;
 using Wolfpack.Core.WebServices.Interfaces;
 using Wolfpack.Core.WebServices.Interfaces.Entities;
 
@@ -22,7 +23,7 @@ namespace Wolfpack.Tests.Activities
         {
             Container.RegisterInstance(_config);
             Container.RegisterInstance(new ActivityTracker());
-            Container.RegisterAsSingleton<IWebServiceExtender>(typeof(RegisterCoreServices));
+            Container.RegisterAsSingleton<IWebServiceExtender>(typeof(RegisterCoreServicesExtender));
             Container.RegisterAsSingleton<IActivityPlugin>(typeof(WebServiceActivity));
             Container.RegisterAsSingleton<IWebServiceReceiverStrategy>(typeof(WebServiceTestReceiverStrategy));
         }

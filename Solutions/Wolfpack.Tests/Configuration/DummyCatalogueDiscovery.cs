@@ -11,8 +11,8 @@ namespace Wolfpack.Tests.Configuration
             return new ConfigurationEntry
                        {
                            Name = "Test",
-                           ConcreteType = "TestConcreteType",
-                           InterfaceType = "TestInterfaceType",
+                           ConfigurationType = "TestConcreteType",
+                           PluginType = "TestInterfaceType",
                            Data = "TestSerialisation",
                            Tags = new List<string> {"Test"}
                        };

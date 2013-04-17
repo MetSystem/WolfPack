@@ -110,6 +110,7 @@
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="ActivityTracker.cs" />
+    <Compile Include="Extenders\RegisterCoreServicesExtender.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Publisher\WebServicePublisher.cs" />
     <Compile Include="Publisher\WebServicePublisherBootstrapper.cs" />

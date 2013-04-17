@@ -42,7 +42,7 @@ namespace Wolfpack.Core.Checks
         }
     }
 
-    public class WindowsServiceStateConfigurationAdvertiser : HealthCheckDiscoveryBase<WindowsServiceStateCheckConfig>
+    public class WindowsServiceStateConfigurationAdvertiser : HealthCheckDiscoveryBase<WindowsServiceStateCheckConfig, WindowsServiceStateCheck>
     {
         protected override WindowsServiceStateCheckConfig GetConfiguration()
         {

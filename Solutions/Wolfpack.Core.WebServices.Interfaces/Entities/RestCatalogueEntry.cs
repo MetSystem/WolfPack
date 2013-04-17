@@ -27,8 +27,8 @@ namespace Wolfpack.Core.WebServices.Interfaces.Entities
             Name = entry.Name;
             Description = entry.Description;
             Tags = entry.Tags;
-            InterfaceType = entry.InterfaceType;
-            ConcreteType = entry.ConcreteType;
+            InterfaceType = entry.PluginType;
+            ConcreteType = entry.ConfigurationType;
             Data = entry.Data;
             RequiredProperties = entry.RequiredProperties.Select(p => new NameValuePair(p)).ToList();
         }
@@ -37,10 +37,10 @@ namespace Wolfpack.Core.WebServices.Interfaces.Entities
         {
             return new ConfigurationEntry
                        {
-                           ConcreteType = ConcreteType,
+                           ConfigurationType = ConcreteType,
                            Data = Data,
                            Description = Description,
-                           InterfaceType = InterfaceType,
+                           PluginType = InterfaceType,
                            Name = Name,
                            Tags = Tags,
                            RequiredProperties = new Properties(RequiredProperties.ToDictionary(nvp => nvp.Name, nvp => nvp.Value))

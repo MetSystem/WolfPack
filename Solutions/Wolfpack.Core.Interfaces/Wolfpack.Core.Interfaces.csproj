@@ -58,6 +58,7 @@
     <Compile Include="IConfigurationManager.cs" />
     <Compile Include="INotificationRepositoryQuery.cs" />
     <Compile Include="ISupportArtifactGeneration.cs" />
+    <Compile Include="ISupportBootStrapping.cs" />
     <Compile Include="ISupportConfigurationDiscovery.cs" />
     <Compile Include="Entities\AgentConfiguration.cs" />
     <Compile Include="Entities\AnalyticsBaseline.cs" />

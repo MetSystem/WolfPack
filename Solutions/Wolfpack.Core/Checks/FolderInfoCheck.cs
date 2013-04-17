@@ -15,7 +15,7 @@ namespace Wolfpack.Core.Checks
         public string NotificationMode { get; set; }
     }
 
-    public class FolderInfoCheckConfigurationAdvertiser : HealthCheckDiscoveryBase<FolderInfoCheckConfig>
+    public class FolderInfoCheckConfigurationAdvertiser : HealthCheckDiscoveryBase<FolderInfoCheckConfig, FolderInfoCheck>
     {
         protected override FolderInfoCheckConfig GetConfiguration()
         {
