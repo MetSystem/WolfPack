@@ -23,7 +23,7 @@
       <dependency id="FluentPath" version="[1.0.0]" />
       <dependency id="Magnum" version="[2.0.1.0]" />
       <dependency id="StoryQ" version="[2.0.5]" />
-      <dependency id="ServiceStack.Text" version="[3.9.37]" />
+      <dependency id="ServiceStack.Text" version="[3.9.43]" />
       <dependency id="log4net" version="[1.2.10]" />
       <dependency id="Newtonsoft.Json" version="[4.5.11]" />
       <dependency id="Sidewinder.Core" version="[1.5.0]" />      
