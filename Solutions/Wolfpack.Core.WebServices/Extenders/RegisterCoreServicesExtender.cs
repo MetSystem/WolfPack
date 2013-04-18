@@ -27,17 +27,17 @@ namespace Wolfpack.Core.WebServices.Extenders
         {
             Messenger.Subscribe(this);
 
-            appHost.Routes.Add<Status>("status");
-            appHost.Routes.Add<Activity>("activity");
+            appHost.Routes.Add<Status>("/status");
+            appHost.Routes.Add<Activity>("/activity");
             
-            appHost.Routes.Add<NotificationEvent>("messages");
-            appHost.Routes.Add<HealthCheckArtifact>("messages/{Name}/artifacts/{NotificationId}");
+            appHost.Routes.Add<NotificationEvent>("/messages");
+            appHost.Routes.Add<HealthCheckArtifact>("/messages/{Name}/artifacts/{NotificationId}");
 
-            appHost.Routes.Add<GetTagCloud>("configuration/tagcloud");
-            appHost.Routes.Add<GetConfigurationCatalogue>("configuration/catalogue");
-            appHost.Routes.Add<GetConfigurationCatalogue>("configuration/catalogue/{Tags}");
-            appHost.Routes.Add<RestConfigurationChangeRequest>("configuration");
-            appHost.Routes.Add<ApplyChanges>("configuration/applychanges");
+            appHost.Routes.Add<GetTagCloud>("/configuration/tagcloud");
+            appHost.Routes.Add<GetConfigurationCatalogue>("/configuration/catalogue");
+            appHost.Routes.Add<GetConfigurationCatalogue>("/configuration/catalogue/{Tags}");
+            appHost.Routes.Add<RestConfigurationChangeRequest>("/configuration");
+            appHost.Routes.Add<ApplyChanges>("/configuration/applychanges");
 
             appHost.Routes.Add<Atom>("/feeds/atom");
 
