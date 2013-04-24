@@ -78,6 +78,8 @@
     <Compile Include="Entities\WebServiceReceiverContext.cs" />
     <Compile Include="Entities\WolfpackWebServicesClientConfig.cs" />
     <Compile Include="Exceptions\CommunicationException.cs" />
+    <Compile Include="Exceptions\DuplicateMessageException.cs" />
+    <Compile Include="Exceptions\StaleMessageException.cs" />
     <Compile Include="IWebServiceReceiverStrategy.cs" />
     <Compile Include="Entities\RestCatalogueEntry.cs" />
     <Compile Include="Entities\RestConfigurationCatalogue.cs" />

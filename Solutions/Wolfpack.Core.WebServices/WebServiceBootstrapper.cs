@@ -2,6 +2,7 @@
 using Wolfpack.Core.WebServices.Interfaces;
 using Wolfpack.Core.WebServices.Interfaces.Entities;
 using Wolfpack.Core.WebServices.Strategies;
+using Wolfpack.Core.WebServices.Strategies.Steps;
 
 namespace Wolfpack.Core.WebServices
 {
@@ -14,6 +15,11 @@ namespace Wolfpack.Core.WebServices
 
             if (!Container.IsRegistered<IWebServiceReceiverStrategy>())
             {
+                if (!Container.IsRegistered<MessageStalenessCheckConfig>())
+                {
+                    Container.RegisterAsSingleton(typeof(MessageStalenessCheckConfig));
+                }
+
                 Container.RegisterAll<IPipelineStep<WebServiceReceiverContext>>();
                 Container.RegisterAsTransient<IWebServiceReceiverStrategy>(typeof(WebServiceReceiverStrategy));
             }

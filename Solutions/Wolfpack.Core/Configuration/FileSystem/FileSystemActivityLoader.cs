@@ -27,13 +27,14 @@ namespace Wolfpack.Core.Configuration.FileSystem
 
                         var name = Path.GetFileNameWithoutExtension(e.FileInfo.Name);
                         Container.RegisterInstance(configType, config, name);
+                        FindAndExecuteBootstrappers(configType, config);
+                        e.Entry.RequiredProperties.AddIfMissing(Tuple.Create(ConfigurationEntry.RequiredPropertyNames.Name, name));
+
+                        if (string.IsNullOrWhiteSpace(e.Entry.PluginType))
+                            return;
 
                         var pluginType = Type.GetType(e.Entry.PluginType);
                         Container.RegisterAsSingleton<IActivityPlugin>(pluginType);
-
-                        FindAndExecuteBootstrappers(configType, config);
-
-                        e.Entry.RequiredProperties.AddIfMissing(Tuple.Create(ConfigurationEntry.RequiredPropertyNames.Name, name));
                     });
 
             return entries;

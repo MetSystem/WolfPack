@@ -4,6 +4,7 @@ using Wolfpack.Core.Interfaces.Entities;
 using Wolfpack.Core.Pipeline;
 using Wolfpack.Core.WebServices.Interfaces;
 using Wolfpack.Core.WebServices.Interfaces.Entities;
+using Wolfpack.Core.WebServices.Strategies.Steps;
 
 namespace Wolfpack.Core.WebServices.Strategies
 {
@@ -12,7 +13,10 @@ namespace Wolfpack.Core.WebServices.Strategies
     {
         public void Execute(NotificationEvent notification)
         {
-            var pipeline = new DefaultPipeline<WebServiceReceiverContext>();
+            var pipeline = new DefaultPipeline<WebServiceReceiverContext>(
+                Load<MessageStalenessCheckStep>(),
+                Load<CheckForDuplicateStep>(),
+                Load<RepublishMessageStep>());
 
             var result = pipeline.Execute(new WebServiceReceiverContext
                                               {
@@ -28,7 +32,7 @@ namespace Wolfpack.Core.WebServices.Strategies
                 throw new ApplicationException("Step failure", ex.Failure.Error);
             }
 
-            throw new ApplicationException("Pipeline failure");
+            throw new ApplicationException("General Pipeline failure");
         }
     }
 }
