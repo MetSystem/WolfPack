@@ -117,8 +117,13 @@
     <Compile Include="Services\ConfigurationServices.cs" />
     <Compile Include="Services\CoreServices.cs" />
     <Compile Include="Services\FeedServices.cs" />
+    <Compile Include="Strategies\Steps\CheckForDuplicateStep.cs" />
     <Compile Include="Strategies\Steps\CleanupMessagesStep.cs" />
     <Compile Include="Strategies\Steps\GetQueuedMessagesStep.cs" />
+    <Compile Include="Strategies\Steps\MessageStalenessCheckConfig.cs" />
+    <Compile Include="Strategies\Steps\MessageStalenessCheckConfigDiscovery.cs" />
+    <Compile Include="Strategies\Steps\MessageStalenessCheckStep.cs" />
+    <Compile Include="Strategies\Steps\RepublishMessageStep.cs" />
     <Compile Include="Strategies\Steps\SendMessagesStep.cs" />
     <Compile Include="Strategies\WebServicePublisherStrategy.cs" />
     <Compile Include="Strategies\WebServiceReceiverStrategy.cs" />

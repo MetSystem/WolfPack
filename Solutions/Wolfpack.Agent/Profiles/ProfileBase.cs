@@ -19,15 +19,15 @@ namespace Wolfpack.Agent.Profiles
         {
             get
             {
-                ConfigurationManager.Initialise();
-                Messenger.Initialise();
-                NotificationHub.Initialise();
-
                 // load and execute all startup plugins
                 // ...not using .SafeInitialise() method as
                 // we want this to blow up loading the agent
                 Container.RegisterAll<IStartupPlugin>()
                     .ResolveAll<IStartupPlugin>(c => c.InitialiseIfEnabled());
+
+                ConfigurationManager.Initialise();
+                Messenger.Initialise();
+                NotificationHub.Initialise();
 
                 // hook to create custom role components
                 CustomiseRole();
