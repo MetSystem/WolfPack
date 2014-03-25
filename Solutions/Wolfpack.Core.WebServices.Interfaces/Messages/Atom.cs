@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using ServiceStack.ServiceHost;
+using ServiceStack.Web;
 
 namespace Wolfpack.Core.WebServices.Interfaces.Messages
 {

@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Net;
+using System.Collections.Generic;
 using RestSharp;
 using Wolfpack.Core.Interfaces.Entities;
 using Wolfpack.Core.WebServices.Interfaces;
@@ -23,7 +23,7 @@ namespace Wolfpack.Core.WebServices.Client
 
         public RestConfigurationCatalogue GetCatalogue(GetConfigurationCatalogue request)
         {
-            var restRequest = new RestRequest("configuration/catalogue/{tags}");
+            var restRequest = new RestRequest("api/configuration/catalogue/{tags}");
 
             restRequest.AddUrlSegment("tags", string.Join(",", request.Tags ?? new string[0]));
             return ExecuteRequest<RestConfigurationCatalogue>(restRequest);
@@ -31,14 +31,14 @@ namespace Wolfpack.Core.WebServices.Client
 
         public ConfigurationCommandResponse Update(ConfigurationEntry request)
         {
-            var restRequest = new RestRequest("configuration", Method.POST);
+            var restRequest = new RestRequest("api/configuration", Method.POST);
             restRequest.AddBody(request);
             return ExecuteRequest<ConfigurationCommandResponse>(restRequest);
         }
 
         public NotificationEventResponse Deliver(NotificationEvent notification)
         {
-            var restRequest = new RestRequest("messages", Method.POST)
+            var restRequest = new RestRequest("api/notification/notify", Method.POST)
             {
                 RequestFormat = DataFormat.Json
             };
@@ -49,8 +49,14 @@ namespace Wolfpack.Core.WebServices.Client
 
         public StatusResponse GetStatus()
         {
-            var restRequest = new RestRequest("status", Method.GET);
+            var restRequest = new RestRequest("api/notification/start", Method.GET);
             return ExecuteRequest<StatusResponse>(restRequest);
+        }
+
+        public IEnumerable<NotificationEvent> GetNotifications()
+        {
+            var restRequest = new RestRequest("api/notification/list", Method.GET);
+            return ExecuteRequest<IEnumerable<NotificationEvent>>(restRequest);
         }
 
         private T ExecuteRequest<T>(IRestRequest request)
@@ -78,21 +84,22 @@ namespace Wolfpack.Core.WebServices.Client
         {
             if (response.ResponseStatus != ResponseStatus.Completed)
             {
-                var msg = string.Format("General failure calling {0}, status: {1}, reason: {2}",
+                var msg = string.Format("General failure calling {0}, status: {1}, httpstatus: {2} ({3}), reason: {4}",
                                         response.ResponseUri,
                                         response.ResponseStatus,
+                                        response.StatusCode,
+                                        (int)response.StatusCode,
                                         response.ErrorMessage);
                 throw new CommunicationException(msg);
             }
 
-            if (response.StatusCode != HttpStatusCode.OK)
-            {
-                var msg = string.Format("Http failure calling {0}, status: {1}, reason: {2}",
-                                        response.ResponseUri,
-                                        response.StatusCode,
-                                        response.StatusDescription);
-                throw new CommunicationException(msg);
-            }
+            if ((int) response.StatusCode < 400) 
+                return;
+
+            throw new CommunicationException(string.Format("Http failure calling {0}, status: {1}, reason: {2}",
+                response.ResponseUri,
+                response.StatusCode,
+                response.StatusDescription));
         }
     }
 }

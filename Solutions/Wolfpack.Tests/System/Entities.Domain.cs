@@ -51,8 +51,8 @@ namespace Wolfpack.Tests.System
         public void TheNotificationRequestIsFullyPopulated()
         {
             _request = _autodata.Build<NotificationRequest>()
-                .Do(nr => nr.Notification = _autodata.CreateAnonymous<NotificationEvent>())
-                .CreateAnonymous();
+                .Do(nr => nr.Notification = _autodata.Create<NotificationEvent>())
+                .Create();
         }
 
         public void TheNotificationRequestIsConvertedToAnEvent()

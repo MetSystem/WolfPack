@@ -66,13 +66,11 @@ namespace Wolfpack.Core.Configuration.FileSystem
 
                             Type schedulerType;
                             if (!GetType<IHealthCheckSchedulerPlugin>(schedulerTypeName, out schedulerType))
-                                throw new InvalidOperationException(
-                                    string.Format(
+                                throw new InvalidOperationException(string.Format(
                                         "Searching for type name '{0}'; found no matches. Check the name of the folder",
                                         schedulerTypeName));
 
-                            var scheduler = Activator.CreateInstance(schedulerType, check, schedulerConfig) as
-                                            IHealthCheckSchedulerPlugin;
+                            var scheduler = (IHealthCheckSchedulerPlugin)Activator.CreateInstance(schedulerType, check, schedulerConfig);
 
                             Logger.Debug("\tAdding Scheduler Instance '{0}' running HealthCheck '{1}' named '{2}' to container...",
                                 scheduler.GetType().Name, checkTypeName, name);
@@ -104,10 +102,20 @@ namespace Wolfpack.Core.Configuration.FileSystem
                 throw new InvalidOperationException(string.Format("Unable to update configuration, '{0}' property is missing",
                     ConfigurationEntry.RequiredPropertyNames.Scheduler));
 
+            PurgeAllExistingItems(change);
+
             var filepath = Path.Combine(_baseFolder, scheduler, Path.ChangeExtension(change.Entry.Name, ConfigFileExtension));
 
             if (!HandleChange(change, filepath))
                 throw new InvalidOperationException(string.Format("Unknown ChangeRequest action '{0}'", change.Action));
+        }
+
+        private void PurgeAllExistingItems(ConfigurationChangeRequest change)
+        {
+            var filespec = Path.ChangeExtension(change.Entry.Name, ConfigFileExtension);
+
+            foreach (var filename in Directory.GetFiles(_baseFolder, filespec, SearchOption.AllDirectories))
+                File.Delete(filename);
         }
     }
 }

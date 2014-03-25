@@ -30,6 +30,9 @@ namespace Wolfpack.Manager.Commands
                 var console = Process.GetProcessById(_instruction.ProcessId);
 
                 Logger.Info("Process located...sending close message");
+                // doesn't work - try SendInput (need to switch to wolfpack console window first
+                // http://stackoverflow.com/questions/5144877/sending-ctrl-s-message-to-a-window
+                // also http://www.nuget.org/packages/InputSimulator/
                 SendMessage(console.MainWindowHandle, WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
 
                 Logger.Info("Close message sent, waiting for process to exit");

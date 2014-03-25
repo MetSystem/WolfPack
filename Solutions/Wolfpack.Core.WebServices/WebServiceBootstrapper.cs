@@ -10,7 +10,9 @@ namespace Wolfpack.Core.WebServices
     {
         public void Execute(WebServiceActivityConfig config)
         {
-            Container.RegisterInstance(new ActivityTracker());
+            var tracker = new ActivityTracker();
+            Container.RegisterInstance(tracker);
+
             Container.RegisterAll<IWebServiceExtender>();
 
             if (!Container.IsRegistered<IWebServiceReceiverStrategy>())

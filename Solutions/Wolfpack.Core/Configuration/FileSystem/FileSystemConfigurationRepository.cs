@@ -82,24 +82,31 @@ namespace Wolfpack.Core.Configuration.FileSystem
                 throw new InvalidOperationException(string.Format("Unable to update configuration, '{0}' property is missing",
                     ConfigurationEntry.RequiredPropertyNames.Name));
 
+            var folder = Path.GetDirectoryName(filepath) ?? string.Empty;
+
             // detect a name change...
-            if (!string.IsNullOrWhiteSpace(newname) && !newname.Equals(entry.Name, StringComparison.InvariantCultureIgnoreCase))
+            if (!string.IsNullOrWhiteSpace(newname) &&
+                !newname.Equals(entry.Name, StringComparison.InvariantCultureIgnoreCase))
             {
-                var folder = Path.GetDirectoryName(filepath) ?? string.Empty;
                 var ext = Path.GetExtension(filepath);
-                filepath = Path.Combine(folder, Path.ChangeExtension(newname, ext));
+                var newfilepath = Path.Combine(folder, Path.ChangeExtension(newname, ext));
 
-                Directory.CreateDirectory(folder);
-                File.Delete(filepath);
-
-                if (File.Exists(filepath))
+                if (File.Exists(newfilepath))
                     throw new InvalidOperationException(string.Format(
-                        "Unable to rename configuration, entry with name '{0}' already exists", newname));
+                        "Unable to rename configuration, entry with name '{0}' already exists in '{1}'", newname, folder));
 
+                // update entry properties
                 entry.Name = newname;
+
+                // do the disk work...
+                Serialiser.ToJsonInFile(newfilepath, entry);
+                File.Delete(filepath);
             }
-          
-            Serialiser.ToJsonInFile(filepath, entry);
+            else
+            {
+                // just save it
+                Serialiser.ToJsonInFile(filepath, entry);               
+            }
         }
 
         protected bool HandleChange(ConfigurationChangeRequest change, string filepath)

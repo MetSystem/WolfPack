@@ -1,9 +1,11 @@
-using ServiceStack.WebHost.Endpoints;
+
+using Nancy.Bootstrapper;
+using Nancy.TinyIoc;
 
 namespace Wolfpack.Core.WebServices.Interfaces
 {
     public interface IWebServiceExtender
     {
-        void Add(IAppHost appHost);
+        void Execute(TinyIoCContainer container, IPipelines pipelines);
     }
 }

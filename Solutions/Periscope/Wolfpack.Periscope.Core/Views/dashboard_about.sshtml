@@ -1,0 +1,9 @@
+﻿@Master['dashboard_master']
+
+@Section['Content']
+	<div class="container" role="main">
+		<h1>Periscope <small>...display all the things!</small></h1>
+		<p>Open Source .Net Dashboard</p>
+		<p><a class="btn btn-primary btn-lg" role="button">Learn more</a></p>
+	</div>
+@EndSection

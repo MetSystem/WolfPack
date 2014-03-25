@@ -1,11 +1,12 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using Magnum.Pipeline;
 using Wolfpack.Core.Interfaces.Entities;
 using System.Linq;
 
 namespace Wolfpack.Core.WebServices
 {
-    public class ActivityTracker
+    public class ActivityTracker : IConsumer<NotificationEvent>
     {
         private readonly ConcurrentQueue<NotificationEvent> _notifications;
 
@@ -16,6 +17,10 @@ namespace Wolfpack.Core.WebServices
         public ActivityTracker()
         {
             _notifications = new ConcurrentQueue<NotificationEvent>();
+        }
+        public void Start()
+        {
+            Messenger.Subscribe(this);
         }
 
         public void Track(NotificationEvent notification)
@@ -34,6 +39,11 @@ namespace Wolfpack.Core.WebServices
                     _notifications.TryDequeue(out item);
                 }
             }
+        }
+
+        public void Consume(NotificationEvent message)
+        {
+            Track(message);
         }
     }
 }

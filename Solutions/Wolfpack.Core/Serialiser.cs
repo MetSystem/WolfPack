@@ -20,10 +20,13 @@ namespace Wolfpack.Core
 
         public static void ToJsonInFile<T>(string path, T entity, bool format = true)
         {
+            var folder = Path.GetDirectoryName(path);
+
+            if (folder != null)
+                Directory.CreateDirectory(folder);
+
             using (var sw = new StreamWriter(path))
-            {
                 sw.WriteLine(ToJson(entity, format));
-            }
         }
 
         public static T FromJson<T>(string data)

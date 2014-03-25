@@ -21,8 +21,8 @@ namespace Wolfpack.Core.WebServices
         protected override void Configure(ConfigurationEntry entry)
         {
             entry.Name = "WebServiceActivity";
-            entry.Description = "This activity provides the Wolfpack Web Interface. This is a ServiceStack " + 
-                "powered api that provides a REST interface and Razor view engine pages.";
+            entry.Description = "This activity provides the Wolfpack Web Interface. This is a NancyFx " + 
+                "powered api that provides a REST interface.";
             entry.Tags.AddIfMissing("Activity", "Api", "WebUI");
         }
     }

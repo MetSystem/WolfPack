@@ -3,6 +3,7 @@ using System.Linq;
 using NUnit.Framework;
 using Wolfpack.Core.Interfaces.Entities;
 using Wolfpack.Core.Repositories.EfDatabase;
+using Wolfpack.Core.Repositories.Plugins;
 using Wolfpack.Core.Repositories.Queries;
 using Wolfpack.Core.Testing;
 using Wolfpack.Core.Testing.Bdd;

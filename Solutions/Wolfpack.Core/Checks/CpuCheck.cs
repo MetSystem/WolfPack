@@ -80,6 +80,8 @@ namespace Wolfpack.Core.Checks
                 .ResultCountIs(value)
                 .DisplayUnitIs("%"))
                 .Build());
+
+            Logger.Debug("CpuCheck reports {0}%", value);
         }
 
         /// <summary>

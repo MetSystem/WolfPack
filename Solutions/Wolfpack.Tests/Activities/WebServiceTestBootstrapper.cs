@@ -23,7 +23,7 @@ namespace Wolfpack.Tests.Activities
         {
             Container.RegisterInstance(_config);
             Container.RegisterInstance(new ActivityTracker());
-            Container.RegisterAsSingleton<IWebServiceExtender>(typeof(RegisterCoreServicesExtender));
+            Container.RegisterAsSingleton<IWebServiceExtender>(typeof(CoreServicesExtender));
             Container.RegisterAsSingleton<IActivityPlugin>(typeof(WebServiceActivity));
             Container.RegisterAsSingleton<IWebServiceReceiverStrategy>(typeof(WebServiceTestReceiverStrategy));
         }

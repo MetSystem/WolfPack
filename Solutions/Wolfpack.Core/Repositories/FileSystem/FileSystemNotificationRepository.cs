@@ -28,11 +28,8 @@ namespace Wolfpack.Core.Repositories.FileSystem
 
         public void Add(NotificationEvent notification)
         {
-            var filename = MakeItemFilename(notification.Id);
-
-            Directory.CreateDirectory(Path.GetDirectoryName(filename));
+            var filename = MakeItemFilename(notification.Id);            
             Serialiser.ToJsonInFile(filename, notification);
-
             Logger.Debug("Stored Notification ({0}): {1}", notification.EventType, filename);
         }
 
