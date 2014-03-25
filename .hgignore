@@ -21,6 +21,7 @@ CVS/
 [Dd]ebug*/
 obj/
 [Rr]elease*/
+packages/
 _ReSharper*/
 [Bb]uild[Ll]og.*
 *~
