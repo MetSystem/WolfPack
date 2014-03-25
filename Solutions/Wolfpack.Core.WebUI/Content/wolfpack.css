@@ -1,0 +1,14 @@
+﻿body 
+{
+    background-color: #3A3A3A;
+    color: #cacaca
+}
+
+.subtitle 
+{
+    font-style: italic;
+}
+
+.panel-body {
+    background-color: #505050;
+}

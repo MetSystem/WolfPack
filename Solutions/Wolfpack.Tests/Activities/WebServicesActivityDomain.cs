@@ -102,6 +102,9 @@ namespace Wolfpack.Tests.Activities
             Agent.Run(new BootstrapperRunner<WebServicePublisherConfig, WebServicePublisherBootstrapper>(config));
             Agent.Run(agent =>
                           {
+                              // iactivityplugins are usually autoregistered by infrastructure
+                              Container.RegisterAsSingleton<IActivityPlugin>(typeof(WebServicePublisher));
+
                               var publisher = Container.Resolve<IActivityPlugin, WebServicePublisher>();
                               agent.Run(publisher);
                           });

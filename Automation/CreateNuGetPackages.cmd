@@ -36,13 +36,6 @@ del NuGet\Templates\Wolfpack.HealthCheck\lib\net40\delete.me
 copy Wolfpack.Agent\bin\debug\Wolfpack.Core.dll NuGet\Templates\Wolfpack.HealthCheck\lib\net40
 copy Wolfpack.Agent\bin\debug\Wolfpack.Core.Interfaces.dll NuGet\Templates\Wolfpack.HealthCheck\lib\net40
 
-rem Build Analytics
-rem del NuGet\Templates\Wolfpack.Contrib.BuildAnalytics\lib\net40\delete.me
-rem copy Wolfpack.Contrib.BuildAnalytics\bin\debug\Wolfpack.Contrib.BuildAnalytics.dll NuGet\Templates\Wolfpack.Contrib.BuildAnalytics\lib\net40
-rem copy Wolfpack.Contrib.BuildAnalytics\bin\debug\Wolfpack.Contrib.BuildAnalytics.pdb NuGet\Templates\Wolfpack.Contrib.BuildAnalytics\lib\net40
-rem copy Wolfpack.Contrib.BuildAnalytics\bin\debug\Sharp2City.dll NuGet\Templates\Wolfpack.Contrib.BuildAnalytics\lib\net40
-rem copy Wolfpack.Contrib.BuildAnalytics\bin\debug\Sharp2City.pdb NuGet\Templates\Wolfpack.Contrib.BuildAnalytics\lib\net40
-
 rem Core.Testing
 del NuGet\Templates\Wolfpack.Core.Testing\lib\net40\delete.me
 copy Wolfpack.Core.Testing\bin\debug\Wolfpack.Agent.exe NuGet\Templates\Wolfpack.Core.Testing\lib\net40
@@ -80,7 +73,6 @@ Automation\NuGet\NuGet.exe pack Releases\v%1\source\NuGet\Templates\Wolfpack.Web
 Automation\NuGet\NuGet.exe pack Releases\v%1\source\NuGet\Templates\Wolfpack.WebServices.Client\Wolfpack.WebServices.Client.nuspec -version %NuGetVersion% -OutputDirectory Releases\v%1
 Automation\NuGet\NuGet.exe pack Releases\v%1\source\NuGet\Templates\Wolfpack.Publisher\Wolfpack.Publisher.nuspec -version %NuGetVersion% -OutputDirectory Releases\v%1
 Automation\NuGet\NuGet.exe pack Releases\v%1\source\NuGet\Templates\Wolfpack.HealthCheck\Wolfpack.HealthCheck.nuspec -version %NuGetVersion% -OutputDirectory Releases\v%1 
-rem Automation\NuGet\NuGet.exe pack Releases\v%1\source\NuGet\Templates\Wolfpack.Contrib.BuildAnalytics\Wolfpack.Contrib.BuildAnalytics.nuspec -version %1 -OutputDirectory Releases\v%1 
 Automation\NuGet\NuGet.exe pack Releases\v%1\source\NuGet\Templates\Wolfpack\Wolfpack.nuspec -version %NuGetVersion% -OutputDirectory Releases\v%1 
 Automation\NuGet\NuGet.exe pack Releases\v%1\source\NuGet\Templates\Wolfpack.Core.Testing\Wolfpack.Core.Testing.nuspec -version %NuGetVersion% -OutputDirectory Releases\v%1 
 popd

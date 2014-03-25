@@ -1,11 +1,8 @@
 using System;
 using System.Linq;
 using Magnum.Pipeline;
+using ServiceStack;
 using ServiceStack.Razor;
-using ServiceStack.ServiceHost;
-using ServiceStack.ServiceInterface.Admin;
-using ServiceStack.Text;
-using ServiceStack.WebHost.Endpoints;
 using Wolfpack.Core.Interfaces.Entities;
 using Wolfpack.Core.WebServices.Interfaces;
 using Wolfpack.Core.WebServices.Interfaces.Entities;
@@ -26,24 +23,20 @@ namespace Wolfpack.Core.WebServices.Extenders
         public void Add(IAppHost appHost)
         {
             Messenger.Subscribe(this);
-
-            appHost.Routes.Add<Status>("/status");
-            appHost.Routes.Add<Activity>("/activity");
             
+            appHost.Plugins.Add(new RazorFormat());
+            appHost.Plugins.Add(new RequestLogsFeature());
+
+            //appHost.Routes.Add<Status>("/status");
+            appHost.Routes.Add<Activity>("/activity");
             appHost.Routes.Add<NotificationEvent>("/messages");
             appHost.Routes.Add<HealthCheckArtifact>("/messages/{Name}/artifacts/{NotificationId}");
-
-            appHost.Routes.Add<GetTagCloud>("/configuration/tagcloud");
-            appHost.Routes.Add<GetConfigurationCatalogue>("/configuration/catalogue");
-            appHost.Routes.Add<GetConfigurationCatalogue>("/configuration/catalogue/{Tags}");
-            appHost.Routes.Add<RestConfigurationChangeRequest>("/configuration");
-            appHost.Routes.Add<ApplyChanges>("/configuration/applychanges");
-
-            appHost.Routes.Add<Atom>("/feeds/atom");
-
-
-            appHost.LoadPlugin(new RazorFormat(), new RequestLogsFeature());
-
+            //appHost.Routes.Add<GetTagCloud>("/configuration/tagcloud");
+            //appHost.Routes.Add<GetConfigurationCatalogue>("/configuration/catalogue");
+            //appHost.Routes.Add<GetConfigurationCatalogue>("/configuration/catalogue/{Tags}");
+            //appHost.Routes.Add<RestConfigurationChangeRequest>("/configuration");
+            //appHost.Routes.Add<ApplyChanges>("/configuration/applychanges");
+            //appHost.Routes.Add<Atom>("/feeds/atom");
 
             if (_config.ApiKeys != null && _config.ApiKeys.Any())
             {

@@ -31,6 +31,7 @@ namespace Wolfpack.Tests.Activities
                         .And(domain.TheAgentIsStarted)
                     .When(domain.TheWebServiceStatusApiIsCalled)
                     .Then(domain.TheWebServiceStatusShouldBeValid)
+                        .And(domain.ThrewNoException)
                     .ExecuteWithReport();
             }
         }

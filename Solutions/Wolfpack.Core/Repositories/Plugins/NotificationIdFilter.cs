@@ -3,7 +3,7 @@ using System.Linq;
 using Wolfpack.Core.Interfaces;
 using Wolfpack.Core.Interfaces.Entities;
 
-namespace Wolfpack.Core.Repositories.Queries
+namespace Wolfpack.Core.Repositories.Plugins
 {
     public class NotificationByIdQuery : INotificationRepositoryQuery
     {

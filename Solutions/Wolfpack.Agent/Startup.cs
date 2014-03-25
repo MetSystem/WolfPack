@@ -67,7 +67,7 @@ namespace Wolfpack.Agent
                     config =>
                         {
                             config.SetDisplayName("Wolfpack Agent");
-                            config.SetServiceName("WolfpackAgent");
+                            config.SetServiceName("Wolfpack");
                             config.SetDescription("Wolfpack Agent Service");
 
                             string username;
@@ -81,8 +81,7 @@ namespace Wolfpack.Agent
                             }
 
                             config.Service<IRolePlugin>(service =>
-                                                            {
-                                                                service.SetServiceName("Wolfpack");
+                                                            {                                                                
                                                                 service.ConstructUsing(factory => role);
                                                                 service.WhenStarted(s => s.Start());
                                                                 service.WhenStopped(s => s.Stop());
