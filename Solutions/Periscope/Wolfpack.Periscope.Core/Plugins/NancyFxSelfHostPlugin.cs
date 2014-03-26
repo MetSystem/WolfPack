@@ -61,20 +61,6 @@ namespace Wolfpack.Periscope.Core.Plugins
                 conventions.StaticContentsConventions.Add(StaticContentConventionBuilder.AddDirectory("Scripts"));
                 conventions.StaticContentsConventions.Add(StaticContentConventionBuilder.AddDirectory("Widgets"));
             }
-
-            protected override IRootPathProvider RootPathProvider
-            {
-                get { return new CustomRootPathProvider(); }
-            }
-
-            private class CustomRootPathProvider : IRootPathProvider
-            {
-                public string GetRootPath()
-                {
-                    return @"C:\Projects\Wolfpack\Trunk\Solutions\Periscope\Wolfpack.Periscope.Tests\bin\Debug";
-                }
-            }
         }
-
     }
 }
