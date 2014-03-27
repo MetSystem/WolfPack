@@ -1,6 +1,5 @@
 using System.Text;
 using Growl.Connector;
-using ServiceStack.Text;
 using Wolfpack.Core.Interfaces.Entities;
 
 namespace Wolfpack.Core.Growl.Formatters

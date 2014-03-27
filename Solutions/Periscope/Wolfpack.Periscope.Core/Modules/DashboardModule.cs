@@ -42,28 +42,7 @@ namespace Wolfpack.Periscope.Core.Modules
                     .Distinct((a, b) => a.Name.Equals(b.Name))
                     .ToList();
 
-                response.Widgets = panel.Widgets
-                    .Select(w =>
-                    {
-                        var widget = new WidgetInstance
-                        {
-                            Configuration = w.Configuration,
-                            Definition = w.Definition
-                        };
-
-                        using (var writer = new StringWriter())
-                        {
-                            w.RenderMarkup(writer, w.Configuration);
-                            widget.Markup = writer.ToString();
-                        }
-                        using (var writer = new StringWriter())
-                        {
-                            w.RenderScript(writer, w.Configuration);
-                            widget.Script = writer.ToString();
-                        }
-                        return widget;
-
-                    }).ToList();
+                response.Widgets = panel.Widgets.ToList();
 
                 return response;
             };

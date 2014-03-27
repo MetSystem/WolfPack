@@ -1,36 +1,20 @@
 ﻿using System.IO;
-using Wolfpack.Periscope.Core.Interfaces;
 using Wolfpack.Periscope.Core.Interfaces.Entities;
 using Wolfpack.Periscope.Core.Interfaces.Widgets;
-using Wolfpack.Periscope.Core.Extensions;
 
-namespace Wolfpack.Periscope.Core.Providers.Highcharts
+namespace Wolfpack.Periscope.Core.Widgets.Highcharts
 {
-    public class HighchartBarChart : WidgetBase, IWidget
+    public class HighchartBarChart : WidgetBase<WidgetConfiguration>
     {
-        public void RenderMarkup(TextWriter writer, WidgetConfiguration cfg)
+        public override void RenderMarkup(TextWriter writer)
         {
             throw new System.NotImplementedException();
         }
 
-        public void RenderScript(TextWriter writer, WidgetConfiguration cfg)
+        public override void RenderScript(TextWriter writer)
         {
             // could inject different renders here...
             writer.WriteLine("<chart type='bar'></chart>");
-        }
-
-        public WidgetDefinition Definition
-        {
-            get { return _definition; }            
-        }
-
-        private static readonly WidgetDefinition _definition;
-        static HighchartBarChart()
-        {
-            _definition = new WidgetDefinition
-                              {
-                                  ImplementationType = typeof(HighchartBarChart).BuildTypeName()
-                              };
         }
 
         public HighchartBarChart()

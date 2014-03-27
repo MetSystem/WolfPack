@@ -1,4 +1,4 @@
-﻿var PERISCOPE = (function ($, targetElement) {
+﻿var PERISCOPE = (function (targetElement) {
     var periscope = {
         Includes: {},
         PanelId: null,
@@ -99,4 +99,4 @@
     }
 
     return periscope;
-} (jQuery, 'panelcontainer'));
+} ('panelcontainer'));

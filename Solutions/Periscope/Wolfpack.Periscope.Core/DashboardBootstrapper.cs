@@ -36,11 +36,6 @@ namespace Wolfpack.Periscope.Core
             infrastructure.RegisterPlugin<ClockPlugin>();
         }
 
-        protected virtual void RegisterRepository(IConfigurableInfrastructure infrastructure)
-        {
-            infrastructure.Container.RegisterType<IDashboardConfigurationRepository, FileSystemDashboardRepository>();
-        }
-
         public IDashboard Configure(Action<IConfigurableInfrastructure> configuratron)
         {
             // create infrastructure (configurable)
@@ -48,15 +43,15 @@ namespace Wolfpack.Periscope.Core
                 CreateContainer(), 
                 CreateMessageBus());
             RegisterDefaultPlugins(infrastructure);
-            configuratron(infrastructure);
-            RegisterRepository(infrastructure);
+            configuratron(infrastructure);            
 
 
             // create default registrations...
             infrastructure.Container.RegisterInstance<IDashboardInfrastructure>(infrastructure);
             infrastructure.Container.RegisterType<IDashboard, Dashboard>(
                 () => !infrastructure.Container.IsRegistered<IDashboard>());
-
+            infrastructure.Container.RegisterType<IDashboardConfigurationRepository, FileSystemDashboardRepository>(
+                            () => !infrastructure.Container.IsRegistered<IDashboardConfigurationRepository>());
 
             // finally resolve plugins & the dashboard itself...
             infrastructure.ResolvePlugins();

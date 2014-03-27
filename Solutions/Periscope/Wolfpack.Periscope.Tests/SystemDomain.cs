@@ -5,20 +5,20 @@ using System.Globalization;
 using System.Net;
 using System.Threading;
 using NUnit.Framework;
-using Newtonsoft.Json;
+using Wolfpack.Periscope.Core;
 using Wolfpack.Periscope.Core.Infrastructure;
 using Wolfpack.Periscope.Core.Interfaces;
 using Wolfpack.Periscope.Core.Interfaces.Entities;
 using Wolfpack.Periscope.Core.Interfaces.Events;
 using Wolfpack.Periscope.Core.Interfaces.Messages;
 using Wolfpack.Periscope.Core.Plugins;
-using Wolfpack.Periscope.Core.Providers.Demo;
-using Wolfpack.Periscope.Core.Providers.Highcharts;
+using Wolfpack.Periscope.Core.Repositories.Preset;
 using Wolfpack.Periscope.Core.Widgets;
+using Wolfpack.Periscope.Core.Widgets.Demo;
+using Wolfpack.Periscope.Core.Widgets.Highcharts;
 using Wolfpack.Periscope.Core.Widgets.Pumps;
 using Wolfpack.Periscope.Core.Widgets.Raphy;
 using Wolfpack.Periscope.Tests.Bdd;
-using Wolfpack.Periscope.Tests.Shims;
 using System.Linq;
 
 namespace Wolfpack.Periscope.Tests
@@ -29,7 +29,7 @@ namespace Wolfpack.Periscope.Tests
         private IDashboard _dashboard;
 
         public const string BaseUrl = "http://localhost:8082/";
-        private readonly AutomationBootstrapper _bootstrapper;
+        private DashboardConfigurationBuilder _panelBuilder;
 
 
         private TinyMessageSubscriptionToken _panelChangeSubscriptionToken;
@@ -40,8 +40,6 @@ namespace Wolfpack.Periscope.Tests
 
         public SystemDomain()
         {
-            _bootstrapper = new AutomationBootstrapper();
-
             _clockTickEvents = new List<ClockTickEvent>();
             _panelChangeEvents = new List<PanelChangeRequestEvent>();
 
@@ -56,9 +54,13 @@ namespace Wolfpack.Periscope.Tests
 
         public void TheDashboardIsStarted()
         {
-            _dashboard = _bootstrapper
-                .Configure(infrastructure =>
+            var bootstrapper = new DashboardBootstrapper();
+            _dashboard = bootstrapper.Configure(infrastructure =>
                                {
+                                   infrastructure.Container.RegisterInstance(_panelBuilder);
+                                   infrastructure.Container.RegisterType<IDashboardConfigurationRepository, PresetRepository>();
+
+
                                    infrastructure.RegisterPlugin<SignalRPlugin>();
                                    infrastructure.RegisterPlugin<NancyFxSelfHostPlugin>();
                                    infrastructure.RegisterPlugin<RotatingPanelSelectorPlugin>();
@@ -89,7 +91,7 @@ namespace Wolfpack.Periscope.Tests
 
         public void WeCreateAPanelNamed_WithSomeDefaultWidgets(string name)
         {
-            _bootstrapper.Builder.Add("PanelA", 
+            _panelBuilder = DashboardConfigurationBuilder.New().Add("PanelA", 
                 (infra, builder) => builder
 
                     .Add<RaphyProgressWidget>(
@@ -101,7 +103,7 @@ namespace Wolfpack.Periscope.Tests
                         cfg.Width = 250;
                     },
 
-                    cfg => new GenericDataPumpBootstrapper<IntervalDataPump>(infra,
+                    cfg => new DataPumpBootstrapper<IntervalDataPump>(infra,
                         new IntervalDataPump(infra, TimeSpan.FromSeconds(7)), cfg,
                         () =>
                         {
@@ -132,7 +134,7 @@ namespace Wolfpack.Periscope.Tests
                         cfg.Width = 250;
                     },
 
-                    cfg => new GenericDataPumpBootstrapper<IntervalDataPump>(infra,
+                    cfg => new DataPumpBootstrapper<IntervalDataPump>(infra,
                         new IntervalDataPump(infra, TimeSpan.FromSeconds(17)), cfg,
                         () =>
                         {
@@ -146,16 +148,7 @@ namespace Wolfpack.Periscope.Tests
 
                             infra.Logger.LogDebug("Callback fired value {0} at {1}!", value, cfg.Name);
                         }))
-
-                //.Add<DojoPieChartWidget>(
-                .Add<PlaceholderWidget>(
-                    cfg =>
-                        {
-                            cfg.Title = "DojoBarChart";
-                            cfg.Name = "widget3";
-                            cfg.Height = 250;
-                            cfg.Width = 250;
-                        })
+                
                 .Add<PlaceholderWidget>(
                     cfg =>
                         {
@@ -164,6 +157,7 @@ namespace Wolfpack.Periscope.Tests
                             cfg.Height = 250;
                             cfg.Width = 250;
                         })
+
                 .Add<HighchartPieChart>(
                     cfg =>
                         {
@@ -171,7 +165,9 @@ namespace Wolfpack.Periscope.Tests
                             cfg.Name = "widget99";
                             cfg.Height = 250;
                             cfg.Width = 450;
-                        }).SetDwellTime(60)
+                        })
+                // panel displays for...
+                .SetDwellTime(60)
            );
         }
 

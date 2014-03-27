@@ -2,8 +2,9 @@
 using NUnit.Framework;
 using StoryQ;
 using Wolfpack.Periscope.Core.Interfaces;
-using Wolfpack.Periscope.Core.Providers.Highcharts;
+using Wolfpack.Periscope.Core.Interfaces.Entities;
 using Wolfpack.Periscope.Core.Repositories.Preset;
+using Wolfpack.Periscope.Core.Widgets.Highcharts;
 using Wolfpack.Periscope.Tests.Bdd;
 using System.Linq;
 
@@ -18,12 +19,12 @@ namespace Wolfpack.Periscope.Tests
             var sut = DashboardConfigurationBuilder.New();
 
             sut.Add("TestPanel1", (infra, builder)
-                                  => builder.Add<HighchartPieChart>(widget
+                                  => builder.Add<HighchartPieChart, WidgetConfiguration>(widget
                                                                     =>
                                                                         {
                                                                             widget.Name = "Piechart1";
                                                                         })
-                                         .Add<HighchartBarChart>(widget
+                                         .Add<HighchartBarChart, WidgetConfiguration>(widget
                                                                  =>
                                                                      {
                                                                          widget.Name = "Barchar1";

@@ -22,22 +22,18 @@ namespace Wolfpack.Periscope.Core.Repositories.Preset
             return this;
         }
 
-        public PanelBuilder Add<T>(Action<WidgetConfiguration> configurer, Func<WidgetConfiguration, IWidgetBootstrapper> builder = null)
-            where T: class, IWidget, new() 
+        public PanelBuilder Add<TWidget>(Action<WidgetConfiguration> configurer, Func<WidgetConfiguration, IWidgetBootstrapper> builder = null)
+            where TWidget : class, IWidget<WidgetConfiguration>, new()
         {
-            var config = new WidgetConfiguration();
-            configurer(config);
+            return Add<TWidget, WidgetConfiguration>(configurer, builder);
+        }
 
-            var widget = new T { Configuration = config };
-            _panel.Add(widget);
-
-            if (builder != null)
-            {
-                var bootstrapper = builder(config);
-                if (bootstrapper != null)
-                    widget.Bootstrapper = bootstrapper;
-            }
-
+        public PanelBuilder Add<TWidget, TWidgetConfig>(Action<TWidgetConfig> configurer, Func<WidgetConfiguration, IWidgetBootstrapper> builder = null)
+            where TWidgetConfig : WidgetConfiguration, new() 
+            where TWidget : class, IWidget<TWidgetConfig>, new() 
+        {
+            var widget = new TWidget();
+            _panel.Add(widget.Configure(configurer, builder).CreateInstance());
             return this;
         }
 

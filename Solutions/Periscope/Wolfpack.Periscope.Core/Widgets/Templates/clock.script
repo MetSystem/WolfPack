@@ -1,0 +1,5 @@
+﻿<script type="text/javascript">
+  function {{name}}Update(payload) {
+    $('#{{name}}Content').text(moment(payload).format('MMMM Do YYYY, h:mm:ss a'));
+  } 
+</script>

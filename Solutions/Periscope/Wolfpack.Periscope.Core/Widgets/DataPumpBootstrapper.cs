@@ -6,7 +6,7 @@ using Wolfpack.Periscope.Core.Interfaces.Events;
 
 namespace Wolfpack.Periscope.Core.Widgets
 {
-    public class GenericDataPumpBootstrapper<T> : IWidgetBootstrapper
+    public class DataPumpBootstrapper<T> : IWidgetBootstrapper
         where T: IWidgetDataPump
     {
         private TinyMessageSubscriptionToken _subscriptionToken;
@@ -16,7 +16,7 @@ namespace Wolfpack.Periscope.Core.Widgets
         private readonly WidgetConfiguration _targetMetadata;
         private readonly Action _callback;
 
-        public GenericDataPumpBootstrapper(IDashboardInfrastructure infrastructure,
+        public DataPumpBootstrapper(IDashboardInfrastructure infrastructure,
             T pump, 
             WidgetConfiguration targetMetadata,
             Action callback)
