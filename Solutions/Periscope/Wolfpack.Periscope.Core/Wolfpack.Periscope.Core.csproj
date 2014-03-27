@@ -45,6 +45,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DotLiquid">
+      <HintPath>..\..\packages\DotLiquid.1.7.0\lib\NET40\DotLiquid.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.Core">
       <HintPath>..\..\packages\Microsoft.AspNet.SignalR.Core.2.0.2\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
     </Reference>
@@ -96,6 +99,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\DictionaryExtensions.cs" />
     <Compile Include="Infrastructure\DefaultClock.cs" />
     <Compile Include="Dashboard.cs" />
     <Compile Include="DashboardBootstrapper.cs" />
@@ -116,7 +120,7 @@
     <Compile Include="Interfaces\IWidgetDataPump.cs" />
     <Compile Include="Plugins\NancyFxSelfHostPlugin.cs" />
     <Compile Include="Plugins\RotatingPanelSelectorPlugin.cs" />
-    <Compile Include="Widgets\GenericDataPumpBootstrapper.cs" />
+    <Compile Include="Widgets\DataPumpBootstrapper.cs" />
     <Compile Include="Widgets\Demo\PlaceholderWidget.cs" />
     <Compile Include="Widgets\Highcharts\HighchartBarChart.cs" />
     <Compile Include="Widgets\Highcharts\HighchartPieChart.cs" />
@@ -159,6 +163,7 @@
     <Compile Include="Repositories\Preset\DashboardConfigurationBuilder.cs" />
     <Compile Include="Repositories\Preset\PanelBuilder.cs" />
     <Compile Include="Widgets\Pumps\IntervalDataPump.cs" />
+    <Compile Include="Widgets\TemplatedWidget.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -184,6 +189,13 @@
     <None Include="Views\dashboard_master.sshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Widgets\Templates\clock.script">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Widgets\Templates\clock.markup">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="Widgets\Highcharts\Scripts\highcharts.js">
@@ -207,8 +219,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Galleries\" />
+    <Folder Include="Widgets\Scripts\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\moment-min.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="Widgets\Highcharts\Scripts\themes\periscope.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

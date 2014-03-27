@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using DotLiquid.Util;
 using Microsoft.AspNet.SignalR;
 using Microsoft.Owin.Cors;
 using Microsoft.Owin.Hosting;
@@ -44,7 +45,6 @@ namespace Wolfpack.Periscope.Core.Plugins
 
         public void Initialise()
         {
-            _subscriptionTokens.Add(_dashboard.Infrastructure.MessageBus.Subscribe<ClockTickEvent>(BroadcastClockTick));
             _subscriptionTokens.Add(_dashboard.Infrastructure.MessageBus.Subscribe<WidgetUpdateEvent>(BroadcastWidgetUpdate));
             _subscriptionTokens.Add(_dashboard.Infrastructure.MessageBus.Subscribe<PanelChangedEvent>(BroadcastPanelChanged));
         }
@@ -59,11 +59,6 @@ namespace Wolfpack.Periscope.Core.Plugins
         {
             GlobalHost.ConnectionManager.GetHubContext<Dashboard>().Clients.All.panelChanged(
                 new { payload.Content.Id, payload.Content.Name, payload.Content.DwellInSeconds });
-        }
-
-        private void BroadcastClockTick(ClockTickEvent payload)
-        {
-            GlobalHost.ConnectionManager.GetHubContext<Dashboard>().Clients.All.clockTick(payload.Content);
         }
 
         private void BroadcastWidgetUpdate(WidgetUpdateEvent payload)

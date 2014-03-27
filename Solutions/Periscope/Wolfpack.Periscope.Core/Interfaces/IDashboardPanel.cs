@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Wolfpack.Periscope.Core.Interfaces.Entities;
 
 namespace Wolfpack.Periscope.Core.Interfaces
 {
@@ -9,6 +10,6 @@ namespace Wolfpack.Periscope.Core.Interfaces
         string Name { get; set; }
         int Sequence { get; set; }
         int DwellInSeconds { get; set; }
-        IEnumerable<IWidget> Widgets { get; set; }
+        IEnumerable<WidgetInstance> Widgets { get; set; }
     }
 }

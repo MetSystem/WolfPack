@@ -1,7 +1,6 @@
 ﻿@Master['dashboard_master']
 
 @Section['Content']
-
 	<div id="panelcontainer" class="periscope-panel-container"></div>
 @EndSection
 
@@ -12,9 +11,7 @@
     <script type="text/javascript" src="/Scripts/periscope.js"></script>
 
     <script type="text/javascript">
-        jQuery.noConflict();
-
-        jQuery(function () {
+        $(function () {
             PERISCOPE.Start();
         });        
     </script>

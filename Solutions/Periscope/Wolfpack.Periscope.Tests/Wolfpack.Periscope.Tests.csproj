@@ -113,7 +113,6 @@
     <Compile Include="Bdd\BddFeature.cs" />
     <Compile Include="Bdd\BddTestDomain.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Shims\AutomationBootstrapper.cs" />
     <Compile Include="SystemDomain.cs" />
     <Compile Include="Testbed.cs" />
   </ItemGroup>
