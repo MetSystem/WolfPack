@@ -1,8 +1,8 @@
-SET NuGetVersion=%1
-IF NOT %2 == "" (
-	SET NuGetVersion=%1-%2
-)
+SET "NuGetVersion=%1"
+IF "%2" == "" GOTO :notPreRelease
+SET "NuGetVersion=%1-%2"
 
+:notPreRelease
 ECHO NuGetVersion is %NuGetVersion%
 
 pushd ..\releases\v%1\source
