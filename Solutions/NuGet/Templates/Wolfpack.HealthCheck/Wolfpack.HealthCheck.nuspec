@@ -4,8 +4,8 @@
     <id>Wolfpack.HealthCheck</id>
     <version>1.0.0.0</version>
     <title>Wolfpack.HealthCheck</title>
-    <authors>jimbobdog</authors>
-    <owners>James Simmonds, Rob Gibbens</owners>
+    <authors>jimbobdog, Rob Gibbens</authors>
+    <owners>James Simmonds</owners>
     <licenseUrl>http://wolfpack.codeplex.com/license</licenseUrl>
     <projectUrl>http://wolfpack.codeplex.com</projectUrl>
     <iconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=Wolfpack&amp;DownloadId=140622&amp;Build=17672</iconUrl>
