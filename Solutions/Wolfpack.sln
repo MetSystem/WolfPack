@@ -43,14 +43,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{DFC24647-C87
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "net45", "net45", "{03516572-0E35-4685-9478-0D349F6C9472}"
 	ProjectSection(SolutionItems) = preProject
-		NuGet\Templates\Wolfpack.HealthCheck\lib\Net40\delete.me = NuGet\Templates\Wolfpack.HealthCheck\lib\Net40\delete.me
+		NuGet\Templates\Wolfpack.HealthCheck\lib\net45\delete.me = NuGet\Templates\Wolfpack.HealthCheck\lib\net45\delete.me
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{B83DFC58-5AEC-4E1F-B367-5B12713C123C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "net45", "net45", "{97C91E7C-A5CF-4D01-AE58-71A82FA46DA4}"
 	ProjectSection(SolutionItems) = preProject
-		NuGet\Templates\Wolfpack.Publisher\lib\Net40\delete.me = NuGet\Templates\Wolfpack.Publisher\lib\Net40\delete.me
+		NuGet\Templates\Wolfpack.Publisher\lib\net45\delete.me = NuGet\Templates\Wolfpack.Publisher\lib\net45\delete.me
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorldHealthCheck", "HelloWorldHealthCheck\HelloWorldHealthCheck.csproj", "{79C0B713-6040-4E36-9607-0364F9AADB39}"
@@ -74,7 +74,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{2959CC02-9D7
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Net45", "Net45", "{4F7C8A51-6676-42BA-A376-037241E47E8A}"
 	ProjectSection(SolutionItems) = preProject
-		NuGet\Templates\Wolfpack\lib\Net40\delete.me = NuGet\Templates\Wolfpack\lib\Net40\delete.me
+		NuGet\Templates\Wolfpack\lib\net45\delete.me = NuGet\Templates\Wolfpack\lib\net45\delete.me
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "content", "content", "{741A7329-0919-4109-A086-9EBBD33A4084}"
@@ -100,7 +100,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{8FD61883-869
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "net45", "net45", "{AAA182C2-8B5E-46D6-93DE-31D718E59415}"
 	ProjectSection(SolutionItems) = preProject
-		NuGet\Templates\Wolfpack.Core.Testing\lib\Net40\delete.me = NuGet\Templates\Wolfpack.Core.Testing\lib\Net40\delete.me
+		NuGet\Templates\Wolfpack.Core.Testing\lib\net45\delete.me = NuGet\Templates\Wolfpack.Core.Testing\lib\net45\delete.me
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{1B65B8C2-B408-412B-8A64-CA976AA7209C}"
@@ -122,7 +122,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{FD1684B9-498
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "net45", "net45", "{9847DE2C-436E-4256-A115-86DCB1660D98}"
 	ProjectSection(SolutionItems) = preProject
-		NuGet\Templates\Wolfpack.WebServices\lib\Net40\delete.me = NuGet\Templates\Wolfpack.WebServices\lib\Net40\delete.me
+		NuGet\Templates\Wolfpack.WebServices\lib\net45\delete.me = NuGet\Templates\Wolfpack.WebServices\lib\net45\delete.me
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wolfpack.Core.WebServices.Client", "Wolfpack.Core.WebServices.Client\Wolfpack.Core.WebServices.Client.csproj", "{BA5F9564-B6B1-4146-9F1E-0B3C9CD2996F}"
@@ -138,7 +138,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{F5C0B11F-234
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "net45", "net45", "{68CB6FFE-A6DB-4667-9A0B-C0127F3704CD}"
 	ProjectSection(SolutionItems) = preProject
-		NuGet\Templates\Wolfpack.WebServices.Client\lib\Net40\delete.me = NuGet\Templates\Wolfpack.WebServices.Client\lib\Net40\delete.me
+		NuGet\Templates\Wolfpack.WebServices.Client\lib\net45\delete.me = NuGet\Templates\Wolfpack.WebServices.Client\lib\net45\delete.me
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "content", "content", "{86E052FA-4B01-4AE1-8B54-86E6B0B8AE9C}"
