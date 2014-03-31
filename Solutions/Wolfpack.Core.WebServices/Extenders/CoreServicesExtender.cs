@@ -38,6 +38,7 @@ namespace Wolfpack.Core.WebServices.Extenders
             if (_config.ApiKeys == null || !_config.ApiKeys.Any()) 
                 return false;
 
+            // TODO: filter UI requests from Api requests...only apply ApiKey check api calls??
             var apikey = nancyContext.Request.Headers["X-ApiKey"].FirstOrDefault() ?? string.Empty;
             return !_config.ApiKeys.Contains(apikey, StringComparer.OrdinalIgnoreCase);
         }

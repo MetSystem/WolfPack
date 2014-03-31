@@ -62,6 +62,17 @@
 		function setActiveTab(tab) {
 			$("ul.navbar-nav li:contains('" + tab + "')").addClass('active');
 		}
+
+		$(function(){
+			// get addon menu additions
+			$.getJSON('/api/addonmenu', function (data) {
+			    console.log('addon menu loaded...');
+			    console.log(data);
+
+				// TODO
+			});
+
+		});
 	</script>		
     @Section['PageScript'] 
 </body>
