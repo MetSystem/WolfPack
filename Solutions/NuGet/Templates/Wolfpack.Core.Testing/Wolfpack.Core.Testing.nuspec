@@ -15,7 +15,6 @@
     <language>en-GB</language>
     <tags>Wolfpack Monitoring Testing BDD</tags>
     <dependencies>
-      <dependency id="Growl" version="[0.6]" />
       <dependency id="Castle.Core" version="[3.2.2]" />
       <dependency id="Castle.Windsor" version="[3.2.1]" />
       <dependency id="EntityFramework" version="[6.1.0]" />

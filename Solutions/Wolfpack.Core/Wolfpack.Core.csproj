@@ -176,15 +176,6 @@
     <Compile Include="Filters\ResultFilterBase.cs" />
     <Compile Include="Filters\SuccessFilter.cs" />
     <Compile Include="Geo\StaticGeoLocator.cs" />
-    <Compile Include="Growl\Formatters\DefaultGrowlUniversalFormatter.cs" />
-    <Compile Include="Growl\Formatters\DefaultGrowlAgentStartFormatter.cs" />
-    <Compile Include="Growl\Formatters\GrowlResultFormatter.cs" />
-    <Compile Include="Growl\Formatters\DefaultGrowlHealthCheckFormatter.cs" />
-    <Compile Include="Growl\Formatters\GrowlCountFormatter.cs" />
-    <Compile Include="Growl\GrowlConfiguration.cs" />
-    <Compile Include="Growl\GrowlPublisher.cs" />
-    <Compile Include="Growl\GrowlPublisherConfigurationDiscovery.cs" />
-    <Compile Include="Growl\IGrowlNotificationFormatter.cs" />
     <Compile Include="Hosts\PluginHostBase.cs" />
     <Compile Include="InterceptorSelector.cs" />
     <Compile Include="Loaders\ContainerLoaders.cs" />
@@ -207,6 +198,9 @@
     <Compile Include="Notification\DefaultNotificationHub.cs" />
     <Compile Include="Pipeline\DefaultPipeline.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Publishers\Console\ConsolePublisherConfiguration.cs" />
+    <Compile Include="Publishers\Console\ConsolePublisher.cs" />
+    <Compile Include="Publishers\Console\ConsolePublisherConfigurationDiscovery.cs" />
     <Compile Include="Publishers\FilteredResultPublisherBase.cs" />
     <Compile Include="Publishers\PublisherBase.cs" />
     <Compile Include="Repositories\EfDatabase\EfDbContext.cs" />
@@ -241,14 +235,6 @@
       <Project>{21083526-1E2F-468C-A08B-D2CAC99EC4FC}</Project>
       <Name>Wolfpack.Core.Interfaces</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Growl\agent.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Growl\growl.monitor.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
