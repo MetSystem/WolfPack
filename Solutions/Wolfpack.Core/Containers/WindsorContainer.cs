@@ -13,7 +13,7 @@ namespace Wolfpack.Core.Containers
         public WindsorContainer()
         {
             _instance = new Castle.Windsor.WindsorContainer(new ZeroAppConfigXmlInterpreter());
-            _instance.Kernel.Resolver.AddSubResolver(new CollectionResolver(_instance.Kernel));
+            _instance.Kernel.Resolver.AddSubResolver(new CollectionResolver(_instance.Kernel, true));
         }
 
         public IContainer RegisterAsTransient(Type implType)

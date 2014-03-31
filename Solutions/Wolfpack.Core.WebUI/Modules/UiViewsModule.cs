@@ -1,14 +1,12 @@
-﻿using System;
-using Nancy;
-using Nancy.ModelBinding;
+﻿using Nancy;
 
 namespace Wolfpack.Core.WebUI.Modules
 {
-    public class UiModule : NancyModule
+    public class UiViewsModule : NancyModule
     {
         private const string BaseUrl = "/ui";
 
-        public UiModule() 
+        public UiViewsModule() 
             : base(BaseUrl)
         {
             Get["/"] = _ => View["views/status.sshtml"];
