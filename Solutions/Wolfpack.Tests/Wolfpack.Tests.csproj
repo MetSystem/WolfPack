@@ -56,12 +56,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="Growl.Connector">
-      <HintPath>..\packages\Growl.0.6\lib\Growl.Connector.dll</HintPath>
-    </Reference>
-    <Reference Include="Growl.CoreLibrary">
-      <HintPath>..\packages\Growl.0.6\lib\Growl.CoreLibrary.dll</HintPath>
-    </Reference>
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
     </Reference>
@@ -144,9 +138,6 @@
     <Compile Include="System\Entities.Domain.cs" />
     <Compile Include="System\Entity.Specs.cs" />
     <Compile Include="Timers\TwentyFourSevenTimerTests.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="license.txt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HelloWorldHealthCheck\HelloWorldHealthCheck.csproj">
