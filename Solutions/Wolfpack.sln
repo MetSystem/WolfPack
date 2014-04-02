@@ -84,11 +84,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Config", "Config", "{DA773E
 		NuGet\Templates\Wolfpack\content\Config\delete.me = NuGet\Templates\Wolfpack\content\Config\delete.me
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Growl", "Growl", "{41E87ECF-4F6F-4B67-ABF8-E549688D4D13}"
-	ProjectSection(SolutionItems) = preProject
-		NuGet\Templates\Wolfpack\content\Growl\delete.me = NuGet\Templates\Wolfpack\content\Growl\delete.me
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wolfpack.Core.Testing", "Wolfpack.Core.Testing\Wolfpack.Core.Testing.csproj", "{CBAADBCA-E16F-4D88-80DB-7CFB455B98F6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Wolfpack.Core.Testing", "Wolfpack.Core.Testing", "{CE4229D8-6176-4BF2-94E6-E18A34218BB0}"
@@ -153,6 +148,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{6C7444
 		.nuget\NuGet.Config = .nuget\NuGet.Config
 		.nuget\NuGet.exe = .nuget\NuGet.exe
 		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{CE7775E5-8CBB-45E6-9170-09D3EB5355D1}"
+	ProjectSection(SolutionItems) = preProject
+		NuGet\Templates\Wolfpack\content\Scripts\delete.me = NuGet\Templates\Wolfpack\content\Scripts\delete.me
 	EndProjectSection
 EndProject
 Global
@@ -317,7 +317,7 @@ Global
 		{1B65B8C2-B408-412B-8A64-CA976AA7209C} = {68C3AA09-D386-4015-8991-F2CAA8C50CD4}
 		{4F7C8A51-6676-42BA-A376-037241E47E8A} = {2959CC02-9D7E-4B01-AEE3-F4C6E477BCED}
 		{DA773E49-2C40-4601-8662-896ABB32951F} = {741A7329-0919-4109-A086-9EBBD33A4084}
-		{41E87ECF-4F6F-4B67-ABF8-E549688D4D13} = {741A7329-0919-4109-A086-9EBBD33A4084}
+		{CE7775E5-8CBB-45E6-9170-09D3EB5355D1} = {741A7329-0919-4109-A086-9EBBD33A4084}
 		{8FD61883-869C-4D62-9C55-C498F095F5C2} = {CE4229D8-6176-4BF2-94E6-E18A34218BB0}
 		{86E052FA-4B01-4AE1-8B54-86E6B0B8AE9C} = {CE4229D8-6176-4BF2-94E6-E18A34218BB0}
 		{AAA182C2-8B5E-46D6-93DE-31D718E59415} = {8FD61883-869C-4D62-9C55-C498F095F5C2}
