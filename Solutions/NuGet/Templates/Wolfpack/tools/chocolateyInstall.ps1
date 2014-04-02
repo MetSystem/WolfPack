@@ -4,7 +4,7 @@ try {
     Write-Host "*** WOLFPACK***" -ForegroundColor yellow
     
     # binaries folder files
-    $wpFolder = Join-Path $packageFolder "lib\net40"
+    $wpFolder = Join-Path $packageFolder "lib\net45"
     $wpFiles = Get-ChildItem $wpFolder
 
     foreach ($wpFile in $wpFiles) {
