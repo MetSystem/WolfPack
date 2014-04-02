@@ -56,15 +56,15 @@ rem Wolfpack (+Sidewinder)
 del NuGet\Templates\Wolfpack\tools\delete.me
 del NuGet\Templates\Wolfpack\lib\net45\delete.me
 del NuGet\Templates\Wolfpack\content\config\delete.me
-del NuGet\Templates\Wolfpack\content\growl\delete.me
+del NuGet\Templates\Wolfpack\content\scripts\delete.me
 copy Wolfpack.Agent\bin\debug\*.* NuGet\Templates\Wolfpack\lib\net45
 del NuGet\Templates\Wolfpack\lib\net45\*.xml
 del NuGet\Templates\Wolfpack\lib\net45\*.pdb
 move NuGet\Templates\Wolfpack\lib\net45\wolfpack.agent.exe.config NuGet\Templates\Wolfpack\content
 xcopy Wolfpack.Agent\bin\debug\config\*.* NuGet\Templates\Wolfpack\content\config /Y /R /I /E
 xcopy Wolfpack.Agent\bin\debug\content\*.* NuGet\Templates\Wolfpack\content\content /Y /R /I /E
+xcopy Wolfpack.Agent\bin\debug\scripts\*.* NuGet\Templates\Wolfpack\content\scripts /Y /R /I /E
 xcopy Wolfpack.Agent\bin\debug\views\*.* NuGet\Templates\Wolfpack\content\views /Y /R /I /E
-xcopy Wolfpack.Agent\bin\debug\growl\*.* NuGet\Templates\Wolfpack\content\growl /Y /R /I /E
 
 
 popd
