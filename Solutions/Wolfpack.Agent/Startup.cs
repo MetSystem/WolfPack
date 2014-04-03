@@ -31,9 +31,10 @@ namespace Wolfpack.Agent
                     {
                         // /update switch applied
                         // general update everything installed
-                        if (AppUpdateFactory.Setup(cfg => cfg.Update("Wolfpack", 
-                            cfg.CurrentAppVersion(), 
-                            feed)).Execute())
+                        if (AppUpdateFactory.Setup(cfg => cfg
+                            .Update("Wolfpack", cfg.CurrentAppVersion(), feed)
+                            .TargetFrameworkVersion45())
+                            .Execute())
                         {
                             Logger.Debug("*** UPDATE AVAILABLE!! SHUTTING DOWN ***");
                             return;
@@ -49,7 +50,8 @@ namespace Wolfpack.Agent
                                                                              NuGetFeedUrl = feed,
                                                                              UpdateDependencies = true
                                                                          })
-                            .JustThesePackages())
+                            .JustThesePackages()
+                            .TargetFrameworkVersion45())
                             .Execute())
                         {
                             Logger.Debug("*** PACKAGE IS AVAILABLE!! SHUTTING DOWN TO INSTALL IT ***");
