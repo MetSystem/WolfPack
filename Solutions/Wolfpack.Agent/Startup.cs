@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Sidewinder.Core;
+using Sidewinder.Core.Interfaces;
 using Sidewinder.Core.Interfaces.Entities;
 using Wolfpack.Agent.Profiles;
 using Wolfpack.Core;
@@ -33,7 +34,8 @@ namespace Wolfpack.Agent
                         // general update everything installed
                         if (AppUpdateFactory.Setup(cfg => cfg
                             .Update("Wolfpack", cfg.CurrentAppVersion(), feed)
-                            .TargetFrameworkVersion45())
+                            .TargetFrameworkVersion45()
+                            .UseLogger(new FileLogger(Level.Debug, @"sidewinder.log")))
                             .Execute())
                         {
                             Logger.Debug("*** UPDATE AVAILABLE!! SHUTTING DOWN ***");
@@ -51,6 +53,7 @@ namespace Wolfpack.Agent
                                                                              UpdateDependencies = true
                                                                          })
                             .JustThesePackages()
+                            .UseLogger(new FileLogger(Level.Debug, @"sidewinder.log"))
                             .TargetFrameworkVersion45())
                             .Execute())
                         {
