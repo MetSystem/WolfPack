@@ -25,7 +25,7 @@
       <dependency id="ServiceStack.Text" version="[4.0.8]" />
       <dependency id="log4net" version="[2.0.3]" />
       <dependency id="Newtonsoft.Json" version="[5.0.8]" />
-      <dependency id="Sidewinder.Core" version="[1.5.3]" />      
+      <dependency id="Sidewinder.Core" version="[1.5.5]" />      
     </dependencies>
   </metadata>
 </package>
