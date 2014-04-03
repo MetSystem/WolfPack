@@ -45,7 +45,8 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Fluent.IO">
+    <Reference Include="Fluent.IO, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\FluentPath.1.0.0\lib\Net4\Fluent.IO.dll</HintPath>
     </Reference>
     <Reference Include="FluentAssertions">
