@@ -1,4 +1,5 @@
 ﻿using Wolfpack.Core.Interfaces;
+using Wolfpack.Core.WebServices.Extenders;
 using Wolfpack.Core.WebServices.Interfaces;
 using Wolfpack.Core.WebServices.Interfaces.Entities;
 using Wolfpack.Core.WebServices.Strategies;
@@ -12,8 +13,7 @@ namespace Wolfpack.Core.WebServices
         {
             var tracker = new ActivityTracker();
             Container.RegisterInstance(tracker);
-
-            Container.RegisterAll<IWebServiceExtender>();
+            Container.RegisterAsSingleton<IWebServiceExtender>(typeof(CoreServicesExtender));
 
             if (!Container.IsRegistered<IWebServiceReceiverStrategy>())
             {
