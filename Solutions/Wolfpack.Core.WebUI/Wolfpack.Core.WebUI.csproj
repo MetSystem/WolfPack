@@ -58,6 +58,7 @@
     <Compile Include="Modules\UiApiModule.cs" />
     <Compile Include="Modules\UiViewsModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WebServiceUIStartup.cs" />
     <Compile Include="WebUIServiceExtender.cs" />
   </ItemGroup>
   <ItemGroup>

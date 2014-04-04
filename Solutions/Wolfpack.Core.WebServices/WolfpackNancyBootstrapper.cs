@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Nancy;
 using Nancy.Bootstrapper;
 using Nancy.Conventions;
@@ -36,6 +37,11 @@ namespace Wolfpack.Core.WebServices
             container.Register(_config);
             container.Register((ctx, npo) => Container.Resolve<IWebServiceReceiverStrategy>());
             container.Register((ctx, npo) => Container.Resolve<ActivityTracker>());
+        }
+
+        protected override IEnumerable<ModuleRegistration> Modules
+        {
+            get { return _extenders.SelectMany(x => x.Modules); }
         }
 
         protected override void ConfigureConventions(NancyConventions nancyConventions)

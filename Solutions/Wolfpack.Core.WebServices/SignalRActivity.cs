@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Reflection;
 using System.Threading.Tasks;
 using Magnum.Pipeline;
 using Microsoft.AspNet.SignalR;
+using Microsoft.AspNet.SignalR.Infrastructure;
 using Microsoft.Owin.Cors;
 using Microsoft.Owin.Hosting;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Owin;
 using Wolfpack.Core.Interfaces;
 using Wolfpack.Core.Interfaces.Entities;
@@ -91,6 +95,14 @@ namespace Wolfpack.Core.WebServices
     {
         public void Configuration(IAppBuilder app)
         {
+
+            var settings = new JsonSerializerSettings
+            {
+                ContractResolver = new SignalRContractResolver()
+            };
+            var serializer = JsonSerializer.Create(settings);
+            GlobalHost.DependencyResolver.Register(typeof(JsonSerializer), () => serializer);
+
             app.Map("/signalr", map =>
             {
                 // Setup the cors middleware to run before SignalR.
@@ -113,5 +125,31 @@ namespace Wolfpack.Core.WebServices
                 map.RunSignalR(hubConfiguration);
             });
         }
+    }
+
+    public class SignalRContractResolver : IContractResolver
+    {
+        private readonly Assembly _assembly;
+        private readonly IContractResolver _camelCaseContractResolver;
+        private readonly IContractResolver _defaultContractSerializer;
+
+        public SignalRContractResolver()
+        {
+            _defaultContractSerializer = new DefaultContractResolver();
+            _camelCaseContractResolver = new CamelCasePropertyNamesContractResolver();
+            _assembly = typeof(Connection).Assembly;
+        }
+
+        #region IContractResolver Members
+
+        public JsonContract ResolveContract(Type type)
+        {
+            if (type.Assembly.Equals(_assembly))
+                return _defaultContractSerializer.ResolveContract(type);
+
+            return _camelCaseContractResolver.ResolveContract(type);
+        }
+
+        #endregion
     }
 }

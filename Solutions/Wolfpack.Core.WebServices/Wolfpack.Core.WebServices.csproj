@@ -157,7 +157,6 @@
       <Name>Wolfpack.Core</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy $(TargetDir)ServiceStack*.* $(SolutionDir)Wolfpack.Agent\bin\Debug /Y /R /I

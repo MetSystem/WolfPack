@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Nancy;
 using Nancy.Bootstrapper;
 using Nancy.TinyIoc;
 using Wolfpack.Core.WebServices.Interfaces;
 using Wolfpack.Core.WebServices.Interfaces.Entities;
+using Wolfpack.Core.WebServices.Modules;
 
 namespace Wolfpack.Core.WebServices.Extenders
 {
@@ -15,6 +17,18 @@ namespace Wolfpack.Core.WebServices.Extenders
         public CoreServicesExtender(WebServiceActivityConfig config)
         {
             _config = config;
+        }
+
+        public IEnumerable<ModuleRegistration> Modules
+        {
+            get
+            {
+                return new []
+                {
+                    new ModuleRegistration(typeof(ConfigurationModule)), 
+                    new ModuleRegistration(typeof(NotificationModule)), 
+                };
+            }
         }
 
         public void Execute(TinyIoCContainer container, IPipelines pipelines)

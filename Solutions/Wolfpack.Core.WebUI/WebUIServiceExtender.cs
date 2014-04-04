@@ -2,6 +2,7 @@
 using Nancy.Bootstrapper;
 using Nancy.TinyIoc;
 using Wolfpack.Core.WebServices.Interfaces;
+using Wolfpack.Core.WebUI.Modules;
 
 namespace Wolfpack.Core.WebUI
 {
@@ -12,6 +13,17 @@ namespace Wolfpack.Core.WebUI
         public WebUIServiceExtender(IEnumerable<INeedMenuSpace> menuChangers)
         {
             _menuChangers = menuChangers;
+        }
+        public IEnumerable<ModuleRegistration> Modules
+        {
+            get
+            {
+                return new[]
+                {
+                    new ModuleRegistration(typeof(UiApiModule)), 
+                    new ModuleRegistration(typeof(UiViewsModule)), 
+                };
+            }
         }
 
         public void Execute(TinyIoCContainer container, IPipelines pipelines)
