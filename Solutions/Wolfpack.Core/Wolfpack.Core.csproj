@@ -126,6 +126,7 @@
     <Compile Include="Checks\WmiProcessRunningCheck.cs" />
     <Compile Include="Configuration\ConfigurationManager.cs" />
     <Compile Include="Configuration\DefaultConfigurationManager.cs" />
+    <Compile Include="Configuration\FileSystem\FileSystemBootstrapLoader.cs" />
     <Compile Include="Configuration\FileSystem\FileSystemPublisherLoader.cs" />
     <Compile Include="Configuration\FileSystem\FileSystemActivityLoader.cs" />
     <Compile Include="Configuration\FileSystem\FileSystemHealthChecksLoader.cs" />

@@ -9,26 +9,26 @@ namespace Wolfpack.Core.Configuration.FileSystem
 {    
     public abstract class FileSystemConfigurationRepository : IConfigurationRepository
     {
-        public const string ConfigFileExtension = "config";
+        public const string CONFIG_FILE_EXTENSION = "config";
 
-        protected string _baseFolder;
+        protected string BaseFolder;
 
         protected FileSystemConfigurationRepository(string baseFolder)
         {
-            _baseFolder = SmartLocation.GetLocation(baseFolder);
+            BaseFolder = SmartLocation.GetLocation(baseFolder);
         }
        
-        protected abstract IEnumerable<FileSystemConfigurationEntry> ProcessEntries(IEnumerable<FileSystemConfigurationEntry> entries);
+        protected abstract IEnumerable<FileSystemConfigurationEntry> ProcessEntries(ICollection<FileSystemConfigurationEntry> entries);
 
         public abstract void Save(ConfigurationChangeRequest change);
 
         public virtual IEnumerable<ConfigurationEntry> Load()
         {
-            if (!Directory.Exists(_baseFolder))
+            if (!Directory.Exists(BaseFolder))
                 return new ConfigurationEntry[0];
 
-            Logger.Info("Scanning for configuration entries in '{0}'...", _baseFolder);
-            var files = Directory.GetFiles(_baseFolder, "*." + ConfigFileExtension, SearchOption.AllDirectories).ToList();
+            Logger.Info("Scanning for configuration entries in '{0}'...", BaseFolder);
+            var files = Directory.GetFiles(BaseFolder, "*." + CONFIG_FILE_EXTENSION, SearchOption.AllDirectories).ToList();
 
             var entries = new List<FileSystemConfigurationEntry>();
             entries.AddRange(files.Select(
@@ -78,9 +78,9 @@ namespace Wolfpack.Core.Configuration.FileSystem
         {
             string newname;
 
-            if (!entry.RequiredProperties.TryGetValue(ConfigurationEntry.RequiredPropertyNames.Name, out newname))
+            if (!entry.RequiredProperties.TryGetValue(ConfigurationEntry.RequiredPropertyNames.NAME, out newname))
                 throw new InvalidOperationException(string.Format("Unable to update configuration, '{0}' property is missing",
-                    ConfigurationEntry.RequiredPropertyNames.Name));
+                    ConfigurationEntry.RequiredPropertyNames.NAME));
 
             var folder = Path.GetDirectoryName(filepath) ?? string.Empty;
 

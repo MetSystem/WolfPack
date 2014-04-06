@@ -17,7 +17,7 @@ namespace Wolfpack.Core.WebServices.Strategies.Steps
         {
             entry.Description = string.Format("Provides configuration for the {0} component which can be executed when a message is received from a remote Agent instance", 
                                               typeof(MessageStalenessCheckStep).Name);
-            entry.Tags.AddIfMissing(SpecialTags.Activity, "WebService", "Step", "Strategy");
+            entry.Tags.AddIfMissing(SpecialTags.ACTIVITY, "WebService", "Step", "Strategy");
         }
     }
 }
