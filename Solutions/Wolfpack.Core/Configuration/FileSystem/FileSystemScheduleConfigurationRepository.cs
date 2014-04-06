@@ -12,7 +12,7 @@ namespace Wolfpack.Core.Configuration.FileSystem
         {
         }
 
-        protected override IEnumerable<FileSystemConfigurationEntry> ProcessEntries(IEnumerable<FileSystemConfigurationEntry> entries)
+        protected override IEnumerable<FileSystemConfigurationEntry> ProcessEntries(ICollection<FileSystemConfigurationEntry> entries)
         {
             entries.ForEach(e =>
                                 {
@@ -26,17 +26,17 @@ namespace Wolfpack.Core.Configuration.FileSystem
                                     Container.RegisterInstance(instance, name);
 
                                     e.Entry.RequiredProperties
-                                        .AddIfMissing(Tuple.Create(ConfigurationEntry.RequiredPropertyNames.Name, name));
+                                        .AddIfMissing(Tuple.Create(ConfigurationEntry.RequiredPropertyNames.NAME, name));
                                 });
             return entries;
         }
 
         public override void Save(ConfigurationChangeRequest change)
         {
-            if (!change.Entry.Tags.ContainsAll(SpecialTags.Schedule))
+            if (!change.Entry.Tags.ContainsAll(SpecialTags.SCHEDULE))
                 return;
 
-            var filepath = Path.Combine(_baseFolder, Path.ChangeExtension(change.Entry.Name, ConfigFileExtension));
+            var filepath = Path.Combine(BaseFolder, Path.ChangeExtension(change.Entry.Name, CONFIG_FILE_EXTENSION));
 
             if (!HandleChange(change, filepath))
                 throw new InvalidOperationException(string.Format("Unknown ChangeRequest action '{0}'", change.Action));

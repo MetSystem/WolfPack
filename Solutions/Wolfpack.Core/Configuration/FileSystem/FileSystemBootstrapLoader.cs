@@ -2,15 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Castle.Core.Internal;
-using Wolfpack.Core.Interfaces.Castle;
 using Wolfpack.Core.Interfaces.Entities;
-using Wolfpack.Core.Interfaces.Magnum;
 
 namespace Wolfpack.Core.Configuration.FileSystem
 {
-    public class FileSystemPublisherLoader : FileSystemConfigurationRepository
+    public class FileSystemBootstrapLoader : FileSystemConfigurationRepository
     {
-        public FileSystemPublisherLoader(string baseFolder)
+        public FileSystemBootstrapLoader(string baseFolder)
             : base(baseFolder)
         {
         }
@@ -31,11 +29,23 @@ namespace Wolfpack.Core.Configuration.FileSystem
                         FindAndExecuteBootstrappers(configType, config);
                         e.Entry.RequiredProperties.AddIfMissing(Tuple.Create(ConfigurationEntry.RequiredPropertyNames.NAME, name));
 
-                        if (string.IsNullOrWhiteSpace(e.Entry.PluginType))
-                            return;
+                        // TODO: complete support for bootstrapping the plugin type
+                        //if (string.IsNullOrWhiteSpace(e.Entry.PluginType))
+                        //    return;
 
-                        var pluginType = Type.GetType(e.Entry.PluginType);
-                        Container.RegisterAsSingletonWithInterception<INotificationEventPublisher, IPublisherFilter>(pluginType);
+                        //var interfaceType = string.IsNullOrWhiteSpace(e.Entry.InterfaceType)
+                        //    ? null
+                        //    : Type.GetType(e.Entry.InterfaceType);
+                        //var pluginType = Type.GetType(e.Entry.PluginType);
+
+                        //if (interfaceType != null)
+                        //{
+
+                        //}
+                        //else
+                        //{
+                            
+                        //}
                     });
 
             return entries;
@@ -43,7 +53,7 @@ namespace Wolfpack.Core.Configuration.FileSystem
 
         public override void Save(ConfigurationChangeRequest change)
         {
-            if (!change.Entry.Tags.ContainsAll(SpecialTags.PUBLISHER))
+            if (!change.Entry.Tags.ContainsAll(SpecialTags.BOOTSTRAP))
                 return;
 
             var filepath = Path.Combine(BaseFolder, Path.ChangeExtension(change.Entry.Name, CONFIG_FILE_EXTENSION));

@@ -8,13 +8,13 @@ namespace Wolfpack.Core.Configuration
     {
         public override List<string> GetTags()
         {
-            return new List<string>{ SpecialTags.HealthCheck };
+            return new List<string>{ SpecialTags.HEALTH_CHECK };
         }
 
         public override Properties GetRequiredProperties()
         {
             var props = base.GetRequiredProperties();
-            props.AddIfMissing(Tuple.Create(ConfigurationEntry.RequiredPropertyNames.Scheduler, "** CHANGEME ** (connects this check with an existing schedule)"));
+            props.AddIfMissing(Tuple.Create(ConfigurationEntry.RequiredPropertyNames.SCHEDULER, "** CHANGEME ** (connects this check with an existing schedule)"));
             return props;
         }
     }

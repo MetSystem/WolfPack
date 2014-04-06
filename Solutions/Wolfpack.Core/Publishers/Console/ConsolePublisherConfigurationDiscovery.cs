@@ -18,7 +18,7 @@ namespace Wolfpack.Core.Publishers.Console
         {
             entry.Name = "ConsolePublisher";
             entry.Description = "Publishes a json representation to the console window (when not running as a windows service) - handy for debugging!";
-            entry.Tags.AddIfMissing(SpecialTags.Publisher, "Console");
+            entry.Tags.AddIfMissing(SpecialTags.PUBLISHER, "Console");
         }
     }
 }

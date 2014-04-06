@@ -13,7 +13,7 @@ namespace Wolfpack.Core.Configuration
         {
             return new Properties
                        {
-                           {ConfigurationEntry.RequiredPropertyNames.Name, typeof (TConfig).Name}
+                           {ConfigurationEntry.RequiredPropertyNames.NAME, typeof (TConfig).Name}
                        };
         }
 
@@ -63,6 +63,15 @@ namespace Wolfpack.Core.Configuration
         {
             var entry = base.BuildBasicEntry();
             entry.PluginType = BuildTypeName<TPlugin>();
+            return entry;
+        }
+    }
+    public abstract class PluginDiscoveryBase<TConfig, TPlugin, TInterface> : PluginDiscoveryBase<TConfig, TPlugin>
+    {
+        protected override ConfigurationEntry BuildBasicEntry()
+        {
+            var entry = base.BuildBasicEntry();
+            entry.InterfaceType = BuildTypeName<TInterface>();
             return entry;
         }
     }

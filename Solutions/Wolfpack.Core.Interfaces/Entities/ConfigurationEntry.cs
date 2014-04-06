@@ -8,12 +8,13 @@ namespace Wolfpack.Core.Interfaces.Entities
     {
         public class RequiredPropertyNames
         {
-            public const string Name = "Name";
-            public const string Scheduler = "Scheduler";
+            public const string NAME = "Name";
+            public const string SCHEDULER = "Scheduler";
         }
 
         public string Name { get; set; }
         public string Description { get; set; }
+        public string InterfaceType { get; set; }
         public string PluginType { get; set; }
         public string ConfigurationType { get; set; }
         public string Data { get; set; }

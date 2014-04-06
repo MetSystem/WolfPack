@@ -14,20 +14,20 @@ namespace Wolfpack.Core.Configuration.FileSystem
         {
         }
 
-        protected override IEnumerable<FileSystemConfigurationEntry> ProcessEntries(IEnumerable<FileSystemConfigurationEntry> entries)
+        protected override IEnumerable<FileSystemConfigurationEntry> ProcessEntries(ICollection<FileSystemConfigurationEntry> entries)
         {
             var validEntries = entries.Select(
                 e =>
                     {
                         var shouldLoad = true;
-                        if (e.FileInfo.Directory.FullName.Equals(_baseFolder,
+                        if (e.FileInfo.Directory.FullName.Equals(BaseFolder,
                             StringComparison.OrdinalIgnoreCase))
                         {
                             shouldLoad = false;
 
                             Logger.Warning(Logger.Event.During("FileSystemHealthChecksLoader.ProcessEntries")
                                 .Description("HealthCheck configuration file '{0}' is not following convention - it should be located in a schedule-named sub folder of {1}. ** Configuration has not been loaded **",
-                                e.FileInfo.FullName, _baseFolder));
+                                e.FileInfo.FullName, BaseFolder));
                         }
 
                         return new
@@ -84,8 +84,8 @@ namespace Wolfpack.Core.Configuration.FileSystem
                         }
 
                         e.Entry.RequiredProperties.AddIfMissing(
-                            Tuple.Create(ConfigurationEntry.RequiredPropertyNames.Scheduler, scheduleConfigName),
-                            Tuple.Create(ConfigurationEntry.RequiredPropertyNames.Name, name));
+                            Tuple.Create(ConfigurationEntry.RequiredPropertyNames.SCHEDULER, scheduleConfigName),
+                            Tuple.Create(ConfigurationEntry.RequiredPropertyNames.NAME, name));
                     });
 
             return validEntries;
@@ -93,18 +93,18 @@ namespace Wolfpack.Core.Configuration.FileSystem
 
         public override void Save(ConfigurationChangeRequest change)
         {
-            if (!change.Entry.Tags.ContainsAll(SpecialTags.HealthCheck))
+            if (!change.Entry.Tags.ContainsAll(SpecialTags.HEALTH_CHECK))
                 return;
 
             string scheduler;
 
-            if (!change.Entry.RequiredProperties.TryGetValue(ConfigurationEntry.RequiredPropertyNames.Scheduler, out scheduler))
+            if (!change.Entry.RequiredProperties.TryGetValue(ConfigurationEntry.RequiredPropertyNames.SCHEDULER, out scheduler))
                 throw new InvalidOperationException(string.Format("Unable to update configuration, '{0}' property is missing",
-                    ConfigurationEntry.RequiredPropertyNames.Scheduler));
+                    ConfigurationEntry.RequiredPropertyNames.SCHEDULER));
 
             PurgeAllExistingItems(change);
 
-            var filepath = Path.Combine(_baseFolder, scheduler, Path.ChangeExtension(change.Entry.Name, ConfigFileExtension));
+            var filepath = Path.Combine(BaseFolder, scheduler, Path.ChangeExtension(change.Entry.Name, CONFIG_FILE_EXTENSION));
 
             if (!HandleChange(change, filepath))
                 throw new InvalidOperationException(string.Format("Unknown ChangeRequest action '{0}'", change.Action));
@@ -112,9 +112,9 @@ namespace Wolfpack.Core.Configuration.FileSystem
 
         private void PurgeAllExistingItems(ConfigurationChangeRequest change)
         {
-            var filespec = Path.ChangeExtension(change.Entry.Name, ConfigFileExtension);
+            var filespec = Path.ChangeExtension(change.Entry.Name, CONFIG_FILE_EXTENSION);
 
-            foreach (var filename in Directory.GetFiles(_baseFolder, filespec, SearchOption.AllDirectories))
+            foreach (var filename in Directory.GetFiles(BaseFolder, filespec, SearchOption.AllDirectories))
                 File.Delete(filename);
         }
     }

@@ -14,7 +14,7 @@ namespace Wolfpack.Core.Configuration.FileSystem
         {
         }
 
-        protected override IEnumerable<FileSystemConfigurationEntry> ProcessEntries(IEnumerable<FileSystemConfigurationEntry> entries)
+        protected override IEnumerable<FileSystemConfigurationEntry> ProcessEntries(ICollection<FileSystemConfigurationEntry> entries)
         {
             entries.ForEach(
                 e =>
@@ -28,7 +28,7 @@ namespace Wolfpack.Core.Configuration.FileSystem
                         var name = Path.GetFileNameWithoutExtension(e.FileInfo.Name);
                         Container.RegisterInstance(configType, config, name);
                         FindAndExecuteBootstrappers(configType, config);
-                        e.Entry.RequiredProperties.AddIfMissing(Tuple.Create(ConfigurationEntry.RequiredPropertyNames.Name, name));
+                        e.Entry.RequiredProperties.AddIfMissing(Tuple.Create(ConfigurationEntry.RequiredPropertyNames.NAME, name));
 
                         if (string.IsNullOrWhiteSpace(e.Entry.PluginType))
                             return;
@@ -42,10 +42,10 @@ namespace Wolfpack.Core.Configuration.FileSystem
 
         public override void Save(ConfigurationChangeRequest change)
         {
-            if (!change.Entry.Tags.ContainsAll(SpecialTags.Activity))
+            if (!change.Entry.Tags.ContainsAll(SpecialTags.ACTIVITY))
                 return;
 
-            var filepath = Path.Combine(_baseFolder, Path.ChangeExtension(change.Entry.Name, ConfigFileExtension));
+            var filepath = Path.Combine(BaseFolder, Path.ChangeExtension(change.Entry.Name, CONFIG_FILE_EXTENSION));
 
             if (!HandleChange(change, filepath))
                 throw new InvalidOperationException(string.Format("Unknown ChangeRequest action '{0}'", change.Action));

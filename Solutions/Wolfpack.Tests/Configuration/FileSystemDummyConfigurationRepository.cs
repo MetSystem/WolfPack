@@ -10,7 +10,7 @@ namespace Wolfpack.Tests.Configuration
         {
         }
 
-        protected override IEnumerable<FileSystemConfigurationEntry> ProcessEntries(IEnumerable<FileSystemConfigurationEntry> entries)
+        protected override IEnumerable<FileSystemConfigurationEntry> ProcessEntries(ICollection<FileSystemConfigurationEntry> entries)
         {
             return entries;
         }
