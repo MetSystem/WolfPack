@@ -15,10 +15,10 @@
 				<!-- content here -->
 				<div style="padding-top: 10px;" data-bind="text: Entry.description"></div>
 				<div style="padding-top: 10px;">
-					Interface Type: <span style="font-style: italic;" data-bind="text: Entry.interfaceType"></span>
+					Plugin Type: <span style="font-style: italic;" data-bind="text: Entry.interfaceType"></span>
 				</div>
 				<div style="padding-top: 10px;">
-					Concrete Type: <span style="font-style: italic;" data-bind="text: Entry.concreteType"></span>
+					Configuration Type: <span style="font-style: italic;" data-bind="text: Entry.concreteType"></span>
 				</div>
 
 				<div id="editor" class="json-editor"></div>
@@ -90,11 +90,11 @@
 							<div id="secondary-nav" style="display:table-cell; vertical-align: top; padding-right: 10px;">
 								<!-- some additional column here -->
 								<div style="display: block; padding-top: 10px;" data-bind="text: Entry.description"></div>
-								<div style="display: block; padding-top: 10px;">
-									Interface Type: <span style="font-style: italic;" data-bind="text: Entry.interfaceType"></span>
+								<div style="display: block; padding-top: 10px;" data-bind="visible: (Entry.interfaceType != null)">
+									Plugin Type: <span style="font-style: italic;" data-bind="text: Entry.interfaceType"></span>
 								</div>
 								<div style="display: block; padding-top: 10px;">
-									Concrete Type: <span style="font-style: italic;" data-bind="text: Entry.concreteType"></span>
+									Configuration Type: <span style="font-style: italic;" data-bind="text: Entry.concreteType"></span>
 								</div>
 							</div>
 						</div>
@@ -358,6 +358,8 @@
 			}, this);
 
 			self.ImageUrl = ko.computed(function () {
+				if (self.ContainsTag('Bootstrap'))
+					return '/content/img/bootstrap.png';
 				if (self.ContainsTag('HealthCheck'))
 					return '/content/img/check.png';
 				if (self.ContainsTag('Schedule'))
@@ -366,7 +368,7 @@
 					return '/content/img/publisher.png';
 				if (self.ContainsTag('Activity'))
 					return '/content/img/activity.png';
-				return '/content/img/agent.png';
+				return '/content/img/config.png';
 			}, this);
 
 			self.BackgroundImage = ko.computed(function (){
