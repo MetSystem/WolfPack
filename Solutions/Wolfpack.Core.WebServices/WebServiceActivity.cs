@@ -39,8 +39,9 @@ namespace Wolfpack.Core.WebServices
             foreach (var extender in _extenders)
                 Logger.Debug("\t\t{0}", extender.GetType().Name);
 
-            _host = new NancyHost(new Uri(_config.BaseUrl), new WolfpackNancyBootstrapper(_config,
-                _extenders),
+            var nancyBootstrapper = new WolfpackNancyBootstrapper(_config, _extenders);
+
+            _host = new NancyHost(new Uri(_config.BaseUrl), nancyBootstrapper,
                 new HostConfiguration
                 {
                     UrlReservations = new UrlReservations { CreateAutomatically = true }

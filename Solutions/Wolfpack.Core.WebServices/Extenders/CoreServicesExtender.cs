@@ -26,7 +26,7 @@ namespace Wolfpack.Core.WebServices.Extenders
                 return new []
                 {
                     new ModuleRegistration(typeof(ConfigurationModule)), 
-                    new ModuleRegistration(typeof(NotificationModule)), 
+                    new ModuleRegistration(typeof(NotificationModule)) 
                 };
             }
         }

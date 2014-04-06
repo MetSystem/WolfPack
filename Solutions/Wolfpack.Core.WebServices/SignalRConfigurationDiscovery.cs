@@ -19,7 +19,7 @@ namespace Wolfpack.Core.WebServices
         {
             entry.Name = "SignalRActivity";
             entry.Description = "This activity hosts SignalR - Wolfpack notifications are rebroadcast to all connected clients.";
-            entry.Tags.AddIfMissing("Activity", "SignalR", "Publisher");
+            entry.Tags.AddIfMissing(SpecialTags.ACTIVITY, "SignalR", "Realtime");
         }
     }
 }

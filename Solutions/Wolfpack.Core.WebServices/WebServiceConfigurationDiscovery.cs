@@ -14,7 +14,7 @@ namespace Wolfpack.Core.WebServices
                        {
                            BaseUrl = "http://*:802/",
                            Enabled = true,
-                           ApiKeys = new List<string> { "Leave blank to disable" }
+                           ApiKeys = new List<string> { " ** Leave blank to disable **" }
                        };
         }
 
@@ -23,7 +23,7 @@ namespace Wolfpack.Core.WebServices
             entry.Name = "WebServiceActivity";
             entry.Description = "This activity provides the Wolfpack Web Interface. This is a NancyFx " + 
                 "powered api that provides a REST interface.";
-            entry.Tags.AddIfMissing("Activity", "Api", "WebUI");
+            entry.Tags.AddIfMissing(SpecialTags.ACTIVITY, "Api", "WebUI");
         }
     }
 
