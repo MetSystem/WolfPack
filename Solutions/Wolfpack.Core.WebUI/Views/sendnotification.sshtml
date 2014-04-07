@@ -7,7 +7,7 @@
 @Section['Content']
 	<div class="container" role="main">
 		<h1>Send Notification</h1>
-		<p>Push a notication to the local Wolfpack instance.</p>
+		<p>Push a notification to the local Wolfpack instance.</p>
 
 		<div id="errorAlert" style="display:none" class="alert alert-danger alert-dismissable">
 		  <button type="button" class="close" aria-hidden="true" data-bind="click: clearError">&times;</button>
