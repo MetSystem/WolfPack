@@ -1,4 +1,5 @@
 ﻿using Wolfpack.Core.Interfaces;
+using Wolfpack.Core.Repositories.FileSystem;
 using Wolfpack.Core.WebServices.Extenders;
 using Wolfpack.Core.WebServices.Interfaces;
 using Wolfpack.Core.WebServices.Interfaces.Entities;
@@ -17,10 +18,19 @@ namespace Wolfpack.Core.WebServices
 
             if (!Container.IsRegistered<IWebServiceReceiverStrategy>())
             {
-                if (!Container.IsRegistered<MessageStalenessCheckConfig>())
+                if (!Container.IsRegistered<INotificationRepository>())
                 {
-                    Container.RegisterAsSingleton(typeof(MessageStalenessCheckConfig));
+                    var repoConfig = new FileSystemNotificationRepositoryConfig
+                    {
+                        BaseFolder = SmartLocation.GetLocation("_notifications")
+                    };
+                    Container.RegisterInstance(repoConfig);
+                    Container.RegisterAsTransient<INotificationRepository>(
+                        typeof(FileSystemNotificationRepository));
                 }
+
+                if (!Container.IsRegistered<MessageStalenessCheckConfig>())
+                    Container.RegisterAsSingleton(typeof(MessageStalenessCheckConfig));
 
                 Container.RegisterAll<IPipelineStep<WebServiceReceiverContext>>();
                 Container.RegisterAsTransient<IWebServiceReceiverStrategy>(typeof(WebServiceReceiverStrategy));
