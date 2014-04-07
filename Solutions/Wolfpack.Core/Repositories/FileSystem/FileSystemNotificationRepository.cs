@@ -13,6 +13,7 @@ namespace Wolfpack.Core.Repositories.FileSystem
         public FileSystemNotificationRepository(FileSystemNotificationRepositoryConfig config)
         {
             _config = config;
+            Directory.CreateDirectory(SmartLocation.GetLocation(_config.BaseFolder));
         }
 
         public bool GetById(Guid id, out NotificationEvent notification)
@@ -59,7 +60,7 @@ namespace Wolfpack.Core.Repositories.FileSystem
         private IQueryable<NotificationEvent> LoadAll()
         {
             return Directory.GetFiles(SmartLocation.GetLocation(_config.BaseFolder), "*.*", SearchOption.TopDirectoryOnly)
-                .ToList().Select(f => Serialiser.FromJsonInFile<NotificationEvent>(f)).AsQueryable();
+                .ToList().Select(Serialiser.FromJsonInFile<NotificationEvent>).AsQueryable();
         }
     }
 }

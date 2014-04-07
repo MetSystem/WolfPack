@@ -32,7 +32,7 @@ namespace Wolfpack.Core.WebServices.Modules
                 Logger.Info("Received Notification ({0}) {1}", message.EventType, message.Id);
                 _receiverStrategy.Execute(message);
 
-                return new Response{ StatusCode = HttpStatusCode.Accepted };
+                return Response.AsJson(new { Message = "Success" }, HttpStatusCode.Accepted);
             };
 
             Get["/artifact/{NotificationId}"] = _ =>

@@ -41,9 +41,16 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Magnum, Version=2.1.2.0, Culture=neutral, PublicKeyToken=b800c4cfcdeea87b, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Magnum.2.1.2\lib\NET40\Magnum.dll</HintPath>
+    </Reference>
     <Reference Include="Nancy, Version=0.22.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Nancy.0.22.2\lib\net40\Nancy.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.5.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -54,6 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Interfaces\Entities\SendNotificationModel.cs" />
     <Compile Include="MenuChanger.cs" />
     <Compile Include="Modules\UiApiModule.cs" />
     <Compile Include="Modules\UiViewsModule.cs" />
@@ -62,6 +70,7 @@
     <Compile Include="WebUIServiceExtender.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="Content\bootstrap-theme.css.map">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -78,6 +87,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Views\about.sshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\sendnotification.sshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\diagnostics.sshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Views\gallery.sshtml">
@@ -205,10 +220,17 @@
       <Project>{ddc40ce0-d9a2-4847-893c-af7ecbcf0fe6}</Project>
       <Name>Wolfpack.Core.WebServices.Interfaces</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Wolfpack.Core.WebServices\Wolfpack.Core.WebServices.csproj">
+      <Project>{BAA3F1D4-196E-4683-A302-557FEC4465F9}</Project>
+      <Name>Wolfpack.Core.WebServices</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Wolfpack.Core\Wolfpack.Core.csproj">
       <Project>{EEFB2D36-3C15-4420-8A07-2D3CB381741D}</Project>
       <Name>Wolfpack.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Interfaces\Messages\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

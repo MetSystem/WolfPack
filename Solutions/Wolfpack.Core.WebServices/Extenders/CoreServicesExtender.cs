@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Magnum.StateMachine;
 using Nancy;
 using Nancy.Bootstrapper;
 using Nancy.TinyIoc;
@@ -43,6 +44,13 @@ namespace Wolfpack.Core.WebServices.Extenders
                     return new Response {StatusCode = HttpStatusCode.Unauthorized};
                 }
 
+                return null;
+            };
+
+            pipelines.OnError += (ctx, ex) =>
+            {
+                Logger.Error(Logger.Event.During("WebService Call: " + ctx.Request.Url)
+                    .Encountered(ex));
                 return null;
             };
         }
