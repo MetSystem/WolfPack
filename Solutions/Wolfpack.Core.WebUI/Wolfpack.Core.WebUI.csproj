@@ -61,6 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DefaultMenuMarkupBuilder.cs" />
     <Compile Include="Interfaces\Entities\SendNotificationModel.cs" />
     <Compile Include="MenuChanger.cs" />
     <Compile Include="Modules\UiApiModule.cs" />

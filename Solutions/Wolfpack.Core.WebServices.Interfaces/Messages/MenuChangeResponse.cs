@@ -4,6 +4,6 @@ namespace Wolfpack.Core.WebServices.Interfaces.Messages
 {
     public class MenuChangeResponse
     {
-        public MenuChanges Changes { get; set; }
+        public string Markup { get; set; }
     }
 }

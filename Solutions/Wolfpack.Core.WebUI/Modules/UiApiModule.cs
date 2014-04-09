@@ -19,8 +19,8 @@ namespace Wolfpack.Core.WebUI.Modules
 
         private dynamic GetAddOnMenu(dynamic request)
         {
-            var menuChanges = _menuChanger.BuildChanges();
-            return Response.AsJson(new MenuChangeResponse { Changes = menuChanges });
+            var menuMarkup = _menuChanger.BuildMarkup();
+            return Response.AsJson(new MenuChangeResponse { Markup = menuMarkup });
         }
     }
 }
