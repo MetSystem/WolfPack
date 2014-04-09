@@ -8,12 +8,6 @@ namespace Wolfpack.Core.WebUI
 {
     public class WebUIServiceExtender : IWebServiceExtender
     {
-        private readonly IEnumerable<INeedMenuSpace> _menuChangers;
-
-        public WebUIServiceExtender(IEnumerable<INeedMenuSpace> menuChangers)
-        {
-            _menuChangers = menuChangers;
-        }
         public IEnumerable<ModuleRegistration> Modules
         {
             get
@@ -28,8 +22,7 @@ namespace Wolfpack.Core.WebUI
 
         public void Execute(TinyIoCContainer container, IPipelines pipelines)
         {
-            var menuTwiddler = new MenuChanger(_menuChangers);
-            container.Register(menuTwiddler);
+            container.Register((ctx, npo) => Container.Resolve<MenuChanger>());
         }
     }
 }
