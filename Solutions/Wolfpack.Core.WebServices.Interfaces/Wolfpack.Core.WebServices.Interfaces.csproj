@@ -59,7 +59,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entities\AddOnMenuModificationRequest.cs" />
-    <Compile Include="Entities\MenuBuilder.cs" />
+    <Compile Include="Entities\DropDownMenuItemBuilder.cs" />
+    <Compile Include="Entities\AddOnMenuBuilder.cs" />
+    <Compile Include="Entities\MenuItem.cs" />
+    <Compile Include="Entities\PassThruMenuItemBuilder.cs" />
     <Compile Include="Entities\RestConfigurationChangeRequest.cs" />
     <Compile Include="Entities\RestConfigurationChangeSummary.cs" />
     <Compile Include="Entities\RestLink.cs" />
@@ -69,6 +72,9 @@
     <Compile Include="Exceptions\CommunicationException.cs" />
     <Compile Include="Exceptions\DuplicateMessageException.cs" />
     <Compile Include="Exceptions\StaleMessageException.cs" />
+    <Compile Include="IDropDownMenuBuilder.cs" />
+    <Compile Include="IMenuBuilder.cs" />
+    <Compile Include="IMenuItemBuilder.cs" />
     <Compile Include="IMenuMarkupBuilder.cs" />
     <Compile Include="INeedMenuSpace.cs" />
     <Compile Include="IWebServiceReceiverStrategy.cs" />

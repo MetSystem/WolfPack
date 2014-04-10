@@ -26,7 +26,7 @@ namespace Wolfpack.Core.WebUI
         {
             var menuRequests = _menuChangers.Select(x => new
             {
-                StartMenu = new MenuBuilder(), 
+                StartMenu = new AddOnMenuBuilder(), 
                 MenuConfigurer = x.Configure()
             }).ToList();
 
