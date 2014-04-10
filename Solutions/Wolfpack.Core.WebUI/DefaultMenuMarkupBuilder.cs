@@ -7,7 +7,7 @@ namespace Wolfpack.Core.WebUI
 {
     public class DefaultMenuMarkupBuilder : IMenuMarkupBuilder
     {
-        public string Build(IEnumerable<MenuItem> requests)
+        public virtual string Build(IEnumerable<MenuItem> requests)
         {
             var sb = new StringBuilder();
 
@@ -19,7 +19,7 @@ namespace Wolfpack.Core.WebUI
             return sb.ToString();
         }
 
-        private string GetMarkup(MenuItem item)
+        protected virtual string GetMarkup(MenuItem item)
         {
             switch (item.Type.ToLower())
             {
@@ -30,13 +30,13 @@ namespace Wolfpack.Core.WebUI
                     return GetItemMarkup(item);
 
                 case "divider":
-                    return GetDividerMarkup(item);
+                    return GetDividerMarkup();
             }
 
             return string.Empty;
         }
 
-        private string GetDropdownMarkup(MenuItem item)
+        protected virtual string GetDropdownMarkup(MenuItem item)
         {
             /*
              <li class="dropdown">
@@ -60,20 +60,19 @@ namespace Wolfpack.Core.WebUI
             sb.Append("</li>");
             return sb.ToString();
         }
-        
-        private string GetItemMarkup(MenuItem item)
+
+        protected virtual string GetItemMarkup(MenuItem item)
         {
             /*
              <li><a href="/ui/configure">Configure</a></li>
              */
-            return string.Format("<li><a hef=\"{0}\">{1}</a></li>", item.Url, item.Name);
+            return string.Format("<li><a {0}href=\"{1}\">{2}</a></li>", 
+                string.IsNullOrWhiteSpace(item.Target) ? string.Empty : "target=\"" + item.Target + "\" ",
+                item.Url, item.Name);
         }
-        
-        private string GetDividerMarkup(MenuItem item)
+
+        protected virtual string GetDividerMarkup()
         {
-            /*
-             <li><a href="/ui/configure">Configure</a></li>
-             */
             return string.Format("<li class=\"divider\"></li>");
         }
     }
