@@ -9,7 +9,6 @@ namespace Wolfpack.Core.WebUI
         public Status Status { get; set; }
         public void Initialise()
         {
-            Container.RegisterAll<INeedMenuSpace>();
             Container.RegisterAsSingleton<IMenuMarkupBuilder>(typeof(DefaultMenuMarkupBuilder));
             Container.RegisterAsSingleton<MenuChanger>(typeof(MenuChanger));
             Container.RegisterAsSingleton<IWebServiceExtender>(typeof (WebUIServiceExtender));
