@@ -24,21 +24,27 @@ namespace Wolfpack.Core.WebUI
         }
         private IEnumerable<MenuItem> BuildChanges()
         {
+            var menus = new List<MenuItem>(BuildAddOnMenu());
+            return menus;
+        }
+
+        private IEnumerable<MenuItem> BuildAddOnMenu()
+        {
             var menuRequests = _menuChangers.Select(x => new
             {
-                StartMenu = new AddOnMenuBuilder(), 
+                StartMenu = new MenuBuilder(),
                 MenuConfigurer = x.Configure()
             }).ToList();
 
-            var menus = menuRequests.SelectMany(rq =>
+            var menuItems = menuRequests.SelectMany(rq =>
             {
                 rq.MenuConfigurer(rq.StartMenu);
                 return rq.StartMenu.Build();
             });
 
-            // TODO: merge menu requests
-
-            return menus;
+            var addons = new MenuBuilder();
+            addons.AddDropdown("Add-Ons").AddItems(menuItems);
+            return addons.Build();
         }
     }
 }

@@ -18,16 +18,22 @@ namespace Wolfpack.Core.WebServices.Interfaces.Entities
     //    }
     //}
 
-    public class AddOnMenuBuilder : IMenuBuilder
+    public class MenuBuilder : IMenuBuilder
     {
         private readonly IList<IMenuItemBuilder> _builders;
 
-        public AddOnMenuBuilder()
+        public MenuBuilder()
         {
             _builders = new List<IMenuItemBuilder>();
         }
 
-        IDropDownMenuBuilder<IMenuBuilder> IMenuBuilder.AddDropdown(string name)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        /// <remarks>not supported in bootstrap v3 but used intenally to build top level dropdowns</remarks>
+        public IDropDownMenuBuilder<IMenuBuilder> AddDropdown(string name)
         {
             var dropdownBuilder = new DropDownMenuItemBuilder<IMenuBuilder>(this, name);
             _builders.Add(dropdownBuilder);
@@ -48,11 +54,7 @@ namespace Wolfpack.Core.WebServices.Interfaces.Entities
 
         public IEnumerable<MenuItem> Build()
         {
-            var addonDropdownBuilder = ((IDropDownMenuBuilder<IMenuBuilder>)
-                new DropDownMenuItemBuilder<IMenuBuilder>(this, "Add-Ons"))
-                .AddItems(_builders.SelectMany(x => x.Build()));
-
-            return ((IMenuItemBuilder)addonDropdownBuilder).Build().ToList();
+            return _builders.SelectMany(x => x.Build());
         }
     }
 }

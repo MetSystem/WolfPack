@@ -60,7 +60,7 @@
   <ItemGroup>
     <Compile Include="Entities\AddOnMenuModificationRequest.cs" />
     <Compile Include="Entities\DropDownMenuItemBuilder.cs" />
-    <Compile Include="Entities\AddOnMenuBuilder.cs" />
+    <Compile Include="Entities\MenuBuilder.cs" />
     <Compile Include="Entities\MenuItem.cs" />
     <Compile Include="Entities\PassThruMenuItemBuilder.cs" />
     <Compile Include="Entities\RestConfigurationChangeRequest.cs" />
