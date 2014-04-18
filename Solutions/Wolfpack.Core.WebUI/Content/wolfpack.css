@@ -12,3 +12,9 @@
 .panel-body {
     background-color: #505050;
 }
+
+.inline-heading {
+	font-size: 25px;
+	font-style: bold;
+	display: inline;
+}

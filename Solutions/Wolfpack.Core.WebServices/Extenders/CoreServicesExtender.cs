@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Magnum.StateMachine;
 using Nancy;
 using Nancy.Bootstrapper;
 using Nancy.TinyIoc;
