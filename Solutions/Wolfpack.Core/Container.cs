@@ -49,7 +49,7 @@ namespace Wolfpack.Core
             return _container.RegisterInstance(instance, name);
         }
 
-        public static IContainer RegisterInstance(Type implType, object instance, string name)
+        public static IContainer RegisterInstance(Type implType, object instance, string name = null)
         {
             return _container.RegisterInstance(implType, instance, name);
         }

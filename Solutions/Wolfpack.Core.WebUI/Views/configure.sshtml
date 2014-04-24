@@ -23,10 +23,10 @@
 
 				<div id="editor" class="json-editor"></div>
 
-				<div style="padding-top: 10px;">
-					<button type="button" class="btn btn-primary" data-bind="click: $root.saveEntry">Save</button>
-					<button type="button" class="btn btn-primary" data-bind="click: $root.deleteEntry">Delete</button>
-					<button type="button" class="btn btn-primary" data-bind="click: $root.cancelEditEntry">Cancel</button>
+				<div style="padding-top: 10px;	">
+					<button type="button" class="btn btn-primary btn-lg" data-bind="click: $root.saveEntry">Save <span class="glyphicon glyphicon-floppy-disk"></span></button>
+					<button type="button" class="btn btn-danger btn-lg" data-bind="click: $root.deleteEntry">Delete <span class="glyphicon glyphicon-trash"></span></button>
+					<button type="button" class="btn btn-primary btn-lg" data-bind="click: $root.cancelEditEntry">Cancel</button>
 				</div>
 			</div>
 		</div>
@@ -34,7 +34,6 @@
 
 	<div id="restart-page" style="display: none; margin-top: 25px;">
 		<p class="lead">Restarting Wolfpack, please wait...</p>
-		<span id="spinner-restart"></span>
 	</div>
 
 	<div id="main-page">
@@ -52,7 +51,6 @@
 			</div>
 		</div>
 		
-		<span id="spinner-tags"></span>
 		<div id="tags-container">
 			<h2>Plugins</h2>
 
@@ -63,7 +61,6 @@
 			</div>
 		</div>
 
-		<span id="spinner-entries"></span>
 		<div id="entries-container" data-bind="foreach: entries">
 			<div data-bind="attr: { style: BackgroundImage};" >
 				<div>
@@ -265,13 +262,11 @@
 			            self.tags.push(tag);
 			        });
 
-			        $('#spinner-tags').hide();
 			        $('#tag-container').show();
 			    });
 			};
 
 			self.loadConfiguration = function (tags) {
-			    $('#spinner-entries').show();
 			    $('#entries-container').hide();
 			    self.entries.removeAll();
 			    self.pending.removeAll();
@@ -284,7 +279,6 @@
 			        tags = '';
 			    } else if (tags === '') {
 			        // no tags selected
-			        $('#spinner-entries').hide();
 			        return;
 			    }
 
@@ -302,7 +296,6 @@
 			            self.pending.push(change);
 			        });
 
-			        $('#spinner-entries').hide();
 			        $('#entries-container').show();
 			    });
 			};

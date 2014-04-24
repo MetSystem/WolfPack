@@ -12,9 +12,9 @@ namespace Wolfpack.Core.Containers
         IContainer RegisterAsSingletonWithInterception<TPlugin, TIntercept>(Type type) where TPlugin : class;
         IContainer RegisterInstance<T>(T instance, bool overwrite = false) where T : class;
         IContainer RegisterInstance<T>(T instance, string name) where T : class;
-        IContainer RegisterInstance(Type implType, object instance, string name);
+        IContainer RegisterInstance(Type implType, object instance, string name = null);
         IContainer RegisterAll<T>() where T : class;
-        IContainer RegisterAllWithInterception<T, I>();
+        IContainer RegisterAllWithInterception<T, TI>();
         object Resolve(string componentName);
         T Resolve<T>();        
         T[] ResolveAll<T>();
