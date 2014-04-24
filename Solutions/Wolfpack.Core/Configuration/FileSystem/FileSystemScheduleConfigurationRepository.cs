@@ -16,10 +16,9 @@ namespace Wolfpack.Core.Configuration.FileSystem
         {
             entries.ForEach(e =>
                                 {
-                                    var name = Path.GetFileNameWithoutExtension(e.FileInfo.Name);
+                                    Logger.Debug("Processing schedule configuration entry: {0}...", e.FileInfo.Name);
 
-                                    Logger.Debug("\tAdding type '{0}' named '{1}' to container...",
-                                        e.Entry.ConfigurationType, name); 
+                                    var name = Path.GetFileNameWithoutExtension(e.FileInfo.Name);
                                     var concreteType = Type.GetType(e.Entry.ConfigurationType);
                                     var instance = Serialiser.FromJson(e.Entry.Data, concreteType);
 

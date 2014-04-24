@@ -18,7 +18,9 @@ namespace Wolfpack.Core.Configuration.FileSystem
         {
             entries.ForEach(
                 e =>
-                    {                        
+                    {
+                        Logger.Debug("Processing activity configuration entry: {0}...", e.FileInfo.Name);
+
                         var configType = Type.GetType(e.Entry.ConfigurationType);
                         var config = Serialiser.FromJson(e.Entry.Data, configType);
 

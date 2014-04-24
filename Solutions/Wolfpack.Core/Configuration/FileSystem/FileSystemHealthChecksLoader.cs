@@ -19,6 +19,8 @@ namespace Wolfpack.Core.Configuration.FileSystem
             var validEntries = entries.Select(
                 e =>
                     {
+                        Logger.Debug("Processing healthcheck configuration entry: {0}...", e.FileInfo.Name);
+
                         var shouldLoad = true;
                         if (e.FileInfo.Directory.FullName.Equals(BaseFolder,
                             StringComparison.OrdinalIgnoreCase))

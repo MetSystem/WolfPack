@@ -8,17 +8,17 @@ namespace Wolfpack.Core.Containers
 {
     public class WindsorContainer : IContainer
     {
-        protected Castle.Windsor.WindsorContainer _instance;
+        protected Castle.Windsor.WindsorContainer Instance;
 
         public WindsorContainer()
         {
-            _instance = new Castle.Windsor.WindsorContainer(new ZeroAppConfigXmlInterpreter());
-            _instance.Kernel.Resolver.AddSubResolver(new CollectionResolver(_instance.Kernel, true));
+            Instance = new Castle.Windsor.WindsorContainer(new ZeroAppConfigXmlInterpreter());
+            Instance.Kernel.Resolver.AddSubResolver(new CollectionResolver(Instance.Kernel, true));
         }
 
         public IContainer RegisterAsTransient(Type implType)
         {
-            _instance.Register(Component.For(implType)
+            Instance.Register(Component.For(implType)
                 .ImplementedBy(implType)
                 .LifeStyle.Transient);
             return this;
@@ -27,7 +27,7 @@ namespace Wolfpack.Core.Containers
         public IContainer RegisterAsTransient<T>(Type implType)
             where T: class
         {
-            _instance.Register(Component.For<T>()
+            Instance.Register(Component.For<T>()
                 .ImplementedBy(implType)
                 .LifeStyle.Transient);
             return this;
@@ -35,7 +35,7 @@ namespace Wolfpack.Core.Containers
 
         public IContainer RegisterAsSingleton(Type implType)
         {
-            _instance.Register(Component.For(implType)
+            Instance.Register(Component.For(implType)
                 .ImplementedBy(implType)
                 .LifeStyle.Singleton);
             return this;
@@ -44,7 +44,7 @@ namespace Wolfpack.Core.Containers
         public IContainer RegisterAsSingleton<T>(Type implType)
             where T: class
         {
-            _instance.Register(Component.For<T>()
+            Instance.Register(Component.For<T>()
                 .ImplementedBy(implType)
                 .LifeStyle.Singleton);
             return this;
@@ -55,7 +55,7 @@ namespace Wolfpack.Core.Containers
             var interceptorTypes = (from iType in ResolveAll<TIntercept>()
                                     select iType.GetType()).ToArray();
 
-            _instance.Register(Component.For(typeof(TPlugin))
+            Instance.Register(Component.For(typeof(TPlugin))
                                     .LifeStyle.Transient
                                     .ImplementedBy(type)
                                     .Interceptors(interceptorTypes));
@@ -65,7 +65,7 @@ namespace Wolfpack.Core.Containers
         public IContainer RegisterInstance<T>(T instance, bool overwrite = false)
             where T : class
         {
-            _instance.Register(overwrite
+            Instance.Register(overwrite
                                    ? Component.For<T>().Instance(instance).OverWrite()
                                    : Component.For<T>().Instance(instance));
             return this;
@@ -74,13 +74,18 @@ namespace Wolfpack.Core.Containers
         public IContainer RegisterInstance<T>(T instance, string name)
             where T : class
         {
-            _instance.Register(Component.For<T>().Instance(instance).Named(name));
+            Instance.Register(Component.For<T>().Instance(instance).Named(name));
             return this;
         }
 
-        public IContainer RegisterInstance(Type implType, object instance, string name)
+        public IContainer RegisterInstance(Type implType, object instance, string name = null)
         {
-            _instance.Register(Component.For(implType).Instance(instance).Named(name));
+            var registration = Component.For(implType).Instance(instance);            
+
+            if (!string.IsNullOrWhiteSpace(name))
+                registration.Named(name);
+
+            Instance.Register(registration);
             return this;
         }
 
@@ -105,7 +110,7 @@ namespace Wolfpack.Core.Containers
                                     select iType.GetType()).ToArray();
 
             components.ToList().ForEach(c =>
-                               _instance.Register(Component.For(typeof (T))
+                               Instance.Register(Component.For(typeof (T))
                                                        .LifeStyle.Transient
                                                        .ImplementedBy(c)
                                                        .Interceptors(interceptorTypes)));
@@ -114,17 +119,17 @@ namespace Wolfpack.Core.Containers
 
         public object Resolve(string componentName)
         {
-            return _instance.Resolve<object>(componentName, new Dictionary<string, string>());
+            return Instance.Resolve<object>(componentName, new Dictionary<string, string>());
         }
 
         public T Resolve<T>()
         {
-            return _instance.Resolve<T>();
+            return Instance.Resolve<T>();
         }
 
         public T[] ResolveAll<T>()
         {
-            return _instance.ResolveAll<T>();
+            return Instance.ResolveAll<T>();
         }
 
         public T Find<T>(Func<IEnumerable<T>, T> filter)
@@ -146,7 +151,7 @@ namespace Wolfpack.Core.Containers
 
         public bool IsRegistered(Type type)
         {
-            return _instance.Kernel.HasComponent(type);
+            return Instance.Kernel.HasComponent(type);
         }
     }
 }

@@ -18,6 +18,8 @@ namespace Wolfpack.Core.Configuration.FileSystem
             entries.ForEach(
                 e =>
                     {
+                        Logger.Debug("Processing bootstrap configuration entry: {0}...", e.FileInfo.Name);
+
                         var configType = Type.GetType(e.Entry.ConfigurationType);
                         var config = Serialiser.FromJson(e.Entry.Data, configType);
 
@@ -29,23 +31,26 @@ namespace Wolfpack.Core.Configuration.FileSystem
                         FindAndExecuteBootstrappers(configType, config);
                         e.Entry.RequiredProperties.AddIfMissing(Tuple.Create(ConfigurationEntry.RequiredPropertyNames.NAME, name));
 
-                        // TODO: complete support for bootstrapping the plugin type
-                        //if (string.IsNullOrWhiteSpace(e.Entry.PluginType))
-                        //    return;
+                        
+                        if (string.IsNullOrWhiteSpace(e.Entry.PluginType))
+                            return;
 
-                        //var interfaceType = string.IsNullOrWhiteSpace(e.Entry.InterfaceType)
-                        //    ? null
-                        //    : Type.GetType(e.Entry.InterfaceType);
-                        //var pluginType = Type.GetType(e.Entry.PluginType);
+                        var interfaceType = string.IsNullOrWhiteSpace(e.Entry.InterfaceType)
+                            ? null
+                            : Type.GetType(e.Entry.InterfaceType);
+                        var pluginType = Type.GetType(e.Entry.PluginType);
+                        if (pluginType == null)
+                        {
+                            Logger.Warning("Unable to create pluginType '{0}'", e.Entry.PluginType);
+                            return;
+                        }
 
-                        //if (interfaceType != null)
-                        //{
+                        var plugin = Activator.CreateInstance(pluginType, config);
 
-                        //}
-                        //else
-                        //{
-                            
-                        //}
+                        if (interfaceType != null)
+                            Container.RegisterInstance(interfaceType, plugin);
+                        else
+                            Container.RegisterInstance(plugin);
                     });
 
             return entries;
