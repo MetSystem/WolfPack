@@ -14,5 +14,11 @@ namespace Wolfpack.Core.Interfaces.Entities
         public string AgentId { get; set; }
         public string Longitude { get; set; }
         public string Latitude { get; set; }
+        public Guid InstanceId { get; set; }
+
+        public AgentConfiguration()
+        {
+            InstanceId = Guid.NewGuid();
+        }
     }
 }

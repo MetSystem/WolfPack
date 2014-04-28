@@ -21,10 +21,5 @@ namespace Wolfpack.Core.Interfaces.Entities
         /// A description of the check
         /// </summary>
         public string Description { get; set; }
-
-        /// <summary>
-        /// A short textual description of the schedule this checks run on
-        /// </summary>
-        public string ScheduleDescription { get; set; }
     }
 }

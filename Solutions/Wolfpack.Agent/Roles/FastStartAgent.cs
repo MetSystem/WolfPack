@@ -23,7 +23,7 @@ namespace Wolfpack.Agent.Roles
             ILoader<IActivityPlugin> activitiesLoader)
             : base(config, publisherLoader, checksLoader, activitiesLoader)
         {
-            _identity = new PluginDescriptor
+            InternalIdentity = new PluginDescriptor
                              {
                                  Description = "Fast Startup Agent",
                                  Name = "FastStartAgent",
