@@ -59,6 +59,9 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsInput">
+      <HintPath>..\packages\InputSimulator.1.0.4.0\lib\net20\WindowsInput.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Build\Common\AssemblyVersion.cs">
@@ -88,7 +91,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy $(TargetDir)wolfpack.manager.* $(SolutionDir)Wolfpack.Agent\bin\Debug /Y /R /I</PostBuildEvent>
+    <PostBuildEvent>xcopy $(TargetDir)wolfpack.manager.* $(SolutionDir)Wolfpack.Agent\bin\Debug /Y /R /I
+xcopy $(TargetDir)WindowsInput.dll $(SolutionDir)Wolfpack.Agent\bin\Debug /Y /R /I</PostBuildEvent>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

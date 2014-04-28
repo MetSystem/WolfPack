@@ -84,10 +84,12 @@ namespace Wolfpack.Core.Configuration
             _restartPending = true;
 
             SystemCommand command;
+            var windowStyle = ProcessWindowStyle.Hidden;
 
             if (Environment.UserInteractive)
             {
                 // console
+                windowStyle = ProcessWindowStyle.Normal;
                 command = new SystemCommand
                               {
                                   RestartConsole = new RestartConsoleInstruction
@@ -116,7 +118,7 @@ namespace Wolfpack.Core.Configuration
             Logger.Info("Launching Wolfpack Helper to manage system restart...");
             Process.Start(new ProcessStartInfo("wolfpack.manager.exe")
                               {
-                                  //WindowStyle = ProcessWindowStyle.Hidden
+                                  WindowStyle = windowStyle
                               });
         }
 

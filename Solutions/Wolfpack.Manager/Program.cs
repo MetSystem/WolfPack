@@ -43,7 +43,7 @@ namespace Wolfpack.Manager
             }
             catch (Exception e)
             {
-                Logger.Error(Logger.Event.During("Wolfpack.Helper").Encountered(e));
+                Logger.Error(Logger.Event.During("Wolfpack.Manager").Encountered(e));
                 Environment.ExitCode = -99;
             }
         }

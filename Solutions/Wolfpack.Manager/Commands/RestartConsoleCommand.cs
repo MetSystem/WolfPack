@@ -2,6 +2,8 @@ using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
+using WindowsInput;
+using WindowsInput.Native;
 using Wolfpack.Core;
 using Wolfpack.Core.Interfaces;
 using Wolfpack.Core.Interfaces.Entities;
@@ -10,10 +12,8 @@ namespace Wolfpack.Manager.Commands
 {
     public class RestartConsoleCommand : ISystemCommand
     {       
-        public const int WM_CLOSE = 0x10;
-
         [DllImport("user32.dll")]
-        public static extern int SendMessage(IntPtr hWnd, int wMsg, IntPtr wParam, IntPtr lParam);
+        static extern bool SetForegroundWindow(IntPtr hWnd);
 
         private readonly RestartConsoleInstruction _instruction;
 
@@ -30,14 +30,14 @@ namespace Wolfpack.Manager.Commands
                 var console = Process.GetProcessById(_instruction.ProcessId);
 
                 Logger.Info("Process located...sending close message");
-                // doesn't work - try SendInput (need to switch to wolfpack console window first
-                // http://stackoverflow.com/questions/5144877/sending-ctrl-s-message-to-a-window
-                // also http://www.nuget.org/packages/InputSimulator/
-                SendMessage(console.MainWindowHandle, WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
+                Thread.Sleep(3000);
+
+                SetForegroundWindow(console.MainWindowHandle);
+                var sim = new InputSimulator();
+                sim.Keyboard.ModifiedKeyStroke(VirtualKeyCode.CONTROL, VirtualKeyCode.VK_C);
 
                 Logger.Info("Close message sent, waiting for process to exit");
-
-                CloseApplication(console);
+                WaitForApplicationToClose(console);
                 StartApplication();
             }
             catch (Exception e)
@@ -56,7 +56,7 @@ namespace Wolfpack.Manager.Commands
                               });
         }
 
-        private static void CloseApplication(Process console)
+        private static void WaitForApplicationToClose(Process console)
         {
             var i = 0;
 
