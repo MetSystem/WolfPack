@@ -37,8 +37,8 @@
 	</div>
 
 	<div id="main-page">
-		<div class="alert alert-danger alert-dismissable" style="display: none;">
-			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		<div id="errorAlert" class="alert alert-danger alert-dismissable" style="display: none;">
+			<button type="button" class="close" aria-hidden="true" data-bind="click: clearError">&times;</button>
 			<strong>Dang it!</strong> something went wrong...
 		</div>
 	 
@@ -47,7 +47,7 @@
 			<p>Wolfpack needs to be restarted in order to activate your configuration changes...</p>
 			<div>
 				<button type="button" class="btn btn-primary" data-bind="html: pendingChangesAccept, click: acceptPendingChanges"></button>
-				<button type="button" class="btn btn-primary">Cancel</button>
+				<button type="button" class="btn btn-primary" data-bind="click: cancelPendingChanges">Cancel</button>
 			</div>
 		</div>
 		
@@ -75,15 +75,6 @@
 				<div>
 					<div id="content-body-wrapper" style="display:table; border-collapse:collapse;">
 						<div id="content-body" style="display:table-row;">
-
-<!-- 						
-							<div id="primary-nav" style="display:table-cell;">
-								<div style="min-height: 96px; height: 96px; height: auto !important;">
-									<img width="96" height="96" data-bind="attr: { src: ImageUrl }"/>
-								</div>    
-							</div>
-							-->
-
 							<div id="secondary-nav" style="display:table-cell; vertical-align: top; padding-right: 10px;">
 								<!-- some additional column here -->
 								<div style="display: block; padding-top: 10px;" data-bind="text: Entry.description"></div>
@@ -119,7 +110,12 @@
 			self.entry = ko.observable();
 			self.jsonConfig = { };
 			self.restart = ko.observable(true);
+			self.instanceId = null;
 		    self.restartHandle = 0;
+
+			self.clearError = function () {
+				$('#errorAlert').slideUp();
+			};
 
 			self.pendingChangesAccept = ko.computed(function () {
 				return 'Accept&nbsp;<span class="badge">' + self.pending().length + '</span>';
@@ -141,8 +137,26 @@
 					
 				}).fail(function (jqXhr, status, err) {
 					console.log(err);
+					//errorAlert
+					$('#errorAlert').show();
+				});
+			};
+			
+			self.cancelPendingChanges = function () {
+				console.log('cancelPendingChanges()');
 
-					$('#edit-msg-container').show();
+				$.ajax({
+					type: 'GET',
+					url: '/api/configuration/cancelchanges',
+					contentType: 'application/json; charset=utf-8',
+					dataType: 'json'
+				}).done(function (data, status, jqXhr) {
+					console.log('canceled changes ok');
+					self.pending.removeAll();
+
+				}).fail(function (jqXhr, status, err) {
+					console.log(err);
+					$('#errorAlert').slideDown();
 				});
 			};
 
@@ -184,22 +198,31 @@
 
 			    self.restartHandle = setInterval(function () {
 			        $.ajax({
-			            type: 'GET',
-			            url: '/ui/about'
-			        }).done(function (data, status, jqXhr) {
-			            console.log('service restarted (' + self.restartHandle + ')');
+						type: 'GET',
+						url: '/api/notification/start',
+						contentType: 'application/json; charset=utf-8',
+						dataType: 'json'
+					}).done(function (data, status, jqXhr) {
+			            console.log('service responded! (' + self.restartHandle + ')');
 
 			            if (self.restartHandle > 0) {
-			                console.log('refreshing config after restart...');
-			                clearInterval(self.restartHandle);
-			                self.restartHandle = 0;
+							console.log('...checking this is a different Wolfpack instance!...');
+							console.log(self.instanceId + ' vs ' + data.info.id);
 
-			                self.refreshConfiguration();
-			                $('#restart-page').hide();
-			                $('#main-page').show();
+							if (data.info.id != self.instanceId) {
+								clearInterval(self.restartHandle);
+								self.restartHandle = 0;
+
+								self.refreshConfiguration();
+								$('#restart-page').hide();
+								$('#main-page').show();
+							}
+							else {
+								console.log('...yep, same instance...waiting some more...');
+							}
 			            }
 			        }).fail(function (jqXhr, status, err) {
-
+						// trap and retry...
 			        });
 			    }, 5000);
 			};
@@ -283,8 +306,10 @@
 			    }
 
 			    $.getJSON('/api/configuration/catalogue/' + tags, function (data) {
-			        console.log('configuration loaded');
+			        console.log('configuration loaded (' + data.instanceId + ')');
 			        console.log(data);
+
+					self.instanceId = data.instanceId;
 
 			        $.each(data.items, function (index, value) {
 			            var entry = new Entry(value);
@@ -324,7 +349,7 @@
 					console.log('change request rejected');
 					console.log(err);
 
-					$('#edit-msg-container').show();
+					$('#errorAlert').slideDown();
 				});
 			};
 		}

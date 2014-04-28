@@ -23,6 +23,7 @@ namespace Wolfpack.Core.WebServices.Modules
             Get["/catalogue/{tags?}"] = GetCatalogue;
             Post["/changerequest"] = PostChangeRequest;
             Get["/applychanges"] = GetApplyChanges;
+            Get["/cancelchanges"] = GetDiscardPendingChanges;
         }
 
         private dynamic GetApplyChanges(dynamic request)
@@ -30,6 +31,18 @@ namespace Wolfpack.Core.WebServices.Modules
             try
             {
                 ConfigurationManager.ApplyPendingChanges(request.Restart);
+                return new ConfigurationCommandResponse { Result = true };
+            }
+            catch (Exception e)
+            {
+                return new ConfigurationCommandResponse { Result = false, Error = e };
+            }            
+        }
+        private dynamic GetDiscardPendingChanges(dynamic request)
+        {
+            try
+            {
+                ConfigurationManager.DiscardPendingChanges();
                 return new ConfigurationCommandResponse { Result = true };
             }
             catch (Exception e)
@@ -58,6 +71,7 @@ namespace Wolfpack.Core.WebServices.Modules
             var catalogue = ConfigurationManager.GetCatalogue(catalogueRequest.Tags);
             var response = new RestConfigurationCatalogue
             {
+                InstanceId = catalogue.InstanceId,
                 Links = new List<RestLink>
                 {
                     new RestLink

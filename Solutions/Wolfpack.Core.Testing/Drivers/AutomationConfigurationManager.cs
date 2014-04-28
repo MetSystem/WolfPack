@@ -17,7 +17,7 @@ namespace Wolfpack.Core.Testing.Drivers
                                        new FileSystemScheduleConfigurationRepository(@"TestData\Config\Schedules")
                                    };
 
-            ConfigurationManager.Initialise(new DefaultConfigurationManager(repositories));
+            ConfigurationManager.Initialise(new DefaultConfigurationManager(repositories, new AgentConfiguration()));
         }
     }
 }

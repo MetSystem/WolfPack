@@ -59,7 +59,7 @@ namespace Wolfpack.Tests.Configuration
 
         public void TheConfigurationManagerIsInitialised()
         {
-            _manager = new DefaultConfigurationManager(_repositories);
+            _manager = new DefaultConfigurationManager(_repositories, new AgentConfiguration());
             _manager.Initialise();
         }
 

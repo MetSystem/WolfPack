@@ -43,5 +43,9 @@ namespace Wolfpack.Core.Configuration
         {
             _instance.ApplyPendingChanges(restart);
         }
+        public static void DiscardPendingChanges()
+        {
+            _instance.DiscardPendingChanges();
+        }
     }
 }

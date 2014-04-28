@@ -11,12 +11,12 @@ namespace Wolfpack.Agent.Roles
 {
     public class Agent : PluginHostBase, IRolePlugin
     {
-        protected readonly ILoader<INotificationEventPublisher> _publisherLoader;
-        protected readonly ILoader<IHealthCheckSchedulerPlugin> _checksLoader;
-        protected readonly ILoader<IActivityPlugin> _activitiesLoader;
+        protected readonly ILoader<INotificationEventPublisher> PublisherLoader;
+        protected readonly ILoader<IHealthCheckSchedulerPlugin> ChecksLoader;
+        protected readonly ILoader<IActivityPlugin> ActivitiesLoader;
 
         private readonly AgentConfiguration _config;
-        protected PluginDescriptor _identity;
+        protected PluginDescriptor InternalIdentity;
 
         public Agent(AgentConfiguration config,
             ILoader<INotificationEventPublisher> publisherLoader,
@@ -24,11 +24,11 @@ namespace Wolfpack.Agent.Roles
             ILoader<IActivityPlugin> activitiesLoader)
         {
             _config = config;
-            _publisherLoader = publisherLoader;
-            _checksLoader = checksLoader;
-            _activitiesLoader = activitiesLoader;
+            PublisherLoader = publisherLoader;
+            ChecksLoader = checksLoader;
+            ActivitiesLoader = activitiesLoader;
 
-            _identity = new PluginDescriptor
+            InternalIdentity = new PluginDescriptor
                              {
                                  Description = "Agent description [TODO]",
                                  Name = "Agent",
@@ -38,7 +38,7 @@ namespace Wolfpack.Agent.Roles
 
         public override PluginDescriptor Identity
         {
-            get { return _identity; }
+            get { return InternalIdentity; }
         }
 
         public override void Start()
@@ -48,11 +48,12 @@ namespace Wolfpack.Agent.Roles
             {
                 DiscoveryStarted = DateTime.UtcNow,
                 AgentId = _config.AgentId,
-                SiteId = _config.SiteId
+                SiteId = _config.SiteId,
+                Id = _config.InstanceId
             };
 
             INotificationEventPublisher[] publishers;
-            _publisherLoader.Load(out publishers,
+            PublisherLoader.Load(out publishers,
                                         p =>
                                             {
                                                 if (!p.Status.IsHealthy())
@@ -70,7 +71,7 @@ namespace Wolfpack.Agent.Roles
             
             // load activities...
             IActivityPlugin[] activities;
-            if (_activitiesLoader.Load(out activities))
+            if (ActivitiesLoader.Load(out activities))
                 activities.ToList().ForEach(
                     a =>
                         {
@@ -87,7 +88,7 @@ namespace Wolfpack.Agent.Roles
 
             // load health checks...
             IHealthCheckSchedulerPlugin[] healthChecks;
-            _checksLoader.Load(out healthChecks);
+            ChecksLoader.Load(out healthChecks);
             healthChecks.ToList().ForEach(
                 h =>
                     {
@@ -103,10 +104,15 @@ namespace Wolfpack.Agent.Roles
 
             // extract check info, attach and publish it to a session message
             sessionInfo.DiscoveryCompleted = DateTime.UtcNow;
+
+            // TODO - add support for publishers
             sessionInfo.Checks = (from healthCheck in healthChecks
                                   where healthCheck.Status.IsHealthy()
                                   select healthCheck.Identity).ToList();
             sessionInfo.UnhealthyChecks = (from healthCheck in healthChecks
+                                  where !healthCheck.Status.IsHealthy()
+                                  select healthCheck.Identity).ToList();
+            sessionInfo.UnhealthyPublishers = (from healthCheck in healthChecks
                                   where !healthCheck.Status.IsHealthy()
                                   select healthCheck.Identity).ToList();
             sessionInfo.Activities = (from activity in activities

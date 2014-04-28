@@ -38,6 +38,8 @@ namespace Wolfpack.Core.Interfaces.Entities
         public DateTime DiscoveryStarted { get; set; }
         public DateTime DiscoveryCompleted { get; set; }
 
+        public List<PluginDescriptor> Publishers { get; set; }
+        public List<PluginDescriptor> UnhealthyPublishers { get; set; }
         public List<PluginDescriptor> Checks { get; set; }
         public List<PluginDescriptor> UnhealthyChecks { get; set; }
 

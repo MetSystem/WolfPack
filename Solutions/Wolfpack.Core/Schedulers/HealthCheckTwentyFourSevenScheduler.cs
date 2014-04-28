@@ -18,7 +18,7 @@ namespace Wolfpack.Core.Schedulers
     [DebuggerDisplay("{Identity.Name}")]
     public class HealthCheckTwentyFourSevenScheduler : HealthCheckIntervalScheduler
     {
-        protected TwentyFourSevenTimer _timer;
+        protected TwentyFourSevenTimer Timer;
 
         public HealthCheckTwentyFourSevenScheduler(IHealthCheckPlugin check,
             HealthCheckTwentyFourSevenSchedulerConfig config) 
@@ -27,15 +27,14 @@ namespace Wolfpack.Core.Schedulers
                                   IntervalInSeconds = config.IntervalInSeconds
                               })
         {
-            _identity = new PluginDescriptor
+            InternalIdentity = new PluginDescriptor
                              {
                                  TypeId = check.Identity.TypeId,
                                  Description = check.Identity.Description,
-                                 Name = check.Identity.Name,
-                                 ScheduleDescription = "24/7 Scheduler"
+                                 Name = check.Identity.Name
                              };
 
-            _timer = new TwentyFourSevenTimer(config);
+            Timer = new TwentyFourSevenTimer(config);
         }
 
         /// <summary>
@@ -43,7 +42,7 @@ namespace Wolfpack.Core.Schedulers
         /// </summary>
         protected override void Execute()
         {
-            if (!_timer.Triggered().Any())
+            if (!Timer.Triggered().Any())
                 return;
 
             base.Execute();

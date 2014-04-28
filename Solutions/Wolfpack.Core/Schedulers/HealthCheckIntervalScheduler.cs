@@ -14,20 +14,19 @@ namespace Wolfpack.Core.Schedulers
     [DebuggerDisplay("{Identity.Name}")]
     public class HealthCheckIntervalScheduler : IntervalSchedulerBase, IHealthCheckSchedulerPlugin
     {
-        protected IHealthCheckPlugin _healthCheck;
-        protected PluginDescriptor _identity;
+        protected IHealthCheckPlugin HealthCheck;
+        protected PluginDescriptor InternalIdentity;
 
         public HealthCheckIntervalScheduler(IHealthCheckPlugin check,
             HealthCheckIntervalSchedulerConfig config) 
             : base(config)
         {
-            _healthCheck = check;
-            _identity = new PluginDescriptor
+            HealthCheck = check;
+            InternalIdentity = new PluginDescriptor
                              {
                                  TypeId = check.Identity.TypeId,
                                  Description = check.Identity.Description,
-                                 Name = check.Identity.Name,
-                                 ScheduleDescription = string.Format("Every {0} Minutes", myInterval.TotalMinutes)
+                                 Name = check.Identity.Name
                              };
         }
 
@@ -35,7 +34,7 @@ namespace Wolfpack.Core.Schedulers
 
         public override PluginDescriptor Identity
         {
-            get { return _identity; }
+            get { return InternalIdentity; }
         }
 
         /// <summary>
@@ -43,7 +42,7 @@ namespace Wolfpack.Core.Schedulers
         /// </summary>
         public override void Initialise()
         {
-            _healthCheck.Initialise();
+            HealthCheck.Initialise();
         }
 
         /// <summary>
@@ -53,14 +52,14 @@ namespace Wolfpack.Core.Schedulers
         {
             try
             {
-                _healthCheck.Execute();
+                HealthCheck.Execute();
             }
             catch (Exception ex)
             {
                 var incidentCorrelationId = Guid.NewGuid();
                 var msg = string.Format("Wolfpack Component Failure. IncidentId:={0}; Name:={1}; Details:={2}",
                     incidentCorrelationId,
-                    _healthCheck.Identity.Name,
+                    HealthCheck.Identity.Name,
                     ex);
 
                 Logger.Error(msg);
@@ -74,7 +73,7 @@ namespace Wolfpack.Core.Schedulers
                                                                                Id = incidentCorrelationId
                                                                            },
                                               GeneratedOnUtc = DateTime.UtcNow,
-                                              Identity = _healthCheck.Identity
+                                              Identity = HealthCheck.Identity
                                           }).Build());
             }            
         }

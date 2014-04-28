@@ -14,6 +14,7 @@ namespace Wolfpack.Core.Configuration
 
         private readonly IList<ConfigurationChangeRequest> _pendingChanges;
         private readonly IEnumerable<IConfigurationRepository> _repositories;
+        private readonly AgentConfiguration _agentInfo;
         private IEnumerable<ConfigurationEntry> _entries;
         private bool _restartPending;
 
@@ -22,9 +23,11 @@ namespace Wolfpack.Core.Configuration
             get { return _pendingChanges; }
         }
 
-        public DefaultConfigurationManager(IEnumerable<IConfigurationRepository> repositories)
+        public DefaultConfigurationManager(IEnumerable<IConfigurationRepository> repositories,
+            AgentConfiguration agentInfo)
         {
             _repositories = repositories;
+            _agentInfo = agentInfo;
             _pendingChanges = new List<ConfigurationChangeRequest>();
         }
 
@@ -39,7 +42,12 @@ namespace Wolfpack.Core.Configuration
         public ConfigurationCatalogue GetCatalogue(params string[] tags)
         {
             var items = _entries.Where(ce => ce.Tags.ContainsAny(tags));
-            return new ConfigurationCatalogue {Items = items, Pending = _pendingChanges };
+            return new ConfigurationCatalogue
+            {
+                InstanceId = _agentInfo.InstanceId,
+                Items = items, 
+                Pending = _pendingChanges
+            };
         }
 
         public void Save(ConfigurationChangeRequest update)
