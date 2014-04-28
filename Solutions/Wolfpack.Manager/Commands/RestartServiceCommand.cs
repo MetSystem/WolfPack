@@ -1,5 +1,6 @@
 using System;
 using System.ServiceProcess;
+using System.Threading;
 using Wolfpack.Core;
 using Wolfpack.Core.Interfaces;
 using Wolfpack.Core.Interfaces.Entities;
@@ -19,12 +20,12 @@ namespace Wolfpack.Manager.Commands
         public void Execute()
         {
             Logger.Info("Stopping Wolfpack...");
+            Thread.Sleep(3000);
             var wolfpack = ServiceController.GetServices().FirstOrDefault(s => 
                 s.ServiceName.Equals("wolfpack", StringComparison.OrdinalIgnoreCase));
 
             if (wolfpack == null)
                 throw new InvalidOperationException(string.Format("Wolfpack service not installed :-S"));
-
 
             wolfpack.Stop();
 

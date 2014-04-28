@@ -30,7 +30,7 @@ namespace Wolfpack.Core.WebServices.Modules
         {
             try
             {
-                ConfigurationManager.ApplyPendingChanges(request.Restart);
+                ConfigurationManager.ApplyPendingChanges(Request.Query.Restart);
                 return new ConfigurationCommandResponse { Result = true };
             }
             catch (Exception e)
