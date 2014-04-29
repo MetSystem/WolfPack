@@ -63,7 +63,7 @@ del NuGet\Templates\Wolfpack\lib\net45\*.pdb
 move NuGet\Templates\Wolfpack\lib\net45\wolfpack.agent.exe.config NuGet\Templates\Wolfpack\content
 xcopy Wolfpack.Agent\bin\debug\config\*.* NuGet\Templates\Wolfpack\content\config /Y /R /I /E
 xcopy Wolfpack.Agent\bin\debug\content\*.* NuGet\Templates\Wolfpack\content\content /Y /R /I /E
-xcopy Wolfpack.Agent\bin\debug\fonts\*.* NuGet\Templates\Wolfpack\content\content /Y /R /I /E
+xcopy Wolfpack.Agent\bin\debug\fonts\*.* NuGet\Templates\Wolfpack\content\fonts /Y /R /I /E
 xcopy Wolfpack.Agent\bin\debug\scripts\*.* NuGet\Templates\Wolfpack\content\scripts /Y /R /I /E
 xcopy Wolfpack.Agent\bin\debug\views\*.* NuGet\Templates\Wolfpack\content\views /Y /R /I /E
 
