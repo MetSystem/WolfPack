@@ -32,7 +32,24 @@ namespace Wolfpack.Manager.Commands
                 Logger.Info("Process located...sending close message");
                 Thread.Sleep(3000);
 
-                SetForegroundWindow(console.MainWindowHandle);
+                var isFront = SetForegroundWindow(console.MainWindowHandle);
+
+                if (!isFront)
+                {
+                    Logger.Warning("Unable to make Wolfpack console the foreground window, trying again...");
+                    isFront = SetForegroundWindow(console.MainWindowHandle);
+
+                    if (!isFront)
+                    {
+                        Logger.Warning("Still unable to make Wolfpack console the foreground window, please manually restart wolfpack!");
+
+                        Console.WriteLine("Press any key to continue...");
+                        Console.ReadKey();
+                        return;
+                    }
+                }
+
+                Thread.Sleep(1000);
                 var sim = new InputSimulator();
                 sim.Keyboard.ModifiedKeyStroke(VirtualKeyCode.CONTROL, VirtualKeyCode.VK_C);
 
