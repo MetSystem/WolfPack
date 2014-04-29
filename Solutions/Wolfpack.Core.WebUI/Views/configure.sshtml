@@ -25,7 +25,7 @@
 
 				<div style="padding-top: 10px;	">
 					<button type="button" class="btn btn-primary btn-lg" data-bind="click: $root.saveEntry">Save <span class="glyphicon glyphicon-floppy-disk"></span></button>
-					<button type="button" class="btn btn-danger btn-lg" data-bind="click: $root.deleteEntry">Delete <span class="glyphicon glyphicon-trash"></span></button>
+					<button type="button" class="btn btn-danger btn-lg" data-bind="click: $root.deleteEntry, visible: $root.isEdit">Delete <span class="glyphicon glyphicon-trash"></span></button>
 					<button type="button" class="btn btn-primary btn-lg" data-bind="click: $root.cancelEditEntry">Cancel</button>
 				</div>
 			</div>
@@ -69,7 +69,7 @@
 					<button type="button" class="btn btn-success" data-bind="click: $parent.editEntry">Edit</button>
 					<!-- /ko -->
 					<!-- ko ifnot: IsRunning -->
-					<button type="button" class="btn btn-primary" data-bind="click: $parent.editEntry">Create</button>
+					<button type="button" class="btn btn-primary" data-bind="click: $parent.createEntry">Create</button>
 					<!-- /ko -->
 				</div>
 				<div>
@@ -107,6 +107,7 @@
 			self.tags = ko.observableArray();
 			self.entries = ko.observableArray();
 			self.pending = ko.observableArray();
+			self.isEdit = ko.observable(false);
 			self.entry = ko.observable();
 			self.jsonConfig = { };
 			self.restart = ko.observable(true);
@@ -161,6 +162,16 @@
 			};
 
 			self.editEntry = function (entry) {
+				self.isEdit(true);
+				self.configureEntry(entry);
+			};
+
+			self.createEntry = function (entry) {
+				self.isEdit(false);
+				self.configureEntry(entry);
+			};
+
+			self.configureEntry = function (entry) {
 				self.entry(entry);
 				console.log('Editing Entry: ' + self.entry().Entry.name);
 
