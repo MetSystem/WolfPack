@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Wolfpack.Core.Interfaces;
 using Wolfpack.Core.Interfaces.Entities;
@@ -10,6 +11,10 @@ namespace Wolfpack.Core.Configuration
 {
     public class DefaultConfigurationManager : IConfigurationManager
     {
+        [DllImport("user32.dll")]
+        static extern bool AllowSetForegroundWindow(IntPtr hWnd);
+
+
         private static readonly object SyncObj = new object();
 
         private readonly IList<ConfigurationChangeRequest> _pendingChanges;
@@ -116,10 +121,16 @@ namespace Wolfpack.Core.Configuration
             Serialiser.ToXmlInFile(SystemCommand.Filename, command);
 
             Logger.Info("Launching Wolfpack Helper to manage system restart...");
-            Process.Start(new ProcessStartInfo("wolfpack.manager.exe")
+            var managerProcess = Process.Start(new ProcessStartInfo("wolfpack.manager.exe")
                               {
                                   WindowStyle = windowStyle
                               });
+
+            if (managerProcess == null)
+                return;
+
+            Logger.Debug("Calling AllowSetForegroundWindow() on manager process...");
+            AllowSetForegroundWindow(managerProcess.MainWindowHandle);
         }
 
         public void DiscardPendingChanges()
