@@ -224,7 +224,8 @@
 								clearInterval(self.restartHandle);
 								self.restartHandle = 0;
 
-								self.refreshConfiguration();
+								self.loadConfiguration('*');
+								self.loadTags();
 								$('#restart-page').hide();
 								$('#main-page').show();
 							}
