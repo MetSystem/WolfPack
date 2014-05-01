@@ -51,8 +51,7 @@ namespace Wolfpack.Core.Checks
         public override void Execute()
         {
             var fi = new DirectoryInfo(_folderLocation.Location);
-            var data = HealthCheckData.For(Identity, _config.NotificationMode, "Information about folder '{0}'...",
-                _folderLocation.Location)
+            var data = HealthCheckData.For(Identity, "Information about folder '{0}'...", _folderLocation.Location)
                 .ResultIs(fi.Exists);
 
             if (data.Result.GetValueOrDefault(false))
