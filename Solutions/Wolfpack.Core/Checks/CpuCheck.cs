@@ -74,8 +74,7 @@ namespace Wolfpack.Core.Checks
             var sample2 = _counter.NextSample();
             var value = Math.Round(CounterSampleCalculator.ComputeCounterValue(sample, sample2));
 
-            Publish(NotificationRequestBuilder.For(_config.NotificationMode, HealthCheckData.For(Identity, 
-                "Cpu utilisation is {0}%", value)
+            Publish(NotificationRequestBuilder.For(_config.NotificationMode, HealthCheckData.For(Identity, "Cpu utilisation is {0}%", value)
                 .Succeeded()
                 .ResultCountIs(value)
                 .DisplayUnitIs("%"))
