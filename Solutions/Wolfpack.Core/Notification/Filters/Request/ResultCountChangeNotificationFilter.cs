@@ -1,16 +1,17 @@
 using System;
 using System.Collections.Generic;
 using Wolfpack.Core.Interfaces.Entities;
+using Omu.ValueInjecter;
 
 namespace Wolfpack.Core.Notification.Filters.Request
 {
-    public class StateChangeNotificationFilter : NotificationRequestFilterBase
+    public class ResultCountChangeNotificationFilter : NotificationRequestFilterBase
     {
-        public const string FilterName = "StateChange";
+        public const string FilterName = "ResultCountChange";
 
         protected readonly Dictionary<string, AlertHistory> History;
 
-        public StateChangeNotificationFilter()
+        public ResultCountChangeNotificationFilter()
         {
             History = new Dictionary<string, AlertHistory>();
         }
@@ -26,25 +27,17 @@ namespace Wolfpack.Core.Notification.Filters.Request
 
                 if (!History.ContainsKey(key))
                 {
-                    alertHistory = new AlertHistory
-                    {
-                        Result = request.Notification.Result,
-                        Received = DateTime.UtcNow
-                    };
-
-                    if (!request.Notification.Result.GetValueOrDefault(true))
-                        alertHistory.FailuresSinceLastSuccess++;
-
+                    alertHistory = new AlertHistory { Received = DateTime.UtcNow };
                     HandleFirstAlert(request, alertHistory);
                     return true;
                 }
 
-                // has state change from last?
+                // has count change from last?
                 alertHistory = History[key];
 
-                if (!HasStateChanged(request, alertHistory))
+                if (!HasNotificationChanged(request, alertHistory))
                 {
-                    Logger.Debug("State for Check '{0}' is unchanged, not publishing", request.CheckId);
+                    Logger.Debug("ResultCount for Check '{0}' is unchanged, not publishing", request.CheckId);
                     return false;
                 }
 
@@ -55,17 +48,18 @@ namespace Wolfpack.Core.Notification.Filters.Request
 
         protected virtual void HandleFirstAlert(NotificationRequest request, AlertHistory alertHistory)
         {
+            alertHistory.InjectFrom<LoopValueInjection>(request.Notification);
             History.Add(GetKey(request), alertHistory);
         }
 
-        protected virtual bool HasStateChanged(NotificationRequest request, AlertHistory alertHistory)
+        protected virtual bool HasNotificationChanged(NotificationRequest request, AlertHistory alertHistory)
         {
-            return alertHistory.Result != request.Notification.Result;
+            return !alertHistory.ResultCount.GetValueOrDefault(0).Equals(request.Notification.ResultCount.GetValueOrDefault(0));
         }
 
         protected virtual void HandleStateChange(NotificationRequest request, AlertHistory alertHistory)
         {
-            alertHistory.Result = request.Notification.Result;
+            alertHistory.InjectFrom<LoopValueInjection>(request.Notification);
             alertHistory.Received = DateTime.UtcNow;
         }
     }
