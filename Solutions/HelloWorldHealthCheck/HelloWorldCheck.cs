@@ -6,14 +6,10 @@ using Wolfpack.Core.Notification;
 
 namespace HelloWorldHealthCheck
 {
-    public class HelloWorldCheckConfig : PluginConfigBase
-    {
-        public string MyCustomSetting { get; set; }
-    }
-
     public class HelloWorldCheck : HealthCheckBase<HelloWorldCheckConfig>
     {
-        public HelloWorldCheck(HelloWorldCheckConfig config) : base(config)
+        public HelloWorldCheck(HelloWorldCheckConfig config) 
+            : base(config)
         {
         }
 
