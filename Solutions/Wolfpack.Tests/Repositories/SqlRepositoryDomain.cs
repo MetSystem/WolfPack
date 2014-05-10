@@ -2,18 +2,18 @@ using System;
 using System.Linq;
 using NUnit.Framework;
 using Wolfpack.Core.Interfaces.Entities;
-using Wolfpack.Core.Repositories.EfDatabase;
 using Wolfpack.Core.Repositories.Plugins;
 using Wolfpack.Core.Repositories.Queries;
+using Wolfpack.Core.Repositories.Sql;
 using Wolfpack.Core.Testing;
 using Wolfpack.Core.Testing.Bdd;
 
 namespace Wolfpack.Tests.Repositories
 {
-    public class EfDbRepositoryDomain : BddTestDomain
+    public class SqlRepositoryDomain : BddTestDomain
     {
-        private readonly EfDbContext _dbContext;
-        private readonly EfDbRepository _sut;
+        private readonly SqlDbContext _dbContext;
+        private readonly SqlRepository _sut;
 
         private IQueryable<NotificationEvent> _queryResults;
 
@@ -21,10 +21,11 @@ namespace Wolfpack.Tests.Repositories
         {           
         }
 
-        public EfDbRepositoryDomain()
+        public SqlRepositoryDomain()
         {
-            _dbContext = new EfDbContext();
-            _sut = new EfDbRepository(_dbContext);
+            AppDomain.CurrentDomain.SetData("DataDirectory", AppDomain.CurrentDomain.BaseDirectory);
+            _dbContext = new SqlDbContext("Wolfpackv3");
+            _sut = new SqlRepository(_dbContext);
         }
 
         public void TheWolfpackDatabaseIsClearedOfNotifications()
