@@ -142,10 +142,8 @@ namespace Wolfpack.Core.Checks
             faultedServices.ForEach(
                 fs =>
                     {
-                        var result = HealthCheckData.For(Identity,
-                                                         string.Format("{0} should be {1} but is {2}",
-                                                                       fs.DisplayName, _config.ExpectedStartupType,
-                                                                       fs.StartMode))
+                        var result = HealthCheckData.For(Identity, string.Format("{0} should be {1} but is {2}",
+                            fs.DisplayName, _config.ExpectedStartupType, fs.StartMode))
                             .AddTag(fs.DisplayName)
                             .Failed();
 
