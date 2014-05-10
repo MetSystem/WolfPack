@@ -1,17 +1,18 @@
 ﻿using System.Data.Entity;
 using Wolfpack.Core.Interfaces.Entities;
 
-namespace Wolfpack.Core.Repositories.EfDatabase
+namespace Wolfpack.Core.Repositories.Sql
 {
-    public class EfDbContext : DbContext, IEfDbContext
+    public class SqlDbContext : DbContext, ISqlDbContext
     {
         public IDbSet<NotificationEvent> Notifications { get; set; }
 
-        public EfDbContext()
+        public SqlDbContext()
         {
         }
 
-        public EfDbContext(string nameOrConnectionString) : base(nameOrConnectionString)
+        public SqlDbContext(string connectionName) 
+            : base(connectionName)
         {
         }
 

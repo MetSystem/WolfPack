@@ -202,9 +202,13 @@
     <Compile Include="Publishers\Console\ConsolePublisherConfigurationDiscovery.cs" />
     <Compile Include="Publishers\FilteredResultPublisherBase.cs" />
     <Compile Include="Publishers\PublisherBase.cs" />
-    <Compile Include="Repositories\EfDatabase\EfDbContext.cs" />
-    <Compile Include="Repositories\EfDatabase\EfDbRepository.cs" />
-    <Compile Include="Repositories\EfDatabase\IEfDbContext.cs" />
+    <Compile Include="Publishers\Sql\SqlPublisher.cs" />
+    <Compile Include="Publishers\Sql\SqlPublisherBootstrapper.cs" />
+    <Compile Include="Publishers\Sql\SqlPublisherConfiguration.cs" />
+    <Compile Include="Publishers\Sql\SqlPublisherConfigurationDiscovery.cs" />
+    <Compile Include="Repositories\Sql\SqlDbContext.cs" />
+    <Compile Include="Repositories\Sql\SqlRepository.cs" />
+    <Compile Include="Repositories\Sql\ISqlDbContext.cs" />
     <Compile Include="Repositories\FileSystem\FileSystemNotificationRepositoryConfig.cs" />
     <Compile Include="Repositories\FileSystem\FileSystemNotificationRepository.cs" />
     <Compile Include="Repositories\Plugins\NotificationStateFilter.cs" />
