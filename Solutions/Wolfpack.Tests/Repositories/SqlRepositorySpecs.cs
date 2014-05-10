@@ -7,12 +7,12 @@ using Wolfpack.Core.Testing.Bdd;
 namespace Wolfpack.Tests.Repositories
 {
     [TestFixture]
-    public class EfDbRepositorySpecs : BddFeature
+    public class SqlRepositorySpecs : BddFeature
     {
         protected override Feature DescribeFeature()
         {
-            return new Story("Ensure that the EF Wolfpack repository works correctly")
-                .InOrderTo("interact with EF based storage")
+            return new Story("Ensure that the Wolfpack Sql repository works correctly")
+                .InOrderTo("interact with SqlServer based storage")
                 .AsA("component that performs reading or writing of wolfpack notification data")
                 .IWant("these tests to prove that the repository hanldes this")
                 .Tag("EntityFramework")
@@ -24,7 +24,7 @@ namespace Wolfpack.Tests.Repositories
         {
             var id = Guid.NewGuid();
 
-            using (var domain = new EfDbRepositoryDomain())
+            using (var domain = new SqlRepositoryDomain())
             {
                 Feature.WithScenario("Add a new item to the database")
                     .Given(domain.TheWolfpackDatabaseIsClearedOfNotifications)
@@ -39,7 +39,7 @@ namespace Wolfpack.Tests.Repositories
         {
             var id = Guid.NewGuid();
 
-            using (var domain = new EfDbRepositoryDomain())
+            using (var domain = new SqlRepositoryDomain())
             {
                 Feature.WithScenario("chaining multiple queries together")
                     .Given(domain.TheWolfpackDatabaseIsClearedOfNotifications)

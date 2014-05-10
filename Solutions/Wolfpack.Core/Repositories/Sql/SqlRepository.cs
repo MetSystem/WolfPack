@@ -3,20 +3,26 @@ using System.Linq;
 using Wolfpack.Core.Interfaces;
 using Wolfpack.Core.Interfaces.Entities;
 
-namespace Wolfpack.Core.Repositories.EfDatabase
+namespace Wolfpack.Core.Repositories.Sql
 {
-    public class EfDbRepository : INotificationRepository
+    public class SqlRepository : INotificationRepository
     {
-        private readonly IEfDbContext _context;
+        private readonly ISqlDbContext _context;
 
-        public EfDbRepository(IEfDbContext context)
+        public SqlRepository()
+            : this(new SqlDbContext("Wolfpackv3"))
+        {
+                
+        }
+
+        public SqlRepository(ISqlDbContext context)
         {
             _context = context;
         }
 
         public void Initialise()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         public IQueryable<NotificationEvent> Filter(params INotificationRepositoryQuery[] filters)
