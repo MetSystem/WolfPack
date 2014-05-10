@@ -100,7 +100,9 @@
     <Content Include="TestData\v2.4.0\HealthCheckResult.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
     <None Include="TestData\Config\Schedules\everyminute.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -131,8 +133,8 @@
     <Compile Include="Configuration\DummyCatalogueDiscovery.cs" />
     <Compile Include="Configuration\FileSystemDummyConfigurationRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\EfDbRepositoryDomain.cs" />
-    <Compile Include="Repositories\EfDbRepositorySpecs.cs" />
+    <Compile Include="Repositories\SqlRepositoryDomain.cs" />
+    <Compile Include="Repositories\SqlRepositorySpecs.cs" />
     <Compile Include="System\TypeDiscovery.Domain.cs" />
     <Compile Include="System\TypeDiscovery.Specs.cs" />
     <Compile Include="System\Entities.Domain.cs" />
