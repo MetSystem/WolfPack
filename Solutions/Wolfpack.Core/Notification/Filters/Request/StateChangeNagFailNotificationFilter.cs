@@ -28,11 +28,11 @@ namespace Wolfpack.Core.Notification.Filters.Request
 
         protected override bool HasStateChanged(NotificationRequest request, AlertHistory alertHistory)
         {
-            var changed = alertHistory.LastResult != request.Notification.Result;
+            var changed = alertHistory.Result != request.Notification.Result;
 
             if (changed)
             {
-                if (alertHistory.LastResult.GetValueOrDefault(false))
+                if (alertHistory.Result.GetValueOrDefault(false))
                 {
                     // flipped to success from failure
                     alertHistory.FailuresSinceLastSuccess = 0;
@@ -43,19 +43,19 @@ namespace Wolfpack.Core.Notification.Filters.Request
             }
            
             //  not changed - do we need to consider frequency of our nagging?
-            if (alertHistory.LastResult.HasValue)
+            if (alertHistory.Result.HasValue)
             {
-                if (alertHistory.LastResult.Value)
+                if (alertHistory.Result.Value)
                 {
                     // stream of success messages
-                    Logger.Debug("{0} result:={1} (success stream)", request.CheckId, alertHistory.LastResult.Value);
+                    Logger.Debug("{0} result:={1} (success stream)", request.CheckId, alertHistory.Result.Value);
                     return false;
                 }
 
                 // stream of failures...check frequency                
                 alertHistory.FailuresSinceLastSuccess++;
                 var minimumMinutesSeparation = FindAlertSeparation(alertHistory.FailuresSinceLastSuccess);                
-                var minutesDiff = DateTime.UtcNow.Subtract(alertHistory.LastReceived).TotalMinutes;
+                var minutesDiff = DateTime.UtcNow.Subtract(alertHistory.Received).TotalMinutes;
 
                 Logger.Debug("{0} failures;={1}, separation:={2}, lastdiff:={3}", request.CheckId, alertHistory.FailuresSinceLastSuccess, minimumMinutesSeparation, minutesDiff);
                 return (minutesDiff >= minimumMinutesSeparation);

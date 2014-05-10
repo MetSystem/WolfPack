@@ -72,6 +72,9 @@
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.5.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Omu.ValueInjecter">
+      <HintPath>..\packages\valueinjecter.2.3.3\lib\net35\Omu.ValueInjecter.dll</HintPath>
+    </Reference>
     <Reference Include="ServiceStack.Text, Version=4.0.8.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\ServiceStack.Text.4.0.8\lib\net40\ServiceStack.Text.dll</HintPath>
@@ -183,6 +186,7 @@
     <Compile Include="Logger.cs" />
     <Compile Include="Messenger.cs" />
     <Compile Include="Notification\Filters\Request\AlwaysPublishNotificationFilter.cs" />
+    <Compile Include="Notification\Filters\Request\ResultCountChangeNotificationFilter.cs" />
     <Compile Include="Notification\Filters\Request\FailureOnlyNotificationFilter.cs" />
     <Compile Include="Notification\Filters\Request\NotificationRequestFilterBase.cs" />
     <Compile Include="Notification\Filters\Request\StateChangeNagFailNotificationFilter.cs" />
