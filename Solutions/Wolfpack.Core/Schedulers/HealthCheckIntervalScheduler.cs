@@ -66,14 +66,15 @@ namespace Wolfpack.Core.Schedulers
 
                 // Broadcast a failure message
                 Messenger.Publish(NotificationRequestBuilder.AlwaysPublish(new HealthCheckData
-                                          {
+                                          {                                              
                                               CriticalFailure = true,
                                               CriticalFailureDetails = new CriticalFailureDetails
                                                                            {
                                                                                Id = incidentCorrelationId
                                                                            },
                                               GeneratedOnUtc = DateTime.UtcNow,
-                                              Identity = HealthCheck.Identity
+                                              Identity = HealthCheck.Identity,
+                                              Info = ex.Message
                                           }).Build());
             }            
         }

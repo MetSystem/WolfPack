@@ -32,7 +32,9 @@
 			
 			self.resultImage = ko.computed(function () {
 				var image = 'agent.png';
-				if (self.alert.result === true)
+				if (self.alert.criticalFailure)
+					image = 'alert.png';
+				else if (self.alert.result === true)
 					image = 'resulttrue.png';
 				else if (self.alert.result === false)
 					image = 'resultfalse.png';
