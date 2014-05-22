@@ -57,7 +57,6 @@ namespace Wolfpack.Core.Checks
                                           {
                                               "DHCP Client",
                                               "DNS Client"
-
                                           }
                        };
         }
@@ -78,27 +77,27 @@ namespace Wolfpack.Core.Checks
     /// </summary>
     public class WindowsServiceStateCheck : HealthCheckBase<WindowsServiceStateCheckConfig>
     {
-        protected readonly string _server;
-        protected ServiceControllerStatus _expectedState;
+        protected readonly string Server;
+        protected ServiceControllerStatus ExpectedState;
 
         public WindowsServiceStateCheck(WindowsServiceStateCheckConfig config)
             : base(config)
         {
-            _server = string.IsNullOrEmpty(_config.Server) ? "." : _config.Server;
+            Server = string.IsNullOrEmpty(_config.Server) ? "." : _config.Server;
         }
 
         public override void Initialise()
         {
             Logger.Debug("Initialising WindowsServiceState check for...");
             if (!_config.StateIsValid())
-                throw new FormatException(
-                    string.Format("Value '{0}' for configuration property 'ExpectedState' is not valid",
-                                  _config.ExpectedState));
+                throw new FormatException(string.Format("Value '{0}' for configuration property 'ExpectedState' is not valid",
+                    _config.ExpectedState));
+
             // save this for use in the check later
-            _expectedState = (ServiceControllerStatus) Enum.Parse(typeof (ServiceControllerStatus), _config.ExpectedState, true);
+            ExpectedState = (ServiceControllerStatus) Enum.Parse(typeof (ServiceControllerStatus), _config.ExpectedState, true);
 
             Logger.Debug("\tComplete, monitoring services for expected state '{0}' on Server '{1}'",
-                _config.ExpectedState, _server);
+                _config.ExpectedState, Server);
         }
 
         public override void Execute()
@@ -111,17 +110,14 @@ namespace Wolfpack.Core.Checks
                     {
                         try
                         {
-                            var sc = new ServiceController(serviceName, _server);
-
-                            if (sc.Status == _expectedState)
-                                return;
-
+                            var sc = new ServiceController(serviceName, Server);
                             var result = HealthCheckData.For(Identity,
-                                string.Format("{0} should be {1} but is {2}",
-                                sc.DisplayName, _config.ExpectedState,sc.Status))
-                                .Failed();
+                                string.Format("{0} is {1}", sc.DisplayName, _config.ExpectedState))
+                                .ResultIs(sc.Status == ExpectedState)
+                                .AddProperty("ExpectedState", ExpectedState.ToString());
 
-                            Publish(NotificationRequestBuilder.AlwaysPublish(result).Build());
+                            Publish(NotificationRequestBuilder.For(_config.NotificationMode, result)
+                                .Build());
                         }
                         catch (InvalidOperationException)
                         {

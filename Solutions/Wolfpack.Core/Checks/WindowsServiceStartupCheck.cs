@@ -83,14 +83,14 @@ namespace Wolfpack.Core.Checks
     /// use WMI to do this</remarks>
     public class WindowsServiceStartupCheck : HealthCheckBase<WindowsServiceStartupCheckConfig>
     {
-        protected readonly string _server;
-        protected readonly string _wmiNamespace;
+        protected readonly string Server;
+        protected readonly string WmiNamespace;
 
         public WindowsServiceStartupCheck(WindowsServiceStartupCheckConfig config) 
             : base(config)
         {
-            _server = string.IsNullOrEmpty(config.Server) ? "." : config.Server;
-            _wmiNamespace = string.Format(@"\\{0}\root\cimv2", _server);
+            Server = string.IsNullOrEmpty(config.Server) ? "." : config.Server;
+            WmiNamespace = string.Format(@"\\{0}\root\cimv2", Server);
         }
 
         public override void Initialise()
@@ -104,7 +104,7 @@ namespace Wolfpack.Core.Checks
 
             _config.Services.ForEach(service => Logger.Debug("\t{0}", service));
             Logger.Debug("\tComplete, monitoring services for expected startup type '{0}' on Server '{1}'",
-                _config.ExpectedStartupType, _server);
+                _config.ExpectedStartupType, Server);
         }
 
         public override void Execute()
@@ -112,7 +112,7 @@ namespace Wolfpack.Core.Checks
             Logger.Debug("WindowsServiceStartupCheck is checking service startup types...");
 
             // use the service/current identity to query local or remote
-            var wmiScope = new ManagementScope(_wmiNamespace, new ConnectionOptions
+            var wmiScope = new ManagementScope(WmiNamespace, new ConnectionOptions
                       {
                           Impersonation = ImpersonationLevel.Impersonate
                       });

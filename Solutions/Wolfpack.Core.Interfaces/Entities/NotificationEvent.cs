@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Wolfpack.Core.Interfaces.Entities
 {
@@ -41,6 +42,33 @@ namespace Wolfpack.Core.Interfaces.Entities
         {
             if (artifact != null)
                 Id = artifact.Id;
+        }
+
+        public IDictionary<string, object> ToDictionary()
+        {
+            var result = GetType().GetProperties()
+                .Where(pi => !pi.Name.Equals("Properties") &&
+                    !pi.Name.Equals("CriticalFailureDetails"))
+                .ToDictionary(pi => pi.Name, pi => pi.GetValue(this, null),
+                    StringComparer.OrdinalIgnoreCase
+                );
+
+            if (Properties != null)
+            {
+                foreach (var property in Properties)
+                    result.Add(string.Format("Property_{0}", property), property.Value);
+            }
+
+            if (CriticalFailureDetails != null)
+            {
+                foreach (var pi in typeof(CriticalFailureDetails).GetProperties())
+                {
+                    result.Add(string.Format("CriticalFailureDetails_{0}", pi.Name), 
+                        pi.GetValue(CriticalFailureDetails, null));
+                }                
+            }
+
+            return result;
         }
     }
 }

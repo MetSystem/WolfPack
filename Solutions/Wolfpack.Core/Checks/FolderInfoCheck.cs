@@ -38,20 +38,20 @@ namespace Wolfpack.Core.Checks
 
     public class FolderInfoCheck : HealthCheckBase<FolderInfoCheckConfig>
     {
-        protected readonly SmartLocation _folderLocation;
+        protected readonly SmartLocation FolderLocation;
 
         /// <summary>
         /// default ctor
         /// </summary>
         public FolderInfoCheck(FolderInfoCheckConfig config) : base(config)
         {
-            _folderLocation = new SmartLocation(config.FolderLocation);            
+            FolderLocation = new SmartLocation(config.FolderLocation);            
         }
 
         public override void Execute()
         {
-            var fi = new DirectoryInfo(_folderLocation.Location);
-            var data = HealthCheckData.For(Identity, "Information about folder '{0}'...", _folderLocation.Location)
+            var fi = new DirectoryInfo(FolderLocation.Location);
+            var data = HealthCheckData.For(Identity, "Information about folder '{0}'...", FolderLocation.Location)
                 .ResultIs(fi.Exists);
 
             if (data.Result.GetValueOrDefault(false))
@@ -75,7 +75,7 @@ namespace Wolfpack.Core.Checks
         {
             return new PluginDescriptor
             {
-                Description = string.Format("Reports information about folder {0}", _folderLocation.Location),
+                Description = string.Format("Reports information about folder {0}", FolderLocation.Location),
                 TypeId = new Guid("5A3F5E7D-28B6-4ce9-A77A-66E83FEB888A"),
                 Name = _config.FriendlyId
             };
