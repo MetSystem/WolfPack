@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using Wolfpack.Core.Configuration;
@@ -39,21 +38,21 @@ namespace Wolfpack.Core.Checks
 
     public class FileInfoCheck : HealthCheckBase<FileInfoCheckConfig>
     {
-        protected readonly SmartLocation _fileLocation;
+        protected readonly SmartLocation FileLocation;
 
         /// <summary>
         /// default ctor
         /// </summary>
         public FileInfoCheck(FileInfoCheckConfig config) : base(config)
         {
-            _fileLocation = new SmartLocation(config.FileLocation);
+            FileLocation = new SmartLocation(config.FileLocation);
         }
 
         public override void Execute()
         {
-            var fi = new FileInfo(_fileLocation.Location);
+            var fi = new FileInfo(FileLocation.Location);
             var data = HealthCheckData.For(Identity, 
-                "Information about file '{0}'...", _fileLocation.Location)
+                "Information about file '{0}'...", FileLocation.Location)
                 .ResultIs(fi.Exists);
 
             if (data.Result.GetValueOrDefault(false))
@@ -76,7 +75,7 @@ namespace Wolfpack.Core.Checks
         {
             return new PluginDescriptor
             {
-                Description = string.Format("Reports information about file {0}", _fileLocation.Location),
+                Description = string.Format("Reports information about file {0}", FileLocation.Location),
                 TypeId = new Guid("E0DDCF22-25B6-4d05-B2C4-D1EBFBEBB681"),
                 Name = _config.FriendlyId
             };

@@ -45,19 +45,19 @@ namespace Wolfpack.Core.Checks
 
     public class WmiProcessRunningCheck : IHealthCheckPlugin
     {
-        protected readonly PluginDescriptor _identity;
-        protected readonly string _wmiNamespace;
-        protected readonly WmiProcessRunningCheckConfig _config;
+        protected readonly PluginDescriptor PluginIdentity;
+        protected readonly string WmiNamespace;
+        protected readonly WmiProcessRunningCheckConfig Config;
 
         public WmiProcessRunningCheck(WmiProcessRunningCheckConfig config)
         {
-            _config = config;
-            _wmiNamespace = string.Format(@"\\{0}\root\cimv2", config.RemoteMachineId);
-            _identity = new PluginDescriptor
+            Config = config;
+            WmiNamespace = string.Format(@"\\{0}\root\cimv2", config.RemoteMachineId);
+            PluginIdentity = new PluginDescriptor
             {
-                Description = string.Format("Checks for the existance of process '{0}' on {1}", _config.ProcessName, _config.RemoteMachineId),
+                Description = string.Format("Checks for the existance of process '{0}' on {1}", Config.ProcessName, Config.RemoteMachineId),
                 TypeId = new Guid("46D4374C-C65D-442e-9B93-AF50BB8C045C"),
-                Name = _config.FriendlyId
+                Name = Config.FriendlyId
             };
         }
 
@@ -65,25 +65,25 @@ namespace Wolfpack.Core.Checks
 
         public PluginDescriptor Identity
         {
-            get { return _identity; }
+            get { return PluginIdentity; }
         }
 
         public void Execute()
         {
             ManagementScope wmiScope;
 
-            Logger.Debug("Querying wmi namespace {0}...", _wmiNamespace);
-            if (!string.IsNullOrEmpty(_config.RemoteUser) && !string.IsNullOrEmpty(_config.RemotePwd))
+            Logger.Debug("Querying wmi namespace {0}...", WmiNamespace);
+            if (!string.IsNullOrEmpty(Config.RemoteUser) && !string.IsNullOrEmpty(Config.RemotePwd))
             {
-                wmiScope = new ManagementScope(_wmiNamespace, new ConnectionOptions
+                wmiScope = new ManagementScope(WmiNamespace, new ConnectionOptions
                 {
-                    Username = _config.RemoteUser,
-                    Password = _config.RemotePwd
+                    Username = Config.RemoteUser,
+                    Password = Config.RemotePwd
                 });
             }
             else
             {
-                wmiScope = new ManagementScope(_wmiNamespace);
+                wmiScope = new ManagementScope(WmiNamespace);
             }
 
             // set up the query and execute it
@@ -93,18 +93,18 @@ namespace Wolfpack.Core.Checks
             var processes = wmiResults.Cast<ManagementObject>();
 
             var matches = (from process in processes
-                          where (string.Compare(process["Name"].ToString(), _config.ProcessName, 
+                          where (string.Compare(process["Name"].ToString(), Config.ProcessName, 
                           StringComparison.InvariantCultureIgnoreCase) == 0)
                           select process).ToList();
 
             var data = HealthCheckData.For(Identity, "There are {0} instances of process '{1}' on {2}",
                                           matches.Count(),
-                                          _config.ProcessName,
-                                          _config.RemoteMachineId)
+                                          Config.ProcessName,
+                                          Config.RemoteMachineId)
                 .ResultIs(matches.Any())
                 .ResultCountIs(matches.Count);
 
-            Messenger.Publish(NotificationRequestBuilder.For(_config.NotificationMode, data).Build());
+            Messenger.Publish(NotificationRequestBuilder.For(Config.NotificationMode, data).Build());
         }
 
         public void Initialise()
