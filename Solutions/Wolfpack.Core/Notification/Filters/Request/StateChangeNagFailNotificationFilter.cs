@@ -12,16 +12,14 @@ namespace Wolfpack.Core.Notification.Filters.Request
         private readonly List<KeyValuePair<int, int>> _alertSpacing;
 
         public StateChangeNagFailNotificationFilter()
-            : this(new KeyValuePair<int, int>(0, 1),
-            new KeyValuePair<int, int>(3, 3),
-            new KeyValuePair<int, int>(15, 10),
-            new KeyValuePair<int, int>(35, 60))
         {
-        }
-
-        public StateChangeNagFailNotificationFilter(params KeyValuePair<int, int>[] alertSpacings)
-        {
-            _alertSpacing = new List<KeyValuePair<int, int>>(alertSpacings);
+            _alertSpacing = new List<KeyValuePair<int, int>>
+            {
+                new KeyValuePair<int, int>(0, 1),
+                new KeyValuePair<int, int>(3, 3),
+                new KeyValuePair<int, int>(15, 10),
+                new KeyValuePair<int, int>(35, 60)
+            };
         }
 
         public override string Mode { get { return FilterName; } }

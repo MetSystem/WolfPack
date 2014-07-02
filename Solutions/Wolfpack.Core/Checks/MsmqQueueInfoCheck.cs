@@ -70,7 +70,7 @@ namespace Wolfpack.Core.Checks
             var exists = MessageQueue.Exists(_config.QueueName);
             string info;
 
-            if (exists)
+            if (exists || IsDeadLetterRelatedQueue())
             {
                 var queue = new MessageQueue(_config.QueueName)
                 {
@@ -126,6 +126,12 @@ namespace Wolfpack.Core.Checks
                 data.ResultCount = count;
 
             return NotificationRequestBuilder.For(_config.NotificationMode, data).Build();
+        }
+
+        private bool IsDeadLetterRelatedQueue()
+        {
+            return _config.QueueName.ToLower().Contains(";deadletter")
+                   || _config.QueueName.ToLower().Contains(";deadxact");
         }
     }
 }
