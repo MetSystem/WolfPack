@@ -19,17 +19,18 @@ namespace Wolfpack.Manager.Commands
 
         public void Execute()
         {
-            Logger.Info("Stopping Wolfpack...");
-            Thread.Sleep(3000);
+            Logger.Info("Stopping Wolfpack service (ServiceName={0})...", _instruction.ServiceName);
+
             var wolfpack = ServiceController.GetServices().FirstOrDefault(s => 
-                s.ServiceName.Equals("wolfpack", StringComparison.OrdinalIgnoreCase));
+                s.ServiceName.Equals(_instruction.ServiceName, StringComparison.OrdinalIgnoreCase));
 
             if (wolfpack == null)
-                throw new InvalidOperationException(string.Format("Wolfpack service not installed :-S"));
+                throw new InvalidOperationException("Wolfpack service not installed :-S");
 
             wolfpack.Stop();
+            wolfpack.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(30));
 
-            Logger.Info("Starting Wolfpack...");
+            Logger.Info("Restarting Wolfpack...");
             wolfpack.Start();
         }
     }

@@ -29,6 +29,12 @@ namespace Wolfpack.Core
             _instance = instance; 
         }
 
+        public static IMessenger Publish<T>(T message)
+             where T : class
+        {
+            return _instance.Publish(message);
+        }
+
         public static IMessenger Publish(NotificationRequest request)
         {
             return _instance.Publish(request);
