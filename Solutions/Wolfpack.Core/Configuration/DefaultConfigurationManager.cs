@@ -112,7 +112,7 @@ namespace Wolfpack.Core.Configuration
                               {
                                   RestartService = new RestartServiceInstruction
                                                        {
-                                                           ServiceName = "WolfpackAgent"
+                                                           ServiceName = "Wolfpack"
                                                        }
                               };
                 Logger.Debug("Writing service restart instruction file");

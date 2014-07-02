@@ -15,7 +15,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{C18216
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Licences", "Licences", "{C37194E6-93F6-4615-B075-3301C6B64720}"
 	ProjectSection(SolutionItems) = preProject
-		Licences\growl.license.txt = Licences\growl.license.txt
 		Licences\log4net.license.txt = Licences\log4net.license.txt
 	EndProjectSection
 EndProject
