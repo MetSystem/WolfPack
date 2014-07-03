@@ -65,12 +65,13 @@ namespace Wolfpack.Core.Checks
 
         protected virtual NotificationRequest DoTest()
         {
+            string info;
             var count = 0;
             DateTime? oldestMessageDated = null;
-            var exists = MessageQueue.Exists(_config.QueueName);
-            string info;
 
-            if (exists || IsDeadLetterRelatedQueue())
+            var exists = IsDeadLetterRelatedQueue() || MessageQueue.Exists(_config.QueueName);            
+            
+            if (exists)
             {
                 var queue = new MessageQueue(_config.QueueName)
                 {
