@@ -38,3 +38,5 @@ Automation/PushNuGetPackages.cmd
 Automation/PushNuGetToMyGet.cmd
 *.ncrunchsolution
 *.ncrunchproject
+Automation/LIVE_PushPackages.cmd
+Automation/PushPackagesToMyGet.cmd
