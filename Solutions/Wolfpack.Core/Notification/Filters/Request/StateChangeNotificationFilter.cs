@@ -32,11 +32,14 @@ namespace Wolfpack.Core.Notification.Filters.Request
                         Received = DateTime.UtcNow
                     };
 
-                    if (!request.Notification.Result.GetValueOrDefault(true))
+                    var result = request.Notification.Result.GetValueOrDefault(true);
+
+                    if (!result)
                         alertHistory.FailuresSinceLastSuccess++;
 
                     HandleFirstAlert(request, alertHistory);
-                    return true;
+                    // only publish if initial failure result
+                    return !result;
                 }
 
                 // has state change from last?
