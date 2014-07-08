@@ -24,12 +24,17 @@ namespace Wolfpack.Core.Containers
             return this;
         }
 
-        public IContainer RegisterAsTransient<T>(Type implType)
+        public IContainer RegisterAsTransient<T>(Type implType, string name = null)
             where T: class
         {
-            Instance.Register(Component.For<T>()
+            var component = Component.For<T>()
                 .ImplementedBy(implType)
-                .LifeStyle.Transient);
+                .LifeStyle.Transient;
+
+            if (!string.IsNullOrWhiteSpace(name))
+                component.Named(name);
+
+            Instance.Register(component);
             return this;
         }
 
@@ -41,24 +46,41 @@ namespace Wolfpack.Core.Containers
             return this;
         }
 
-        public IContainer RegisterAsSingleton<T>(Type implType)
+        public IContainer RegisterAsSingleton<T>(Type implType,
+            string name = null,
+            params Tuple<Type, string>[] hints) 
             where T: class
         {
-            Instance.Register(Component.For<T>()
+            var component = Component.For<T>()
                 .ImplementedBy(implType)
-                .LifeStyle.Singleton);
+                .LifeStyle.Singleton;
+
+            if (!string.IsNullOrWhiteSpace(name))
+                component.Named(name);
+
+            ApplyHints(component, hints);
+            Instance.Register(component);
             return this;
         }
 
-        public IContainer RegisterAsSingletonWithInterception<TPlugin, TIntercept>(Type type) where TPlugin : class
+        public IContainer RegisterAsSingletonWithInterception<TPlugin, TIntercept>(Type type, 
+            string name = null, 
+            params Tuple<Type, string>[] hints)
+            where TPlugin : class
         {
             var interceptorTypes = (from iType in ResolveAll<TIntercept>()
                                     select iType.GetType()).ToArray();
 
-            Instance.Register(Component.For(typeof(TPlugin))
-                                    .LifeStyle.Transient
-                                    .ImplementedBy(type)
-                                    .Interceptors(interceptorTypes));
+            var component = Component.For(typeof (TPlugin))
+                .LifeStyle.Transient
+                .ImplementedBy(type)
+                .Interceptors(interceptorTypes);
+
+            if (!string.IsNullOrWhiteSpace(name))
+                component.Named(name);
+
+            ApplyHints(component, hints);
+            Instance.Register(component);
             return this;
         }
 
@@ -152,6 +174,16 @@ namespace Wolfpack.Core.Containers
         public bool IsRegistered(Type type)
         {
             return Instance.Kernel.HasComponent(type);
+        }
+
+        private void ApplyHints<T>(ComponentRegistration<T> component, IEnumerable<Tuple<Type, string>> hints)
+            where T: class
+        {
+            if (hints == null)
+                return;
+
+            foreach (var hint in hints)
+                component.DependsOn(Dependency.OnComponent(hint.Item1, hint.Item2));           
         }
     }
 }
