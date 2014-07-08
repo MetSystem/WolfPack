@@ -20,10 +20,10 @@ namespace Wolfpack.Core
             return _container.RegisterAsTransient(implType);
         }
 
-        public static IContainer RegisterAsTransient<T>(Type implType)
+        public static IContainer RegisterAsTransient<T>(Type implType, string name = null)
             where T : class
         {
-            return _container.RegisterAsTransient<T>(implType);
+            return _container.RegisterAsTransient<T>(implType, name);
         }
 
         public static IContainer RegisterAsSingleton(Type implType)
@@ -31,16 +31,19 @@ namespace Wolfpack.Core
             return _container.RegisterAsSingleton(implType);
         }
 
-        public static IContainer RegisterAsSingleton<T>(Type implType)
+        public static IContainer RegisterAsSingleton<T>(Type implType, string name = null,
+            params Tuple<Type, string>[] hints) 
             where T : class
         {
-            return _container.RegisterAsSingleton<T>(implType);
+            return _container.RegisterAsSingleton<T>(implType, name, hints);
         }
-
-        public static IContainer RegisterAsSingletonWithInterception<TPlugin, TIntercept>(Type type) 
+        
+        public static IContainer RegisterAsSingletonWithInterception<TPlugin, TIntercept>(Type type, 
+            string name = null,
+            params Tuple<Type, string>[] hints) 
             where TPlugin : class
         {
-            return _container.RegisterAsSingletonWithInterception<TPlugin, TIntercept>(type);
+            return _container.RegisterAsSingletonWithInterception<TPlugin, TIntercept>(type, name, hints);
         }
 
         public static IContainer RegisterInstance<T>(T instance, string name) 
