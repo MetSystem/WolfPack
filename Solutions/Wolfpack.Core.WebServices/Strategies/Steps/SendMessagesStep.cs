@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using Wolfpack.Core.Interfaces.Entities;
-using Wolfpack.Core.WebServices.Client;
 using Wolfpack.Core.WebServices.Interfaces;
 using Wolfpack.Core.WebServices.Interfaces.Entities;
 

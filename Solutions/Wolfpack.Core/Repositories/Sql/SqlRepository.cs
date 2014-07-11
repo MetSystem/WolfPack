@@ -2,17 +2,19 @@
 using System.Linq;
 using Wolfpack.Core.Interfaces;
 using Wolfpack.Core.Interfaces.Entities;
+using Wolfpack.Core.Publishers.Sql;
 
 namespace Wolfpack.Core.Repositories.Sql
 {
     public class SqlRepository : INotificationRepository
     {
+        private readonly SqlPublisherConfiguration _config;
         private readonly ISqlDbContext _context;
 
-        public SqlRepository()
-            : this(new SqlDbContext("Wolfpackv3"))
+        public SqlRepository(SqlPublisherConfiguration config)
+            : this(new SqlDbContext(config.ConnectionName))
         {
-                
+            _config = config;
         }
 
         public SqlRepository(ISqlDbContext context)
@@ -22,7 +24,7 @@ namespace Wolfpack.Core.Repositories.Sql
 
         public void Initialise()
         {
-            //throw new NotImplementedException();
+            Logger.Info("SqlPublisher ({0}) initialised!", _config.ConnectionName);
         }
 
         public IQueryable<NotificationEvent> Filter(params INotificationRepositoryQuery[] filters)
