@@ -48,7 +48,7 @@ namespace Wolfpack.Core.WebUI.Modules
                     Properties = new Properties { {"SomeProperty", "SomeValue"} },
                     Result = false,
                     ResultCount = 0,
-                    SiteId = _tracker.StartEvent.SiteId,
+                    SiteId = siteInfo.SiteId,
                     State = MessageStateTypes.NotSet,
                     Tags = new List<string> {"SomeTag"},
                     Version = Guid.Empty
