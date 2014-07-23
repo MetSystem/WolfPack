@@ -6,10 +6,16 @@ namespace Wolfpack.Core.Containers
     public interface IContainer
     {
         IContainer RegisterAsTransient(Type implType);
-        IContainer RegisterAsTransient<T>(Type implType) where T : class;
+        IContainer RegisterAsTransient<T>(Type implType, string name = null) where T : class;
         IContainer RegisterAsSingleton(Type implType);
-        IContainer RegisterAsSingleton<T>(Type implType) where T : class;
-        IContainer RegisterAsSingletonWithInterception<TPlugin, TIntercept>(Type type) where TPlugin : class;
+        IContainer RegisterAsSingleton<T>(Type implType,
+            string name = null, 
+            params Tuple<Type, string>[] hints) 
+            where T : class;
+        IContainer RegisterAsSingletonWithInterception<TPlugin, TIntercept>(Type type, 
+            string name = null, 
+            params Tuple<Type, string>[] hints) 
+            where TPlugin : class;
         IContainer RegisterInstance<T>(T instance, bool overwrite = false) where T : class;
         IContainer RegisterInstance<T>(T instance, string name) where T : class;
         IContainer RegisterInstance(Type implType, object instance, string name = null);
