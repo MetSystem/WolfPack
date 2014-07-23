@@ -37,7 +37,11 @@ namespace Wolfpack.Core.Configuration.FileSystem
                             return;
 
                         var pluginType = Type.GetType(e.Entry.PluginType);
-                        Container.RegisterAsSingletonWithInterception<INotificationEventPublisher, IPublisherFilter>(pluginType);
+                        var pluginName = string.Format("{0}.{1}", pluginType.AssemblyQualifiedName, name);
+                        Container.RegisterAsSingletonWithInterception<INotificationEventPublisher, IPublisherFilter>(
+                            pluginType, 
+                            pluginName,
+                            new Tuple<Type, string>(configType, name));
                     });
 
             return entries;
