@@ -142,16 +142,17 @@ namespace Wolfpack.Core.Checks
                             try
                             {
                                 wc.AllowAutoRedirect = true;
-                                wc.UseDefaultCredentials = _config.UseDefaultCredentials;                                
+                                wc.UseDefaultCredentials = _config.UseDefaultCredentials;
 
                                 if (!string.IsNullOrWhiteSpace(_config.UserAgentString))
-                                    wc.Headers.Add(HttpRequestHeader.UserAgent, _config.UserAgentString);
+                                    wc.UserAgent = _config.UserAgentString;
 
                                 if (_config.Headers != null)
                                 {
                                     foreach (var header in _config.Headers)
                                     {
-                                        wc.Headers.Add(header.Key, header.Value);
+                                        if (!HandledAsProtectedHeader(wc, header))
+                                            wc.Headers.Add(header.Key, header.Value);
                                     }                                    
                                 }
 
@@ -174,8 +175,11 @@ namespace Wolfpack.Core.Checks
 
                                     wc.Method = "POST";
                                     wc.ContentType = "application/x-www-form-urlencoded";
+                                    
                                     var streamUp = wc.GetRequestStream();                                   
                                     var dataUp = Encoding.UTF8.GetBytes(_config.PostData);
+                                    wc.ContentLength = dataUp.Length;
+
                                     streamUp.Write(dataUp, 0, dataUp.Length);
                                     response = DownloadString(wc);
                                 }                                                                
@@ -222,6 +226,49 @@ namespace Wolfpack.Core.Checks
                             }
                         }
                     });
+        }
+
+        private static bool HandledAsProtectedHeader(HttpWebRequest wc, KeyValuePair<string, string> header)
+        {
+            var name = header.Key.ToLower();
+
+            switch (name)
+            {
+                case "Date":
+                case "Range":
+                case "Connection":
+                case "Transfer-Encoding":
+                case "Content-Length":
+                case "If-Modified-Since": 
+                    Logger.Warning("{0} header not supported!", name);
+                    break;
+
+                case "accept":
+                    wc.Accept = header.Value;
+                    break;
+                case "content-type":
+                    wc.ContentType = header.Value;
+                    break;
+                case "expect":
+                    wc.Expect = header.Value;
+                    break;
+                case "host":
+                    wc.Host = header.Value;
+                    break;
+                case "referer":
+                    wc.Referer= header.Value;
+                    break;
+                case "user-agent":
+                    wc.UserAgent = header.Value;
+                    break;
+
+                default:
+                    // not protected
+                    return false;
+            }
+
+            // handled as protected
+            return true;
         }
 
         private static string DownloadString(WebRequest wc)
