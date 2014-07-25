@@ -317,7 +317,7 @@
 			        return;
 			    }
 
-			    $.getJSON('/api/configuration/catalogue/' + tags, function (data) {
+			    $.getJSON('/api/configuration/catalogue?tags=' + tags, function (data) {
 			        console.log('configuration loaded (' + data.instanceId + ')');
 			        console.log(data);
 

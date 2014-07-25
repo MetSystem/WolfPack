@@ -20,7 +20,7 @@ namespace Wolfpack.Core.WebServices.Modules
         {
             _config = config;
             Get["/tagcloud"] = _ => Response.AsJson(ConfigurationManager.GetTagCloud().ToList());
-            Get["/catalogue/{tags?}"] = GetCatalogue;
+            Get["/catalogue"] = GetCatalogue;
             Post["/changerequest"] = PostChangeRequest;
             Get["/applychanges"] = GetApplyChanges;
             Get["/cancelchanges"] = GetDiscardPendingChanges;
