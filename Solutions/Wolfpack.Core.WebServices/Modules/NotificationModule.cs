@@ -26,6 +26,7 @@ namespace Wolfpack.Core.WebServices.Modules
             Post["/notify"] = request =>
             {
                 var message = this.Bind<NotificationEvent>();
+                message.GeneratedOnUtc = message.GeneratedOnUtc.ToUniversalTime();
                 message.State = MessageStateTypes.Delivered;
                 message.ReceivedOnUtc = DateTime.UtcNow;
 
