@@ -116,8 +116,13 @@ namespace Wolfpack.Core.Checks
                                 .ResultIs(sc.Status == ExpectedState)
                                 .AddProperty("ExpectedState", ExpectedState.ToString());
 
-                            Publish(NotificationRequestBuilder.For(_config.NotificationMode, result)
-                                .Build());
+                            var request = NotificationRequestBuilder.For(_config.NotificationMode, result,
+                            nr =>
+                            {
+                                nr.DataKeyGenerator = data => string.Format("{0}>>{1}", data.CheckId, serviceName);
+                            }).Build();
+
+                            Publish(request);
                         }
                         catch (InvalidOperationException)
                         {
