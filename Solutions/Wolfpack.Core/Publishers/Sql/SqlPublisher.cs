@@ -25,7 +25,9 @@ namespace Wolfpack.Core.Publishers.Sql
 
         public void Consume(NotificationEvent message)
         {
-            _repository.Add(message);
+            NotificationEvent other;
+            if(!_repository.GetById(message.Id, out other))
+                _repository.Add(message);
         }
     }
 }
