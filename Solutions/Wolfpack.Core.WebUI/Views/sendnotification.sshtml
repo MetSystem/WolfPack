@@ -22,6 +22,9 @@
 		<p>
 			<div id="editor" class="json-editor"></div>
 		</p>
+		<select data-bind="options: apiKeys,
+                       value: selectedApiKey,
+                       optionsCaption: 'Choose an api key'"></select>
 		<button class="btn btn-lg btn-primary" data-bind="click: send">Send</button>
 	</div>
 @EndSection
@@ -35,6 +38,8 @@
 	var viewModel = (function () {
 		var my = {
 			notification : JSON.parse('@Model.Json'),
+			apiKeys : ko.observableArray(JSON.parse('@Model.ApiKeys')),
+			selectedApiKey : ko.observable(),
 			hasError: ko.observable(false),
 			clearError: function () {
 				my.hasError(false);
@@ -59,10 +64,15 @@
 			send: function () {
 				var wsData = JSON.stringify(my.notification);
 
+				var headers = {};
+				if(my.selectedApiKey())
+					headers["X-ApiKey"] = my.selectedApiKey();
+
 				$.ajax({
 					type: 'POST',
 					url: '/api/notification/notify',
 					data: wsData,
+					headers: headers,
 					contentType: 'application/json; charset=utf-8',
 					dataType: 'json'
 				}).done(function (data, status, jqXhr) {

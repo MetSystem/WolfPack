@@ -5,7 +5,7 @@ namespace Wolfpack.Core.WebUI.Modules
 {
     public class UiApiModule : NancyModule
     {
-        private const string BaseUrl = "/api";
+        private const string BaseUrl = "/ui/api";
 
         private readonly MenuChanger _menuChanger;
 
