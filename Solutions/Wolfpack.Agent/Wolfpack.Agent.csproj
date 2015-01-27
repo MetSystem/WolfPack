@@ -133,6 +133,7 @@
     </None>
     <None Include="Config\Activities\SignalR-Host.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </None>
     <None Include="Config\Activities\WolfpackPublisher.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -156,9 +157,8 @@
     <None Include="Config\log4net.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Config\Publishers\ConsolePublisherConfiguration.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <None Include="Config\Publishers\ConsolePublisherConfiguration.config" />
+    <None Include="Config\Publishers\SqlPublisherConfiguration.config" />
     <None Include="Config\role.castle.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
