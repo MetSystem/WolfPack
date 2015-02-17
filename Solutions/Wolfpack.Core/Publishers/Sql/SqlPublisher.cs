@@ -20,7 +20,7 @@ namespace Wolfpack.Core.Publishers.Sql
 
         public override void Initialise()
         {
-            _repository = new SqlRepository(new SqlDbContext(_config.ConnectionName));
+            _repository = new SqlRepository(new SqlDbContextProvider(() => new SqlDbContext(_config.ConnectionName)));
         }
 
         public void Consume(NotificationEvent message)

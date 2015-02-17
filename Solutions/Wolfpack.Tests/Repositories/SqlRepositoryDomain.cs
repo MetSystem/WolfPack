@@ -25,7 +25,7 @@ namespace Wolfpack.Tests.Repositories
         {
             AppDomain.CurrentDomain.SetData("DataDirectory", AppDomain.CurrentDomain.BaseDirectory);
             _dbContext = new SqlDbContext("Wolfpackv3");
-            _sut = new SqlRepository(_dbContext);
+            _sut = new SqlRepository(new SqlDbContextProvider(() => _dbContext));
         }
 
         public void TheWolfpackDatabaseIsClearedOfNotifications()

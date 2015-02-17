@@ -38,6 +38,22 @@ namespace Wolfpack.Core.Containers
             return this;
         }
 
+        /// <summary>
+        /// Registers an interface with a singleton providerFunc that is used to create new instances of a given type
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="providerFunc">The provider function.</param>
+        /// <returns></returns>
+        public IContainer RegisterUsingFactory<T>(Func<T> providerFunc)
+            where T : class
+        {
+            var component = Component.For<T>()
+                .UsingFactoryMethod(_ => providerFunc());
+
+            Instance.Register(component);
+            return this;
+        }
+
         public IContainer RegisterAsSingleton(Type implType)
         {
             Instance.Register(Component.For(implType)
