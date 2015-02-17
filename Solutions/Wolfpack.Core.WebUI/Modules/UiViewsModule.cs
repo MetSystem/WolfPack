@@ -56,7 +56,8 @@ namespace Wolfpack.Core.WebUI.Modules
                     Tags = new List<string> {"SomeTag"},
                     Version = Guid.Empty
                 };
-                var model = new SendNotificationModel(notification, config.ApiKeys.ToArray());
+                var keys = config.ApiKeys != null ? config.ApiKeys.ToArray() : new string[0];
+                var model = new SendNotificationModel(notification, keys);
                 return View["views/sendnotification.sshtml", model];
             };
         }

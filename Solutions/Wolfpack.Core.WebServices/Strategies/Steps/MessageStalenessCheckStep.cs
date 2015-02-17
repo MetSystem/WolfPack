@@ -1,4 +1,5 @@
 ﻿using System;
+using Wolfpack.Core.Interfaces;
 using Wolfpack.Core.Interfaces.Entities;
 using Wolfpack.Core.WebServices.Interfaces.Entities;
 using Wolfpack.Core.WebServices.Interfaces.Exceptions;
@@ -14,14 +15,18 @@ namespace Wolfpack.Core.WebServices.Strategies.Steps
             _config = config;
         }
 
-        public override void Execute(WebServiceReceiverContext context)
+        public override ContinuationOptions Execute(WebServiceReceiverContext context)
         {
             if (DateTime.UtcNow.Subtract(context.Notification.GeneratedOnUtc).TotalMinutes > _config.MaxAgeInMinutes)
             {
-                Logger.Info("Message '{0}' is stale ({1} minutes old), discarding it!",
+                Logger.Warning("Message '{0}' is stale ({1} minutes old), discarding it!",
                     context.Notification.Id, DateTime.UtcNow.Subtract(context.Notification.GeneratedOnUtc).TotalMinutes);
-                throw new StaleMessageException(context.Notification.Id);
+                
+                // stop execution of the pipeline
+                return ContinuationOptions.Stop;
             }
+
+            return ContinuationOptions.Continue;
         }
     }
 }
