@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Wolfpack.Core.Interfaces;
 using Wolfpack.Core.Interfaces.Entities;
 using Wolfpack.Core.WebServices.Interfaces;
 using Wolfpack.Core.WebServices.Interfaces.Entities;
@@ -20,7 +21,7 @@ namespace Wolfpack.Core.WebServices.Strategies.Steps
             return context.OutboundQueue.Any();
         }
 
-        public override void Execute(WebServicePublisherContext context)
+        public override ContinuationOptions Execute(WebServicePublisherContext context)
         {
             Logger.Info("{0} notifications queued...", context.OutboundQueue.Count);
 
@@ -43,6 +44,8 @@ namespace Wolfpack.Core.WebServices.Strategies.Steps
                     Logger.Error(msg);
                 }
             }
+
+            return ContinuationOptions.Continue;
         }
     }
 }
