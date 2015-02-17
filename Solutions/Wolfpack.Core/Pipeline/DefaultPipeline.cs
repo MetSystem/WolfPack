@@ -25,7 +25,7 @@ namespace Wolfpack.Core.Pipeline
             foreach (var step in _steps)
             {
                 var stepResult = step.GenerateResult(i++);
-
+                var continuation = ContinuationOptions.Continue;
                 try
                 {
                     timer.Start();
@@ -34,7 +34,7 @@ namespace Wolfpack.Core.Pipeline
 
                     if (step.ShouldExecute(context))
                     {
-                        step.Execute(context);
+                        continuation = step.Execute(context);
                         step.PostValidate(context);
                         stepResult.Succeeded();
                     }
@@ -55,6 +55,9 @@ namespace Wolfpack.Core.Pipeline
 
                     timer.Reset();
                 }
+
+                if (continuation == ContinuationOptions.Stop)
+                    break;
             }
 
             return result;

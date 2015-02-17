@@ -18,13 +18,14 @@ namespace Wolfpack.Core.WebServices.Strategies.Steps
             _repository = repository;
         }
 
-        public override void Execute(WebServicePublisherContext context)
+        public override ContinuationOptions Execute(WebServicePublisherContext context)
         {
             var messages = _repository.Filter(new NotificationByStateQuery(MessageStateTypes.Queued))
                 .OrderBy(msg => msg.GeneratedOnUtc)
                 .ToList();
 
-            messages.ForEach(msg => context.OutboundQueue.Enqueue(msg));            
+            messages.ForEach(msg => context.OutboundQueue.Enqueue(msg));
+            return ContinuationOptions.Continue;          
         }
     }
 }
