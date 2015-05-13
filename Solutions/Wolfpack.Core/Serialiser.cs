@@ -42,7 +42,8 @@ namespace Wolfpack.Core
         public static T FromJsonInFile<T>(string path)
         {
             string data;
-            using (var sr = new StreamReader(path))
+            using (var stream = File.OpenRead(path))
+            using (var sr = new StreamReader(stream))
             {
                 data = sr.ReadToEnd();                
             }
