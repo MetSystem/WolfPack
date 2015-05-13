@@ -8,6 +8,7 @@ namespace Wolfpack.Core.Repositories.FileSystem
 {
     public class FileSystemNotificationRepository : INotificationRepository
     {
+        private static readonly object LockObject = new object();
         private readonly FileSystemNotificationRepositoryConfig _config;
 
         public FileSystemNotificationRepository(FileSystemNotificationRepositoryConfig config)
@@ -29,8 +30,11 @@ namespace Wolfpack.Core.Repositories.FileSystem
 
         public void Add(NotificationEvent notification)
         {
-            var filename = MakeItemFilename(notification.Id);            
-            Serialiser.ToJsonInFile(filename, notification);
+            var filename = MakeItemFilename(notification.Id);
+            lock (LockObject)
+            {
+                Serialiser.ToJsonInFile(filename, notification);
+            }
             Logger.Debug("Stored Notification ({0}): {1}", notification.EventType, filename);
         }
 
@@ -43,7 +47,11 @@ namespace Wolfpack.Core.Repositories.FileSystem
         public void Delete(Guid notificationId)
         {
             var filename = MakeItemFilename(notificationId);
-            File.Delete(filename);
+            
+            lock (LockObject)
+            {
+                File.Delete(filename);
+            }
         }
 
         public void Initialise()
@@ -59,8 +67,14 @@ namespace Wolfpack.Core.Repositories.FileSystem
 
         private IQueryable<NotificationEvent> LoadAll()
         {
-            return Directory.GetFiles(SmartLocation.GetLocation(_config.BaseFolder), "*.*", SearchOption.TopDirectoryOnly)
-                .ToList().Select(Serialiser.FromJsonInFile<NotificationEvent>).AsQueryable();
+            // Serializer throws if multiple instances read same file concurrently
+            lock (LockObject)
+            {
+                return
+                    Directory.GetFiles(SmartLocation.GetLocation(_config.BaseFolder), "*.*",
+                        SearchOption.TopDirectoryOnly)
+                        .ToList().Select(Serialiser.FromJsonInFile<NotificationEvent>).AsQueryable();
+            }
         }
     }
 }
