@@ -17,8 +17,9 @@ namespace Wolfpack.Core.Publishers.Sql
 
             if (config.UseAsRepository)
             {
-                var repository = new SqlRepository(new SqlDbContext(config.ConnectionName));
-                Container.RegisterInstance<INotificationRepository>(repository);
+                Container.RegisterInstance<ISqlDbContextProvider>(
+                    new SqlDbContextProvider(() => new SqlDbContext(config.ConnectionName)));
+                Container.RegisterAsTransient<INotificationRepository>(typeof(SqlRepository));
             }
         }
     }

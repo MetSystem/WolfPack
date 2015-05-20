@@ -2,7 +2,7 @@ namespace Wolfpack.Core.Interfaces.Entities
 {
     public abstract class StepBase<T> : IPipelineStep<T>
     {
-        public abstract void Execute(T context);
+        public abstract ContinuationOptions Execute(T context);
 
         public virtual void PreValidate(T context)
         {            

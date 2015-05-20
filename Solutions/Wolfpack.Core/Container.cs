@@ -71,6 +71,12 @@ namespace Wolfpack.Core
                 : _container;
         }
 
+        public static IContainer RegisterRegisterUsingFactory<T>(Func<T> providerFunc)
+            where T : class
+        {
+            return _container.RegisterUsingFactory(providerFunc);
+        }
+
         public static IContainer RegisterAll<T>()
             where T : class
         {
