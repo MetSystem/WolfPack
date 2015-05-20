@@ -56,10 +56,13 @@ namespace Wolfpack.Core.WebServices.Extenders
 
         private bool ApiKeysConfiguredButNonePresentedInRequest(NancyContext nancyContext)
         {
-            if (_config.ApiKeys == null || !_config.ApiKeys.Any()) 
+            // use apikeys only for securing api requests!
+            if (!nancyContext.Request.Path.StartsWith("/api"))
                 return false;
 
-            // TODO: filter UI requests from Api requests...only apply ApiKey check api calls??
+            if (_config.ApiKeys == null || !_config.ApiKeys.Any()) 
+                return false;
+            
             var apikey = nancyContext.Request.Headers["X-ApiKey"].FirstOrDefault() ?? string.Empty;
             return !_config.ApiKeys.Contains(apikey, StringComparer.OrdinalIgnoreCase);
         }

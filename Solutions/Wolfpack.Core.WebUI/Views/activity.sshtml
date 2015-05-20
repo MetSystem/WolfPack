@@ -45,6 +45,10 @@
 				if (self.alert.displayUnit == null)
 					return null;
 
+				// resultCount is nullable!
+				if(!self.alert.resultCount)
+					return self.alert.displayUnit;
+
 				return self.alert.resultCount.toString() + self.alert.displayUnit;
 			}, this);
 

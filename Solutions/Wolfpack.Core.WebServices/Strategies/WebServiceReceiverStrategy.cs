@@ -4,6 +4,7 @@ using Wolfpack.Core.Interfaces.Entities;
 using Wolfpack.Core.Pipeline;
 using Wolfpack.Core.WebServices.Interfaces;
 using Wolfpack.Core.WebServices.Interfaces.Entities;
+using Wolfpack.Core.WebServices.Interfaces.Exceptions;
 using Wolfpack.Core.WebServices.Strategies.Steps;
 
 namespace Wolfpack.Core.WebServices.Strategies
@@ -29,6 +30,10 @@ namespace Wolfpack.Core.WebServices.Strategies
             var ex = result.StepResults.FirstOrDefault(sr => sr.Failure != null);
             if (ex != null)
             {
+                // ignore staleness exceptions
+                if (ex.Failure.Error is StaleMessageException)
+                    return;
+
                 throw new ApplicationException("Step failure", ex.Failure.Error);
             }
 

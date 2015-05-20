@@ -8,18 +8,18 @@ namespace Wolfpack.Core.Repositories.Sql
 {
     public class SqlRepository : INotificationRepository
     {
+        private readonly ISqlDbContextProvider _provider;
         private readonly SqlPublisherConfiguration _config;
-        private readonly ISqlDbContext _context;
 
         public SqlRepository(SqlPublisherConfiguration config)
-            : this(new SqlDbContext(config.ConnectionName))
+            : this(new SqlDbContextProvider(() => new SqlDbContext(config.ConnectionName)))
         {
             _config = config;
         }
 
-        public SqlRepository(ISqlDbContext context)
+        public SqlRepository(ISqlDbContextProvider provider)
         {
-            _context = context;
+            _provider = provider;
         }
 
         public void Initialise()
@@ -29,35 +29,50 @@ namespace Wolfpack.Core.Repositories.Sql
 
         public IQueryable<NotificationEvent> Filter(params INotificationRepositoryQuery[] filters)
         {
-            return filters.Aggregate(_context.Notifications.AsQueryable(), (current, filter) => filter.Filter(current));            
+            using (var context = _provider.Provide())
+            {
+                return filters.Aggregate(context.Notifications.AsQueryable(), (current, filter) => filter.Filter(current));
+            }            
         }
 
         public bool GetById(Guid id, out NotificationEvent notification)
         {
-            notification = _context.Notifications.FirstOrDefault(n => n.Id.Equals(id));
+            using (var context = _provider.Provide())
+            {
+                notification = context.Notifications.FirstOrDefault(n => n.Id.Equals(id));
+            }
             return notification != null;
         }
 
         public IQueryable<NotificationEvent> GetByState(MessageStateTypes state)
         {
-            return _context.Notifications.Where(n => n.State.Equals(state));
+            using (var context = _provider.Provide())
+            {
+                return context.Notifications.Where(n => n.State.Equals(state));
+            }
         }
 
         public void Add(NotificationEvent notification)
         {
-            _context.Notifications.Add(notification);
-            _context.SaveChanges();
+            using (var context = _provider.Provide())
+            {
+                context.Notifications.Add(notification);
+                context.SaveChanges();
+            }
         }
 
         public void Delete(Guid notificationId)
         {
-            var notification = _context.Notifications.FirstOrDefault(n => n.Id.Equals(notificationId));
+            using (var context = _provider.Provide())
+            {
+                var notification = context.Notifications.FirstOrDefault(n => n.Id.Equals(notificationId));
 
-            if (notification == null)
-                return;
+                if (notification == null)
+                    return;
 
-            _context.Notifications.Remove(notification);
-            _context.SaveChanges();
+                context.Notifications.Remove(notification);
+                context.SaveChanges();
+            }
         }
     }
 }

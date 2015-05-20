@@ -21,6 +21,7 @@ namespace Wolfpack.Core.Containers
         IContainer RegisterInstance(Type implType, object instance, string name = null);
         IContainer RegisterAll<T>() where T : class;
         IContainer RegisterAllWithInterception<T, TI>();
+        IContainer RegisterUsingFactory<T>(Func<T> providerFunc) where T : class;
         object Resolve(string componentName);
         T Resolve<T>();        
         T[] ResolveAll<T>();

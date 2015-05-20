@@ -72,7 +72,7 @@
 
 		$(function(){
 			// get addon menu additions
-			$.getJSON('/api/addonmenu', function (data) {
+			$.getJSON('/ui/api/addonmenu', function (data) {
 			    console.log('addon menu loaded...');
 			    console.log(data);
 

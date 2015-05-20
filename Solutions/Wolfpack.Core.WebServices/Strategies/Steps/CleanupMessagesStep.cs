@@ -22,7 +22,7 @@ namespace Wolfpack.Core.WebServices.Strategies.Steps
             return context.DeliveredQueue.Any();
         }
 
-        public override void Execute(WebServicePublisherContext context)
+        public override ContinuationOptions Execute(WebServicePublisherContext context)
         {
             Logger.Info("{0} notifications delivered...", context.DeliveredQueue.Count);
 
@@ -31,6 +31,7 @@ namespace Wolfpack.Core.WebServices.Strategies.Steps
                 var message = context.DeliveredQueue.Dequeue();
                 _repository.Delete(message.Id);
             }
+            return ContinuationOptions.Continue;          
         }
     }
 }

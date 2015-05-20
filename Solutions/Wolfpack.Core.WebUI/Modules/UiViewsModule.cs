@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Nancy;
 using Wolfpack.Core.Interfaces.Entities;
 using Wolfpack.Core.WebServices;
+using Wolfpack.Core.WebServices.Interfaces.Entities;
 using Wolfpack.Core.WebUI.Interfaces.Entities;
 
 namespace Wolfpack.Core.WebUI.Modules
@@ -27,6 +28,8 @@ namespace Wolfpack.Core.WebUI.Modules
             Get["/tools/sendnotification"] = _ =>
             {
                 var siteInfo = _tracker.StartEvent;
+
+                var config = Container.Resolve<WebServiceActivityConfig>();
 
                 var notification = new NotificationEvent
                 {
@@ -53,7 +56,8 @@ namespace Wolfpack.Core.WebUI.Modules
                     Tags = new List<string> {"SomeTag"},
                     Version = Guid.Empty
                 };
-                var model = new SendNotificationModel(notification);
+                var keys = config.ApiKeys != null ? config.ApiKeys.ToArray() : new string[0];
+                var model = new SendNotificationModel(notification, keys);
                 return View["views/sendnotification.sshtml", model];
             };
         }
